@@ -15,7 +15,6 @@ with user as (
       user_role_id
 
     from user
-    where not _fivetran_deleted
 
 )
 

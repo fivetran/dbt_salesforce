@@ -9,11 +9,11 @@ with account as (
 
       account.id as account_id,
       name as account_name,
-      industry as industry,
-      number_of_employees as number_of_employeees,
-      account_source as account_source,
-      rating as account_rating,
-      annual_revenue as annual_revenue
+      industry,
+      number_of_employees,
+      -- account_source --confirm that this exists across all connectors
+      -- rating as account_rating, --confirm that this exists across all connectors
+      annual_revenue
 
     from account
     where not is_deleted

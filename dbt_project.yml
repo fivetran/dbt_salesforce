@@ -16,6 +16,6 @@ clean-targets:
 models:
     salesforce:
         vars:
-            schema_name: "salesforce"
-            salesforce_schema: "salesforce"
+            schema_name: "SALESFORCE"
+            salesforce_schema: "SALESFORCE"
       

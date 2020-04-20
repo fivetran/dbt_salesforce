@@ -45,15 +45,15 @@ select
   coalesce(sum(total_pipeline_amount), 0) as total_pipeline_amount,
   coalesce(sum(total_pipeline_forecast_amount), 0) as total_pipeline_forecast_amount,
   coalesce(max(largest_deal_in_pipeline), 0) as largest_deal_in_pipeline,
-  round(if(sum(bookings_amount_closed_this_month + lost_amount_this_month) > 0, 
-            sum(bookings_amount_closed_this_month) / sum(bookings_amount_closed_this_month + lost_amount_this_month) * 100, 
-            0), 2) as win_percent_this_month,
-  round(if(sum(bookings_amount_closed_this_quarter + lost_amount_this_quarter) > 0, 
-            sum(bookings_amount_closed_this_quarter) / sum(bookings_amount_closed_this_quarter + lost_amount_this_quarter) * 100,
-            0), 2) as win_percent_this_quarter,
-  round(if(sum(total_bookings_amount + total_lost_amount) > 0, 
-            sum(total_bookings_amount) / sum(total_bookings_amount + total_lost_amount) * 100, 
-            0), 2) as total_win_percent
+  round(case when sum(bookings_amount_closed_this_month + lost_amount_this_month) > 0 then 
+            sum(bookings_amount_closed_this_month) / sum(bookings_amount_closed_this_month + lost_amount_this_month) * 100
+            else 0 end, 2) as win_percent_this_month,
+  round(case when sum(bookings_amount_closed_this_quarter + lost_amount_this_quarter) > 0 then
+            sum(bookings_amount_closed_this_quarter) / sum(bookings_amount_closed_this_quarter + lost_amount_this_quarter) * 100
+            else 0 end, 2) as win_percent_this_quarter,
+  round(case when sum(total_bookings_amount + total_lost_amount) > 0 then 
+            sum(total_bookings_amount) / sum(total_bookings_amount + total_lost_amount) * 100
+            else 0 end, 2) as total_win_percent
 
 from opportunity_aggregation_by_owner
 left join user as manager on manager.user_id = opportunity_aggregation_by_owner.manager_id
