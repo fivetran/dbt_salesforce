@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: salesforce
+    schema: "{{ var('salesforce_schema', 'salesforce') }}" # you will need to customize if your schema name is not salesforce
+    database: "{{ var('salesforce_database', target.database) }}"
+    loader: fivetran
+    loaded_at_field: _fivetran_synced
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+  
+    tables:
+      - name: account
+      - name: opportunity
+      - name: user
+      - name: user_role

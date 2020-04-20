@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: manager_performance
+    description: >
+        This query is structured similar to rep performance, but each CTE join opportunties to users to pull in the manager field.
+        For the final query, the fields are aggregated a second time to count the number of distinct owner_ids
+        the final having clause is used to only pull in users who are managing other users who own opportunities.
+  
+  - name: owner_performance
+    description: >
+        Similar to opportunity overview, this uses three common table expressions to aggregate data from opportunities, but here it is grouped by owner_id.
+        Each of the CTEs are full outer joined with the user table to capture any opportunities without owner or user's without opportunities.
+          user_roles is left joined to only pull in roles for users who own opportunities
+        most fields are coalesced to 0 if a rep does not own any appropriate opportunities (avg time fields are not to differentiate from a rep having an average of 0 days).
+
+  - name: opportunity overview
+    description: >
+        The query uses three similar common table expressions to aggregate data from the opportunities table.
+        Each CTE aggregates various fields in similar fashion but has different where clauses to filter for the appropriate opportunities.
+        pipeline_data checks that the opportunity is not closed and has one of three forecase_categories (There is an "Omited" category we do not want to include).
+        bookings_data checks for opportunities marked as "is_won"
+        lost_op_data checks for opportunities that are closed, but are not marked as "is_won"
+
+        Within each CTE, there are fields for the number of opportunities and their total amount. 
+        The first two check if the activity happened this month or quarter
+          for pipeline is checks when the opportunity was created
+          for bookings and lost opportunities it checks when the opportunity was closed (which is when it was won cause we filter for only won opportunties)
+        bookings_data and pipeline_data have a few additional summary fields: time opportunities are open, the overall average amount, and largest amount.
+        The final select pulls from all three tables and doesn't need a join because the CTE's are already aggregated to 1 row
+
+        # Ops raw data:
+        # This query is un-aggregated data about opportunities and their associated accounts and owners.
+        # The only two transformed fields are:
+        #   A stauts field that follows the other queries' logic if the opporuntiy is won, lost or in the pipeline
+        #   The number of days the opportunity has been open.  If the opportunity is still open, the current date is used.
