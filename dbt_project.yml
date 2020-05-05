@@ -1,21 +1,12 @@
 name: 'salesforce'
-version: '0.1.0'
+version: '0.0.1'
 
-source-paths: ["models"]
-analysis-paths: ["analysis"]
-test-paths: ["tests"]
-data-paths: ["data"]
-macro-paths: ["macros"]
-snapshot-paths: ["snapshots"]
-
-target-path: "target" 
-clean-targets:         
-    - "target"
-    - "dbt_modules"
+require-dbt-version: [">=0.16.0", "<0.17.0"]
 
 models:
     salesforce:
-        vars:
-            schema_name: "SALESFORCE"
-            salesforce_schema: "SALESFORCE"
-      
+        materialized: table
+        base:
+            materialized: ephemeral
+        intermediate:
+            materialized: ephemeral

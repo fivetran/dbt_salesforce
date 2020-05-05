@@ -1,8 +1,9 @@
--- --confirm that this table exists across all connectors
-with user_role as (
+
+with base as (
 
     select *
-    from {{ source('salesforce', 'user_role') }}
+    from {{ var('user_role')}}
+    where not _fivetran_deleted
 
 ), fields as (
 
@@ -11,8 +12,7 @@ with user_role as (
       id as user_role_id,
       name as role_name
 
-    from user_role
-    where not _fivetran_deleted
+    from base
 
 )
 
