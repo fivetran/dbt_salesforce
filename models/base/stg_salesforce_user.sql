@@ -1,20 +1,18 @@
-with user as (
+with base as (
 
     select *
-    from {{ source('salesforce', 'user') }}
+    from {{ var('user')}}
 
 ), fields as (
 
     select 
-
-      user.id as user_id,
+      id as user_id,
       name,
       city,
       state,
       manager_id,
       user_role_id
-
-    from user
+    from base
 
 )
 

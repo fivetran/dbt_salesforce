@@ -1,22 +1,22 @@
-with account as (
+with base as (
 
     select *
-    from {{ source('salesforce', 'account') }}
+    from {{ var('account')}}
+    where not is_deleted
 
 ), fields as (
 
     select 
 
-      account.id as account_id,
+      id as account_id,
       name as account_name,
       industry,
       number_of_employees,
-      -- account_source --confirm that this exists across all connectors
-      -- rating as account_rating, --confirm that this exists across all connectors
+      account_source,
+      rating as account_rating,
       annual_revenue
 
-    from account
-    where not is_deleted
+    from base
 
 )
 
