@@ -54,7 +54,7 @@ models:
             opportunity: "{{ source('salesforce', 'opportunity') }}" 
             user: "{{ source('salesforce', 'user') }}"
             user_role: "{{ source('salesforce', 'user_role') }}"
-
+```
 
 ### Contributions ###
 
