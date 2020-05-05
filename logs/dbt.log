@@ -2549,3 +2549,12 @@ Done. PASS=4 WARN=0 ERROR=0 SKIP=0 TOTAL=4
 2020-05-05 23:24:23.143102 (MainThread): Flushing usage events
 2020-05-05 23:24:23.452220 (MainThread): Connection 'generate_catalog' was left open.
 2020-05-05 23:24:23.452417 (MainThread): Connection 'digital-arbor-400.information_schema' was left open.
+2020-05-05 23:27:32.860564 (MainThread): Running with dbt=0.16.0
+2020-05-05 23:27:33.088356 (MainThread): running dbt with arguments Namespace(cls=<class 'dbt.task.clean.CleanTask'>, debug=False, log_cache_events=False, log_format='default', partial_parse=None, profile=None, profiles_dir='/Users/kristin/.dbt', project_dir=None, record_timing_info=None, rpc_method=None, single_threaded=False, strict=False, target=None, test_new_parser=False, use_cache=True, vars='{}', warn_error=False, which='clean', write_json=True)
+2020-05-05 23:27:33.090167 (MainThread): Tracking: tracking
+2020-05-05 23:27:33.095291 (MainThread): Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x112fb9690>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x112fb98d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x112fb9390>]}
+2020-05-05 23:27:33.095794 (MainThread): Checking target/*
+2020-05-05 23:27:33.099131 (MainThread):  Cleaned target/*
+2020-05-05 23:27:33.099295 (MainThread): Finished cleaning all paths.
+2020-05-05 23:27:33.099596 (MainThread): Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x112a8a0d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x112fb9350>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x112fb9390>]}
+2020-05-05 23:27:33.099804 (MainThread): Flushing usage events
