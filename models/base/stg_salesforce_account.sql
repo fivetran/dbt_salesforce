@@ -12,9 +12,7 @@ with base as (
       name as account_name,
       industry,
       number_of_employees,
-      account_source,
-      rating as account_rating,
-      annual_revenue
+      account_source
 
     from base
 

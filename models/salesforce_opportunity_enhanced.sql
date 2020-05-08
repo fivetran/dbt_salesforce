@@ -3,7 +3,7 @@ with opportunity as (
     select *
     from {{ ref('stg_salesforce_opportunity') }}
 
-), user as (
+), salesforce_user as (
 
     select *
     from {{ ref('stg_salesforce_user') }}
@@ -43,8 +43,8 @@ with opportunity as (
       
     from opportunity
     left join account on opportunity.opportunity_account_id = account.account_id
-    left join user as opportunity_owner on opportunity.owner_id = opportunity_owner.user_id
-    left join user as opportunity_manager on opportunity_owner.manager_id = opportunity_manager.user_id
+    left join salesforce_user as opportunity_owner on opportunity.owner_id = opportunity_owner.user_id
+    left join salesforce_user as opportunity_manager on opportunity_owner.manager_id = opportunity_manager.user_id
 )
 
 select *

@@ -3,7 +3,7 @@ with opportunity_aggregation_by_owner as (
     select *
     from {{ ref('opportunity_aggregation_by_owner') }}
   
-), user as (
+), salesforce_user as (
 
     select *
     from {{ ref('stg_salesforce_user') }}
@@ -16,7 +16,7 @@ with opportunity_aggregation_by_owner as (
 )
 
 select 
-
+  coalesce(manager.user_id, 'No Manager Assigned') as manager_id,  
   coalesce(manager.name, 'No Manager Assigned') as manager_name,
   manager.city as manager_city,
   manager.state as manager_state,
@@ -56,7 +56,7 @@ select
             else 0 end, 2) as total_win_percent
 
 from opportunity_aggregation_by_owner
-left join user as manager on manager.user_id = opportunity_aggregation_by_owner.manager_id
+left join salesforce_user as manager on manager.user_id = opportunity_aggregation_by_owner.manager_id
 left join user_role on user_role.user_role_id = manager.user_role_id
-group by 1, 2, 3, 4
+group by 1, 2, 3, 4, 5
 having number_of_direct_reports > 0
