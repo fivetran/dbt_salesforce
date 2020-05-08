@@ -56,5 +56,5 @@ select
   lost.*,
   round((bookings.bookings_amount_closed_this_month / (bookings.bookings_amount_closed_this_month + lost.lost_amount_this_month)) * 100, 2 ) as win_percent_this_month,
   round((bookings.bookings_amount_closed_this_quarter / (bookings.bookings_amount_closed_this_quarter + lost.lost_amount_this_quarter)) * 100, 2 ) as win_percent_this_quarter,
-  round((bookings.total_bookings_amount / (bookings.total_bookings_amount + lost.total_lost_amount)) * 100, 2) as win_percent_all_time
+  round((bookings.total_bookings_amount / (bookings.total_bookings_amount + lost.total_lost_amount)) * 100, 2) as total_win_percent
 from bookings, pipeline, lost

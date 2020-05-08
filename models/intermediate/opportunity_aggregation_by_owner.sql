@@ -3,7 +3,7 @@ with salesforce_opportunity_enhanced as (
     select *
     from {{ ref('salesforce_opportunity_enhanced') }}
   
-), user as (
+), salesforce_user as (
 
     select *
     from {{ ref('stg_salesforce_user') }}
@@ -64,12 +64,12 @@ with salesforce_opportunity_enhanced as (
 )
 
 select 
-  user.user_id as owner_id,
+  salesforce_user.user_id as owner_id,
   coalesce(p_manager_id, b_manager_id, l_manager_id) as manager_id,
   booking_by_owner.*,
   lost_by_owner.*,
   pipeline_by_owner.*
-from user 
-left join booking_by_owner on booking_by_owner.b_owner_id = user.user_id
-left join lost_by_owner on lost_by_owner.l_owner_id = user.user_id
-left join pipeline_by_owner on pipeline_by_owner.p_owner_id = user.user_id
+from salesforce_user
+left join booking_by_owner on booking_by_owner.b_owner_id = salesforce_user.user_id
+left join lost_by_owner on lost_by_owner.l_owner_id = salesforce_user.user_id
+left join pipeline_by_owner on pipeline_by_owner.p_owner_id = salesforce_user.user_id
