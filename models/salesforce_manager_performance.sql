@@ -59,4 +59,4 @@ from opportunity_aggregation_by_owner
 left join salesforce_user as manager on manager.user_id = opportunity_aggregation_by_owner.manager_id
 left join user_role on user_role.user_role_id = manager.user_role_id
 group by 1, 2, 3, 4, 5
-having number_of_direct_reports > 0
+having count(distinct owner_id) > 0
