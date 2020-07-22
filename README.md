@@ -30,7 +30,8 @@ When this change occurs, we will release a new version of this package.
 Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
 ## Configuration
-The [variables](https://docs.getdbt.com/docs/using-variables) needed to configure this package are as follows:
+
+The following [variables](https://docs.getdbt.com/docs/using-variables) are needed to configure this package:
 
 **variable**|**information**|**required**
 -----|-----|-----
