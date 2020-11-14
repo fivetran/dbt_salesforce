@@ -1,0 +1,45 @@
+name: 'salesforce_integration_tests'
+version: '1.0.0'
+config-version: 2
+
+profile: 'integration_tests'
+
+vars:
+  salesforce:
+      account: "{{ ref('account_data') }}"
+      opportunity: "{{ ref('opportunity_data') }}"
+      user: "{{ ref('user_data') }}"
+      user_role: "{{ ref('user_role_data') }}"
+      salesforce_schema: salesforce_integration_tests
+
+seeds:
+  salesforce_integration_tests:
+    +column_types:
+      _fivetran_synced: timestamp
+    account_data:
+      +column_types:
+        last_activity_date: timestamp
+        last_referenced_date: timestamp
+        last_viewed_date: timestamp
+        annual_revenue: float
+        billing_latitude: float
+        billing_longitude: float
+        shipping_latitude: float
+        shipping_longitude: float
+    opportunity_data:
+      +column_types:
+        close_date: timestamp
+        created_date: timestamp
+        last_activity_date: timestamp
+        last_referenced_date: timestamp
+        last_viewed_date: timestamp
+        amount: float
+        probability: float
+    user_data:
+      +column_types:
+        last_login_date: timestamp
+        last_referenced_date: timestamp
+        last_viewed_date: timestamp
+        offline_trial_expiration_date: timestamp
+        latitude: float
+        longitude: float

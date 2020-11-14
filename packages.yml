@@ -1,4 +1,3 @@
 packages:
 
-  - package: fivetran/salesforce_source
-    version: 0.1.0
+  - package: ../dbt_salesforce_source
