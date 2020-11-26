@@ -1,11 +1,12 @@
 with salesforce_opportunity_enhanced as (
     
     select *
-    from {{ ref('salesforce_opportunity_enhanced') }}
+    from {{ ref('salesforce__opportunity_enhanced') }}
 
 ), pipeline as (
 
   select 
+
     round(sum(created_amount_this_month)) as pipeline_created_amount_this_month,
     round(sum(created_amount_this_quarter)) as pipeline_created_amount_this_quarter,
     round(sum(created_amount_this_month * probability)) as pipeline_created_forecast_amount_this_month,
@@ -18,6 +19,7 @@ with salesforce_opportunity_enhanced as (
     round(avg(amount)) as avg_pipeline_opp_amount,
     max(amount) as largest_deal_in_pipeline,
     avg(days_since_created) as avg_days_open
+  
   from salesforce_opportunity_enhanced
   where status = 'Pipeline'
 

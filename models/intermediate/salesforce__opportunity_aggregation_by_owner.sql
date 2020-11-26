@@ -1,12 +1,12 @@
 with salesforce_opportunity_enhanced as (
     
     select *
-    from {{ ref('salesforce_opportunity_enhanced') }}
+    from {{ ref('salesforce__opportunity_enhanced') }}
   
 ), salesforce_user as (
 
     select *
-    from {{ ref('stg_salesforce_user') }}
+    from {{ var('user') }}
   
 ), booking_by_owner as (
 
