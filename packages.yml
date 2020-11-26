@@ -1,3 +1,5 @@
 packages:
   - git: https://github.com/fivetran/dbt_salesforce_source.git
     warn-unpinned: false
+
+    # this will be switched back once salesforce source is released

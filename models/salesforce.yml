@@ -171,19 +171,71 @@ models:
     columns:
       - name: opportunity_id
         description: The unique, system-generated ID assigned during creation.
-        tests:
-          - unique
+        tests: 
           - not_null
+          - unique
+      - name: _fivetran_synced 
+        description: The time at which fivetran last synced this record 
       - name: account_id
-        description: The unique, system-generated ID of the account, assigned during creation
+        description: ID of the account associated with this opportunity.
+      - name: amount
+        description: Estimated total sale amount. For opportunities with products, the amount is the sum of the related products.
+      - name: campaign_id
+        description: ID of a related Campaign. This field is defined only for those organizations that have the campaign feature Campaigns enabled.
+      - name: close_date
+        description: Required. Date when the opportunity is expected to close.
+      - name: created_date
+        description: Date when the opportunity is was created.
+      - name: description
+        description: Text description of the opportunity.
+      - name: expected_revenue
+        description: Read-only field that is equal to the product of the opportunity Amount field and the Probability.
+      - name: fiscal
+        description: If fiscal years are not enabled, the name of the fiscal quarter or period in which the opportunity CloseDate falls.
+      - name: fiscal_quarter
+        description: Represents the fiscal quarter. Valid values are 1, 2, 3, or 4.
+      - name: fiscal_year
+        description: Represents the fiscal year, for example, 2006.
+      - name: forecast_category_name
+        description: The name of the forecast category.
+      - name: has_open_activity
+        description: Indicates whether an opportunity has an open event or task (true) or not (false).
+      - name: has_opportunity_line_item
+        description: Read-only field that indicates whether the opportunity has associated line items. A value of true means that Opportunity line items have been created for the opportunity.
+      - name: has_overdue_task
+        description: Indicates whether an opportunity has an overdue task (true) or not (false).
+      - name: is_closed
+        description: True, if Stage Name Label is Closed.
+      - name: is_deleted
+        description: Indicates whether the object has been moved to the Recycle Bin (true) or not (false).
+      - name: is_won
+        description: True, if Stage Name Label is Won.
+      - name: last_activity_date
+        description: Value is one of the following, whichever is the most recent:Due date of the most recent event logged against the record or Due date of the most recently closed task associated with the record.
+      - name: last_referenced_date
+        description: The timestamp when the current user last accessed this record, a record related to this record, or a list view.
+      - name: last_viewed_date
+        description: The timestamp when the current user last viewed this record or list view. If this value is null, the user might have only accessed this record or list view (LastReferencedDate) but not viewed it.
+      - name: lead_source
+        description: Source of this opportunity, such as Advertisement or Trade Show.
+      - name: opportunity_name
+        description: Required. A name for this opportunity.
+      - name: next_step
+        description: Description of next task in closing opportunity.
+      - name: probability
+        description: Percentage of estimated confidence in closing the opportunity.
+      - name: record_type_id
+        description: ID of the record type assigned to this object.
+      - name: stage_name
+        description: Required. Current stage of this record. The StageName field controls several other fields on an opportunity.
+      - name: synced_quote_id
+        description: The ID of the Quote that syncs with the opportunity.
+      - name: type
+        description: Type of opportunity. For example, Existing Business or New Business.
       - name: account_name
         description: Name of the account.
       - name: account_source
         description: The source of the account record. For example, Advertisement, Data.com, or Trade Show.
-      - name: amount
-        description: Estimated total sale amount. For opportunities with products, the amount is the sum of the related products.
-      - name: close_date
-        description: Date when the opportunity has been, or is expected to close.
       - name: closed_amount_this_month
         description: The opportunity amount, if closed this month.
       - name: closed_amount_this_quarter
@@ -200,8 +252,6 @@ models:
         description: The opportunity count, if created this month.
       - name: created_count_this_quarter
         description: The opportunity count, if created this quarter.
-      - name: created_date
-        description: System generate date the opportunity was created.
       - name: days_since_created
         description: The difference in days between the current day and the day the opportunity was created.
       - name: days_to_close
@@ -210,8 +260,6 @@ models:
         description: The category of the state of the opportunity. Default values are 'pipeline','forecast','bestcase','closed', and 'omited'
       - name: industry
         description: An industry associated with this account.
-      - name: is_closed
-        description: Boolean for if the opportunity is closed. Controled by stage_name.
       - name: is_closed_this_month
         description: Boolean field, indicating whether the closed month is equal to the current month.
       - name: is_closed_this_quarter
@@ -220,8 +268,6 @@ models:
         description: Boolean field, indicating whether the created date is greater than or equal to the first day of this month.
       - name: is_created_this_quarter
         description: Boolean field, indicating whether the created date is greater than or equal to the first day of this quarter.
-      - name: is_won
-        description: Boolean for if the opportunity is won. Controled by stage_name.
       - name: number_of_employees
         description: Number of employees working at the company represented by this account.
       - name: opportunity_account_id
@@ -244,10 +290,6 @@ models:
         description: The state associated with the owner.
       - name: owner_id
         description: '{{ doc("owner_id") }}'
-      - name: probability
-        description: Likelihood that opportunity will close, stated as a percentage.
-      - name: stage_name
-        description: Current stage of this record. The StageName field controls several other fields on an opportunity.
       - name: status
         description: Whether the opportunity is won, lost, in the pipeline, or other.
 
