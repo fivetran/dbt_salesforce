@@ -21,3 +21,7 @@ vars:
     # Use to add more field to the opportunity enhanced table. 
     # Note these columns must be present in the downstream account table or user table
     opportunity_enhanced_pass_through_columns: []
+
+clean-targets:
+    - target
+    - dbt_modules

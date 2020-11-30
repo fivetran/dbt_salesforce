@@ -6,11 +6,11 @@ profile: 'integration_tests'
 
 vars:
   salesforce:
-      account: "{{ ref('account_data') }}"
-      opportunity: "{{ ref('opportunity_data') }}"
-      user: "{{ ref('user_data') }}"
-      user_role: "{{ ref('user_role_data') }}"
-      salesforce_schema: salesforce_integration_tests
+    account: "{{ ref('stg_salesforce__account') }}"
+    opportunity: "{{ ref('stg_salesforce__opportunity') }}"
+    user: "{{ ref('stg_salesforce__user') }}"
+    user_role: "{{ ref('stg_salesforce__user_role') }}"
+    salesforce_schema: salesforce_integration_tests
 
 seeds:
   salesforce_integration_tests:
@@ -43,3 +43,7 @@ seeds:
         offline_trial_expiration_date: timestamp
         latitude: float
         longitude: float
+
+clean-targets:
+    - target
+    - dbt_modules
