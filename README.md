@@ -10,10 +10,10 @@ The primary outputs of this package are described below. Staging and intermediat
 
 **model**|**description**
 -----|-----
-salesforce\_manager\_performance|Each record represents a manager, enriched with data about their team's pipeline, bookings, loses, and win percentages.
-salesforce\_owner\_performance|Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, loses, and win percentages.
-salesforce\_sales\_snapshot|A single row snapshot that provides various metrics about your sales funnel.
-salesforce\_opportunity\_enhanced|Each record represents an opportunity, enriched with related data about the account and opportunity owner.
+salesforce\_\_manager\_performance|Each record represents a manager, enriched with data about their team's pipeline, bookings, loses, and win percentages.
+salesforce\_\_owner\_performance|Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, loses, and win percentages.
+salesforce\_\_sales\_snapshot|A single row snapshot that provides various metrics about your sales funnel.
+salesforce\_\_opportunity\_enhanced|Each record represents an opportunity, enriched with related data about the account and opportunity owner.
 
 
 ## Installation Instructions
