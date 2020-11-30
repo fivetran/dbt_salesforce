@@ -1,12 +1,27 @@
 config-version: 2
 
 name: 'salesforce'
-version: '0.0.1'
+version: '0.3.0'
 
 require-dbt-version: [">=0.18.0", "<0.19.0"]
 
 models:
-    salesforce:
-        materialized: table
-        intermediate:
-            materialized: ephemeral
+  salesforce:
+    materialized: table
+    intermediate:
+      materialized: ephemeral
+
+vars:
+  salesforce:
+    account: "{{ ref('stg_salesforce__account') }}"
+    opportunity: "{{ ref('stg_salesforce__opportunity') }}"
+    user: "{{ ref('stg_salesforce__user') }}"
+    user_role: "{{ ref('stg_salesforce__user_role') }}"
+    
+    # Use to add more field to the opportunity enhanced table. 
+    # Note these columns must be present in the downstream account table or user table
+    opportunity_enhanced_pass_through_columns: []
+
+clean-targets:
+    - target
+    - dbt_modules

@@ -1,26 +1,26 @@
 with opportunity_aggregation_by_owner as (
     
     select *
-    from {{ ref('opportunity_aggregation_by_owner') }}
+    from {{ ref('salesforce__opportunity_aggregation_by_owner') }}
   
 ), salesforce_user as (
 
     select *
-    from {{ ref('stg_salesforce_user') }}
+    from {{ var('user') }}
   
 ), user_role as (
 
     select *
-    from {{ ref('stg_salesforce_user_role') }}
+    from {{ var('user_role') }}
   
 )
 
 select 
   coalesce(manager.user_id, 'No Manager Assigned') as manager_id,  
-  coalesce(manager.name, 'No Manager Assigned') as manager_name,
+  coalesce(manager.user_name, 'No Manager Assigned') as manager_name,
   manager.city as manager_city,
   manager.state as manager_state,
-  user_role.role_name as manager_position,
+  user_role.user_role_name as manager_position,
   count(distinct owner_id) as number_of_direct_reports,
   coalesce(sum(bookings_amount_closed_this_month), 0) as bookings_amount_closed_this_month,
   coalesce(sum(bookings_amount_closed_this_quarter), 0) as bookings_amount_closed_this_quarter,
@@ -56,7 +56,12 @@ select
             else 0 end, 2) as total_win_percent
 
 from opportunity_aggregation_by_owner
-left join salesforce_user as manager on manager.user_id = opportunity_aggregation_by_owner.manager_id
-left join user_role on user_role.user_role_id = manager.user_role_id
+
+left join salesforce_user as manager 
+  on manager.user_id = opportunity_aggregation_by_owner.manager_id
+left join user_role 
+  on user_role.user_role_id = manager.user_role_id
+
 group by 1, 2, 3, 4, 5
+
 having count(distinct owner_id) > 0

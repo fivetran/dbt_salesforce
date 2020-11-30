@@ -1,4 +1,4 @@
-# Salesforce 
+# Salesforce ([docs](https://dbt-salesforce.netlify.app/)) 
 
 This package models Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce). It uses data in the format described by [this ERD](https://docs.google.com/presentation/d/1fB6aCiX_C1lieJf55TbS2v1yv9sp-AHNNAh2x7jnJ48/edit#slide=id.g3cb9b617d1_0_237).
 
@@ -10,10 +10,10 @@ The primary outputs of this package are described below. Staging and intermediat
 
 **model**|**description**
 -----|-----
-salesforce\_manager\_performance|Each record represents a manager, enriched with data about their team's pipeline, bookings, loses, and win percentages.
-salesforce\_owner\_performance|Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, loses, and win percentages.
-salesforce\_sales\_snapshot|A single row snapshot that provides various metrics about your sales funnel.
-salesforce\_opportunity\_enhanced|Each record represents an opportunity, enriched with related data about the account and opportunity owner.
+salesforce\_\_manager\_performance|Each record represents a manager, enriched with data about their team's pipeline, bookings, loses, and win percentages.
+salesforce\_\_owner\_performance|Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, loses, and win percentages.
+salesforce\_\_sales\_snapshot|A single row snapshot that provides various metrics about your sales funnel.
+salesforce\_\_opportunity\_enhanced|Each record represents an opportunity, enriched with related data about the account and opportunity owner.
 
 
 ## Installation Instructions
@@ -33,18 +33,42 @@ vars:
     salesforce_database: your_schema_name
 ```
 
+This package allows users to add additional columns to the opportunity enhanced table. Columns passed through must be present in the downstream source account table or user table. If you want to include a column from the user table, you must specify if you want it to be a field relate to the opportunity_manager or opportunity_owner.
+
+```yml
+# dbt_project.yml
+
+...
+vars:
+  salesforce:
+    opportunity_enhanced_pass_through_columns: [account_custom_field_1, account_custom_field_2, opportunity_manager.user_custom_column]
+  salesforce_source:
+    account_pass_through_columns: [account_custom_field_1, account_custom_field_2]
+    user_pass_through_columns: [user_custom_column]
+```
+
 For additional configurations for the source models, visit the [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source).
+
 
 ## Contributions
 
 Additional contributions to this package are very welcome! Please create issues
-or open PRs against `master`. Check out [this post](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657) 
+or open PRs against `master`. Check out 
+[this post](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657) 
 on the best workflow for contributing to a package.
+
+
+## Database support
+This package has been tested on BigQuery, Snowflake and Redshift.
+
+Coming soon -- compatibility with Spark
 
 ## Resources:
 - Provide [feedback](https://www.surveymonkey.com/r/DQ7K7WW) on our existing dbt packages or what you'd like to see next
+- Have questions, feedback, or need help? Book a time during our office hours [here](https://calendly.com/fivetran-solutions-team/fivetran-solutions-team-office-hours) or email us at solutions@fivetran.com
 - Find all of Fivetran's pre-built dbt packages in our [dbt hub](https://hub.getdbt.com/fivetran/)
-- Learn more about Fivetran [in the Fivetran docs](https://fivetran.com/docs)
+- Learn how to orchestrate dbt transformations with Fivetran [here](https://fivetran.com/docs/transformations/dbt)
+- Learn more about Fivetran overall [in our docs](https://fivetran.com/docs)
 - Check out [Fivetran's blog](https://fivetran.com/blog)
 - Learn more about dbt [in the dbt docs](https://docs.getdbt.com/docs/introduction)
 - Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
