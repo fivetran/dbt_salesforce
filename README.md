@@ -29,8 +29,8 @@ By default, this package looks for your Salesforce data in the `salesforce` sche
 config-version: 2
 
 vars:
-    salesforce_schema: your_database_name
-    salesforce_database: your_schema_name
+    salesforce_schema: your_schema_name
+    salesforce_database: your_database_name
 ```
 
 This package allows users to add additional columns to the opportunity enhanced table. Columns passed through must be present in the downstream source account table or user table. If you want to include a column from the user table, you must specify if you want it to be a field relate to the opportunity_manager or opportunity_owner.
@@ -60,8 +60,6 @@ on the best workflow for contributing to a package.
 
 ## Database support
 This package has been tested on BigQuery, Snowflake and Redshift.
-
-Coming soon -- compatibility with Spark
 
 ## Resources:
 - Provide [feedback](https://www.surveymonkey.com/r/DQ7K7WW) on our existing dbt packages or what you'd like to see next
