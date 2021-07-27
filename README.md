@@ -1,3 +1,4 @@
+[![Apache License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) ![dbt logo and version](https://img.shields.io/static/v1?logo=dbt&label=dbt-version&message=0.20.x&color=orange)
 # Salesforce ([docs](https://dbt-salesforce.netlify.app/)) 
 
 This package models Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce). It uses data in the format described by [this ERD](https://docs.google.com/presentation/d/1fB6aCiX_C1lieJf55TbS2v1yv9sp-AHNNAh2x7jnJ48/edit#slide=id.g3cb9b617d1_0_237).
@@ -18,6 +19,14 @@ salesforce\_\_opportunity\_enhanced|Each record represents an opportunity, enric
 
 ## Installation Instructions
 Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+
+Include in your `packages.yml`
+
+```yaml
+packages:
+  - package: fivetran/salesforce
+    version: [">=0.4.0", "<0.5.0"]
+```
 
 ## Configuration
 By default, this package looks for your Salesforce data in the `salesforce` schema of your [target database](https://docs.getdbt.com/docs/running-a-dbt-project/using-the-command-line-interface/configure-your-profile). If this is not where your Salesforce data is, add the following configuration to your `dbt_project.yml` file:
