@@ -1,7 +1,7 @@
 config-version: 2
 name: 'salesforce'
-version: '0.4.0'
-require-dbt-version: [">=0.20.0"]
+version: '0.5.0'
+require-dbt-version: [">=1.0.0", "<2.0.0"]
 models:
   salesforce:
     materialized: table
@@ -17,3 +17,4 @@ vars:
 clean-targets:
 - target
 - dbt_modules
+- dbt_packages
