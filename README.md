@@ -49,14 +49,23 @@ This package allows users to add additional columns to the opportunity enhanced 
 
 ...
 vars:
-  salesforce:
-    opportunity_enhanced_pass_through_columns: [account_custom_field_1, account_custom_field_2, opportunity_manager.user_custom_column]
-  salesforce_source:
-    account_pass_through_columns: [account_custom_field_1, account_custom_field_2]
-    user_pass_through_columns: [user_custom_column]
+  opportunity_enhanced_pass_through_columns: [account_custom_field_1, account_custom_field_2, opportunity_manager.user_custom_column]
+  account_pass_through_columns: [account_custom_field_1, account_custom_field_2]
+  user_pass_through_columns: [user_custom_column]
 ```
 
-For additional configurations for the source models, visit the [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source).
+### Salesforce History Mode
+If you have Salesforce [History Mode](https://fivetran.com/docs/getting-started/feature/history-mode) enabled for your connector, the source tables will include all historical records. This package is designed to deal with non-historical data. As such, if you have History Mode enabled you will want to set the desired `using_[table]_history_mode_active_records` variable(s) as `true` to filter for only active records. These variables are disabled by default; however, you may add the below variable configuration within your `dbt_project.yml` file to enable the feature.
+```yml
+# dbt_project.yml
+
+...
+vars:
+  using_account_history_mode_active_records: true      # false by default. Only use if you have history mode enabled.
+  using_opportunity_history_mode_active_records: true  # false by default. Only use if you have history mode enabled.
+  using_user_role_history_mode_active_records: true    # false by default. Only use if you have history mode enabled.
+  using_user_history_mode_active_records: true         # false by default. Only use if you have history mode enabled.
+```
 
 
 ## Contributions
