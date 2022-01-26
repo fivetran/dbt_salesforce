@@ -33,6 +33,7 @@ jobs:
             cd integration_tests
             dbt deps
             dbt seed --target redshift --full-refresh
+            dbt run --vars '{salesforce__user_role_enabled: false} --target redshift --full-refresh
             dbt run --target redshift --full-refresh
             dbt test --target redshift
       - run:
@@ -43,6 +44,7 @@ jobs:
             cd integration_tests
             dbt deps
             dbt seed --target snowflake --full-refresh
+            dbt run --vars '{salesforce__user_role_enabled: false} --target snowflake --full-refresh
             dbt run --target snowflake --full-refresh
             dbt test --target snowflake
       - run:
@@ -56,6 +58,7 @@ jobs:
             cd integration_tests
             dbt deps
             dbt seed --target bigquery --full-refresh
+            dbt run --vars '{salesforce__user_role_enabled: false} --target bigquery --full-refresh
             dbt run --target bigquery --full-refresh
             dbt test --target bigquery
       - save_cache:
