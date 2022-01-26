@@ -71,8 +71,12 @@ left join salesforce_user as manager
 -- If using user_role table, the following will be included, otherwise it will not.
 {% if var('salesforce__user_role_enabled', True) %}
 left join user_role using (user_role_id) 
-{% endif %}
 
 group by 1, 2, 3, 4, 5
+
+{% else %}
+group by 1, 2, 3, 4
+
+{% endif %}
 
 having count(distinct owner_id) > 0
