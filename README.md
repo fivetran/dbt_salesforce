@@ -67,6 +67,22 @@ vars:
   using_user_history_mode_active_records: true         # false by default. Only use if you have history mode enabled.
 ```
 
+### Disabling Models
+Your connector may not be syncing all tabes that this package references. This might be because you are excluding those tables. If you are not using those tables, you can disable the corresponding functionality in the package by specifying the variable in your dbt_project.yml. By default, all packages are assumed to be true. You only have to add variables for tables you want to disable, like so:
+
+The `salesforce__user_role_enabled` variable below refers to the `user_role` table. 
+
+```yml
+# dbt_project.yml
+
+...
+config-version: 2
+
+vars:
+  salesforce__user_role_enabled: false # Disable if you do not have the user_role table
+
+```
+The corresponding metrics from the disabled tables will not populate in downstream models.
 
 ## Contributions
 
