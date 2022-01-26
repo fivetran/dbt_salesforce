@@ -7,12 +7,15 @@ with opportunity_aggregation_by_owner as (
 
     select *
     from {{ var('user') }}
-  
+
+-- If using user_role table, the following will be included, otherwise it will not.
+{% if var('salesforce__user_role_enabled', True) %}
 ), user_role as (
 
     select *
     from {{ var('user_role') }}
-  
+{% endif %}
+
 )
 
 select 
@@ -20,7 +23,12 @@ select
   coalesce(manager.user_name, 'No Manager Assigned') as manager_name,
   manager.city as manager_city,
   manager.state as manager_state,
-  user_role.user_role_name as manager_position,
+
+  -- If using user_role table, the following will be included, otherwise it will not.
+  {% if var('salesforce__user_role_enabled', True) %} 
+  user_role.user_role_name as manager_position, 
+  {% endif %}
+
   count(distinct owner_id) as number_of_direct_reports,
   coalesce(sum(bookings_amount_closed_this_month), 0) as bookings_amount_closed_this_month,
   coalesce(sum(bookings_amount_closed_this_quarter), 0) as bookings_amount_closed_this_quarter,
@@ -59,8 +67,11 @@ from opportunity_aggregation_by_owner
 
 left join salesforce_user as manager 
   on manager.user_id = opportunity_aggregation_by_owner.manager_id
-left join user_role 
-  on user_role.user_role_id = manager.user_role_id
+
+-- If using user_role table, the following will be included, otherwise it will not.
+{% if var('salesforce__user_role_enabled', True) %}
+left join user_role using (user_role_id) 
+{% endif %}
 
 group by 1, 2, 3, 4, 5
 

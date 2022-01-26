@@ -14,6 +14,11 @@ vars:
     user: "{{ ref('stg_salesforce__user') }}"
     user_role: "{{ ref('stg_salesforce__user_role') }}"
     opportunity_enhanced_pass_through_columns: []
+
+    # Variable for whether you are using the user_role table (default is set to True)
+    salesforce__user_role_enabled: true
+
+    
 clean-targets:
 - target
 - dbt_modules
