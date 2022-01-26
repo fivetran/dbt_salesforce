@@ -49,14 +49,23 @@ This package allows users to add additional columns to the opportunity enhanced 
 
 ...
 vars:
-  salesforce:
-    opportunity_enhanced_pass_through_columns: [account_custom_field_1, account_custom_field_2, opportunity_manager.user_custom_column]
-  salesforce_source:
-    account_pass_through_columns: [account_custom_field_1, account_custom_field_2]
-    user_pass_through_columns: [user_custom_column]
+  opportunity_enhanced_pass_through_columns: [account_custom_field_1, account_custom_field_2, opportunity_manager.user_custom_column]
+  account_pass_through_columns: [account_custom_field_1, account_custom_field_2]
+  user_pass_through_columns: [user_custom_column]
 ```
 
-For additional configurations for the source models, visit the [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source).
+### Salesforce History Mode
+If you have Salesforce [History Mode](https://fivetran.com/docs/getting-started/feature/history-mode) enabled for your connector, the source tables will include all historical records. This package is designed to deal with non-historical data. As such, if you have History Mode enabled you will want to set the desired `using_[table]_history_mode_active_records` variable(s) as `true` to filter for only active records. These variables are disabled by default; however, you may add the below variable configuration within your `dbt_project.yml` file to enable the feature.
+```yml
+# dbt_project.yml
+
+...
+vars:
+  using_account_history_mode_active_records: true      # false by default. Only use if you have history mode enabled.
+  using_opportunity_history_mode_active_records: true  # false by default. Only use if you have history mode enabled.
+  using_user_role_history_mode_active_records: true    # false by default. Only use if you have history mode enabled.
+  using_user_history_mode_active_records: true         # false by default. Only use if you have history mode enabled.
+```
 
 ### Disabling Models
 Your connector may not be syncing all tabes that this package references. This might be because you are excluding those tables. If you are not using those tables, you can disable the corresponding functionality in the package by specifying the variable in your dbt_project.yml. By default, all packages are assumed to be true. You only have to add variables for tables you want to disable, like so:
@@ -84,7 +93,17 @@ on the best workflow for contributing to a package.
 
 
 ## Database support
-This package has been tested on BigQuery, Snowflake and Redshift.
+This package has been tested on BigQuery, Snowflake, Redshift, Postgres, and Databricks.
+
+### Databricks Dispatch Configuration
+dbt `v0.20.0` introduced a new project-level dispatch configuration that enables an "override" setting for all dispatched macros. If you are using a Databricks destination with this package you will need to add the below (or a variation of the below) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
+```yml
+# dbt_project.yml
+
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['spark_utils', 'dbt_utils']
+```
 
 ## Resources:
 - Provide [feedback](https://www.surveymonkey.com/r/DQ7K7WW) on our existing dbt packages or what you'd like to see next

@@ -1,4 +1,6 @@
 # dbt_salesforce v0.5.1
+## Features
+- Support for Databricks compatibility! ([#24](https://github.com/fivetran/dbt_salesforce/pull/24))
 - Added feature to disable `user_role` table if not being synced. This will build the models while ignoring metrics depending on the `user_role` table.
 
 # dbt_salesforce v0.5.0
