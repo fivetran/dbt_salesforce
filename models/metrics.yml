@@ -1,0 +1,32 @@
+version: 2
+
+metrics:
+  - name: new_opportunities
+    label: New Opportunities
+    model: ref('salesforce__opportunity_enhanced')
+    description: The number of new opportunities created in Salesforce
+
+    type: count
+
+    timestamp: created_date
+    time_grains: [day, week, month]
+
+    dimensions: 
+      - stage_name
+      - type
+      - lead_source
+      - account_name
+      - account_type
+      - opportunity_owner_name
+      - opportunity_manager_name
+      - opportunity_manager_state
+      - status
+
+    filters:
+      # TODO: Confirm this syntax is correct. Operator isn't in the docs, but an error is raised if its not present.
+      - field: is_deleted
+        value: "false"
+        operator: "is"
+
+    meta:
+      is_fivetran_metric: true
