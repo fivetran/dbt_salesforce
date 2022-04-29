@@ -1,3 +1,6 @@
+# dbt_salesforce v0.6.0
+## Features
+- Updating package structure to align with most recent standards 
 # dbt_salesforce v0.5.1
 ## Features
 - Support for Databricks compatibility! ([#24](https://github.com/fivetran/dbt_salesforce/pull/24))
