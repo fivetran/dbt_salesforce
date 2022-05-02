@@ -8,10 +8,10 @@ vars:
   salesforce_schema: salesforce_integration_tests
 
   salesforce_source:
-    salesforce__account_identifier: "account"
-    salesforce__opportunity_identifier: "opportunity"
-    salesforce__user_role_identifier: "user_role"
-    salesforce__user_identifier: "user"
+    salesforce__account_identifier: "account_data"
+    salesforce__opportunity_identifier: "opportunity_data"
+    salesforce__user_role_identifier: "user_role_data"
+    salesforce__user_identifier: "user_data"
 
 dispatch:
   - macro_namespace: dbt_utils
