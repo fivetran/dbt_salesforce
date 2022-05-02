@@ -9,8 +9,8 @@ salesforce_user as (
     select *
     from {{ var('user') }}
 
--- If using user_role table, the following will be included, otherwise it will not.
-{% if var('salesforce__user_role_enabled', True) %}
+    -- If using user_role table, the following will be included, otherwise it will not.
+    {% if var('salesforce__user_role_enabled', True) %}
 
 ), 
 
