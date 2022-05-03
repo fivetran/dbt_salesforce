@@ -4,21 +4,19 @@ with opportunity_aggregation_by_owner as (
     from {{ ref('salesforce__opportunity_aggregation_by_owner') }}
 ), 
 
-salesforce_user as (
-
-    select *
-    from {{ var('user') }}
-
-    -- If using user_role table, the following will be included, otherwise it will not.
-    {% if var('salesforce__user_role_enabled', True) %}
-
-), 
-
+-- If using user_role table, the following will be included, otherwise it will not.
+{% if var('salesforce__user_role_enabled', True) %}
 user_role as (
 
     select *
     from {{ var('user_role') }}
+),
 {% endif %}
+
+salesforce_user as (
+
+    select *
+    from {{ var('user') }}
 
 )
 
@@ -57,18 +55,23 @@ select
     coalesce(sum(total_pipeline_amount), 0) as total_pipeline_amount,
     coalesce(sum(total_pipeline_forecast_amount), 0) as total_pipeline_forecast_amount,
     coalesce(max(largest_deal_in_pipeline), 0) as largest_deal_in_pipeline,
-    round(case when sum(bookings_amount_closed_this_month + lost_amount_this_month) > 0 then 
-              sum(bookings_amount_closed_this_month) / sum(bookings_amount_closed_this_month + lost_amount_this_month) * 100
-              else 0 end, 2) as win_percent_this_month,
-    round(case when sum(bookings_amount_closed_this_quarter + lost_amount_this_quarter) > 0 then
-              sum(bookings_amount_closed_this_quarter) / sum(bookings_amount_closed_this_quarter + lost_amount_this_quarter) * 100
-              else 0 end, 2) as win_percent_this_quarter,
-    round(case when sum(total_bookings_amount + total_lost_amount) > 0 then 
-              sum(total_bookings_amount) / sum(total_bookings_amount + total_lost_amount) * 100
-              else 0 end, 2) as total_win_percent
+    round(case 
+        when sum(bookings_amount_closed_this_month + lost_amount_this_month) > 0 then 
+        sum(bookings_amount_closed_this_month) / sum(bookings_amount_closed_this_month + lost_amount_this_month) * 100
+        else 0 
+    end, 2) as win_percent_this_month,
+    round(case 
+        when sum(bookings_amount_closed_this_quarter + lost_amount_this_quarter) > 0 then
+        sum(bookings_amount_closed_this_quarter) / sum(bookings_amount_closed_this_quarter + lost_amount_this_quarter) * 100
+        else 0 
+    end, 2) as win_percent_this_quarter,
+    round(case 
+        when sum(total_bookings_amount + total_lost_amount) > 0 then 
+        sum(total_bookings_amount) / sum(total_bookings_amount + total_lost_amount) * 100
+        else 0 
+    end, 2) as total_win_percent
 
 from opportunity_aggregation_by_owner
-
 left join salesforce_user as manager 
     on manager.user_id = opportunity_aggregation_by_owner.manager_id
 

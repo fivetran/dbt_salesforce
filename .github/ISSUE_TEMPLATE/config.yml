@@ -1,10 +1,7 @@
 contact_links:
-  - name: Provide feedback to our dbt package team
+  - name: Provide feedback or request a new package to our dbt package team
     url: https://www.surveymonkey.com/r/DQ7K7WW
     about: Fill out our survey form to provide valuable feedback to the Fivetran team developing and maintaining the dbt packages.
-  - name: Request a new dbt package
-    url: https://www.surveymonkey.com/r/DQ7K7WW
-    about: The dbt package team at Fivetran is always taking requests for future dbt packages. Request one that you would like using our feedback form!
   - name: Ask a question during our office hours
     url: https://calendly.com/fivetran-solutions-team/fivetran-solutions-team-office-hours
     about: Schedule time during the external office hours block with the Fivetran Analytics Engineering team for support

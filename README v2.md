@@ -18,18 +18,21 @@
 # 📣 What does this dbt package do?
 - Produces modeled tables that leverage Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema) and builds off the output of our [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source).
 
-- This package:
-  - Enables enable users to better understand the performance of your opportunities. You can easily understand what is going on in your sales funnel and dig into how the members of your sales team are performing. 
-  - Generates a comprehensive data dictionary of your source and modeled Salesforce data via the [dbt docs site](https://fivetran.github.io/dbt_salesforce/)
+- This package enables users to:
+  - Understand the performance of your opportunities
+  - Understand what is going on in your sales funnel and 
+  - Drill into how the members of your sales team are performing
 
-Refer to the table below for a detailed view of all models materialized by default within this package. Additionally, check out our [docs site](https://fivetran.github.io/dbt_salesforce/#!/overview?g_v=1) for more details about these models. 
+This package also generates a comprehensive data dictionary of your source and modeled Salesforce data via the [dbt docs site](https://fivetran.github.io/dbt_salesforce/)
+You can also refer to the table below for a detailed view of all models materialized by default within this package.
 
-**model**|**description**
+|**model**|**description**
 -----|-----
-salesforce\_\_manager\_performance|Each record represents a manager, enriched with data about their team's pipeline, bookings, losses, and win percentages.
-salesforce\_\_owner\_performance|Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, losses, and win percentages.
-salesforce\_\_sales\_snapshot|A single row snapshot that provides various metrics about your sales funnel.
-salesforce\_\_opportunity\_enhanced|Each record represents an opportunity, enriched with related data about the account and opportunity owner.
+| [salesforce_manager_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__manager_performance)     |Each record represents a manager, enriched with data about their team's pipeline, bookings, losses, and win percentages.
+| [salesforce_owner_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__owner_performance)         |Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, losses, and win percentages.
+| [salesforce_sales_snapshot](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__sales_snapshot)               |A single row snapshot that provides various metrics about your sales funnel.
+| [salesforce__opportunity_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_enhanced)  |Each record represents an opportunity, enriched with related data about the account and opportunity owner.
+
 # 🤔 Who is the target user of this dbt package?
 - You use Fivetran's [Salesforce connector](https://fivetran.com/docs/applications/salesforce)
 - You use dbt
@@ -40,6 +43,15 @@ To effectively install this package and leverage the pre-made models, you will f
 You will need to ensure you have the following before leveraging the dbt package.
 - **Connector**: Have the Fivetran Salesforce connector syncing data into your warehouse. 
 - **Database support**: This package has been tested on **BigQuery**, **Snowflake**, **Redshift**, **Spark**, and **Postgres**. Ensure you are using one of these supported databases.
+  - If you are using Databricks you'll need to add the below to your `dbt_project.yml`. 
+
+```yml
+# dbt_project.yml
+
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['spark_utils', 'dbt_utils']
+```
 - **dbt Version**: This dbt package requires you have a functional dbt project that utilizes a dbt version within the respective range `>=1.0.0, <2.0.0`.
 ## Step 2: Installing the Package
 Include the following salesforce_source package version in your `packages.yml`
@@ -47,7 +59,7 @@ Include the following salesforce_source package version in your `packages.yml`
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: [">=0.5.0", "<0.6.0"]
+    version: [">=0.6.0", "<0.7.0"]
 ```
 ## Step 3: Configure Your Variables
 ### Database and Schema Variables
@@ -78,7 +90,7 @@ vars:
 ```
 
 ### Salesforce History Mode
-If you have Salesforce [History Mode](https://fivetran.com/docs/getting-started/feature/history-mode) enabled for your connector, the source tables will include all historical records. This package is designed to deal with non-historical data. As such, if you have History Mode enabled you will want to set the desired `using_[table]_history_mode_active_records` variable(s) as `true` to filter for only active records. These variables are disabled by default; however, you may add the below variable configuration within your `dbt_project.yml` file to enable the feature.
+If you have Salesforce [History Mode](https://fivetran.com/docs/getting-started/feature/history-mode) enabled for your connector, you will want to add and set the desired `using_[table]_history_mode_active_records` variable(s) as `true` to filter for only active records as the package is designed for non-historical data. These variables are disabled by default. 
 ```yml
 # dbt_project.yml
 
@@ -91,9 +103,7 @@ vars:
 ```
 
 ### Disabling Models
-Your connector may not be syncing all tabes that this package references. This might be because you are excluding those tables. If you are not using those tables, you can disable the corresponding functionality in the package by specifying the variable in your dbt_project.yml. By default, all packages are assumed to be true. You only have to add variables for tables you want to disable, like so:
-
-The `salesforce__user_role_enabled` variable below refers to the `user_role` table. 
+Your connector may not be syncing all tabes that this package references. This might be because you are excluding those tables. If you are not using those tables, you can disable the corresponding functionality in the package by specifying the variable in your `dbt_project.yml`. The metrics from the disabled tables will not populate in downstream models. By default, all packages are assumed to be true. You only have to add variables for tables you want to disable, like so:
 
 ```yml
 # dbt_project.yml
@@ -105,7 +115,6 @@ vars:
   salesforce__user_role_enabled: false # Disable if you do not have the user_role table
 
 ```
-The corresponding metrics from the disabled tables will not populate in downstream models.
 ## Step 5: Finish Setup
 Your dbt project is now setup to successfully run the dbt package models! You can now execute `dbt run` and `dbt test` to have the models materialize in your warehouse and execute the data integrity tests applied within the package.
 
@@ -136,9 +145,6 @@ We highly encourage and welcome contributions to this package. Check out [this p
 - If you encounter any questions or want to reach out for help, please refer to the [GitHub Issue](https://github.com/fivetran/dbt_salesforce/issues/new/choose) section to find the right avenue of support for you.
 - If you would like to provide feedback to the dbt package team at Fivetran, or would like to request a future dbt package to be developed, then feel free to fill out our [Feedback Form](https://www.surveymonkey.com/r/DQ7K7WW).
 - Have questions or want to just say hi? Book a time during our office hours [here](https://calendly.com/fivetran-solutions-team/fivetran-solutions-team-office-hours) or send us an email at solutions@fivetran.com.
-
-## Database support
-This package has been tested on BigQuery, Snowflake, Redshift, Postgres, Spark, and Databricks.
 
 ### Databricks Dispatch Configuration
 dbt `v0.20.0` introduced a new project-level dispatch configuration that enables an "override" setting for all dispatched macros. If you are using a Databricks destination with this package you will need to add the below (or a variation of the below) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.

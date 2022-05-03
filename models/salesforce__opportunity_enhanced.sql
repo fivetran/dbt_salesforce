@@ -51,9 +51,8 @@ add_fields as (
 
         --The below script allows for pass through columns.
 
-        {% if var('opportunity_enhanced_pass_through_columns') %}
-        ,
-        {{ var('opportunity_enhanced_pass_through_columns') | join (", ")}}
+        {% if var('opportunity_enhanced_pass_through_columns',[]) != [] %}
+        , {{ var('opportunity_enhanced_pass_through_columns') | join (", ")}}
 
         {% endif %}
 
