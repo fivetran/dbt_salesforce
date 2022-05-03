@@ -16,7 +16,7 @@
 # Salesforce Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_salesforce/))
 
 # 📣 What does this dbt package do?
-- Produces modeled tables that leverage Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://docs.google.com/presentation/d/1fB6aCiX_C1lieJf55TbS2v1yv9sp-AHNNAh2x7jnJ48/edit#slide=id.g3cb9b617d1_0_237) and builds off the output of our [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source).
+- Produces modeled tables that leverage Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema) and builds off the output of our [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source).
 
 - This package:
   - Enables enable users to better understand the performance of your opportunities. You can easily understand what is going on in your sales funnel and dig into how the members of your sales team are performing. 
