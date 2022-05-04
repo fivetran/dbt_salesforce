@@ -5,19 +5,12 @@ config-version: 2
 profile: 'integration_tests'
 
 vars:
-  salesforce:
-    account: "{{ ref('stg_salesforce__account') }}"
-    opportunity: "{{ ref('stg_salesforce__opportunity') }}"
-    user: "{{ ref('stg_salesforce__user') }}"
-    user_role: "{{ ref('stg_salesforce__user_role') }}"
-    salesforce_schema: salesforce_integration_tests
 
   salesforce_source:
-    salesforce_account_identifier: "{{ ref('account_data') }}"
-    salesforce_opportunity_identifier: "{{ ref('opportunity_data') }}"
-    salesforce_user_identifier: "{{ ref('user_data') }}"
-    salesforce_user_role_identifier: "{{ ref('user_role_data') }}"
-    salesforce_schema: salesforce_source_integration_tests
+    salesforce_account_identifier: "account_data"
+    salesforce_opportunity_identifier: "opportunity_data"
+    salesforce_user_identifier: "user_data"
+    salesforce_user_role_identifier: "user_role_data"
 
 dispatch:
   - macro_namespace: dbt_utils
