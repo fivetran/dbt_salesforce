@@ -42,7 +42,7 @@ integration_tests:
       pass: "{{ env_var('CI_POSTGRES_DBT_PASS') }}"
       dbname: "{{ env_var('CI_POSTGRES_DBT_DBNAME') }}"
       port: 5432
-      schema: salesforce_integration_tests
+      schema: salesforce_integration_tests_1
       threads: 8
     spark:
       type: spark
