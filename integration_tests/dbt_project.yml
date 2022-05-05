@@ -21,6 +21,7 @@ seeds:
   salesforce_integration_tests:
     +column_types:
       _fivetran_synced: timestamp
+      _fivetran_active: boolean
     account_data:
       +column_types:
         last_activity_date: timestamp
