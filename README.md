@@ -42,7 +42,7 @@ To effectively install this package and leverage the pre-made models, you will f
 ## Step 1: Pre-Requisites
 You will need to ensure you have the following before leveraging the dbt package.
 - **Connector**: Have the Fivetran Salesforce connector syncing data into your warehouse. 
-- **Database support**: This package has been tested on **BigQuery**, **Snowflake**, **Redshift**, **Spark**, and **Postgres**. Ensure you are using one of these supported databases.
+- **Database support**: This package has been tested on **BigQuery**, **Snowflake**, **Redshift**, **Databricks**, and **Postgres**. Ensure you are using one of these supported databases.
   - If you are using Databricks you'll need to add the below to your `dbt_project.yml`. 
 
 ```yml
@@ -76,7 +76,7 @@ vars:
     salesforce_schema: your_schema_name
     salesforce__<default_source_table_name>_identifier: your_table_name
 ```
-
+### Adding Passthrough Columns
 This package allows users to add additional columns to the opportunity enhanced table. Columns passed through must be present in the downstream source account table or user table. If you want to include a column from the user table, you must specify if you want it to be a field relate to the opportunity_manager or opportunity_owner.
 
 ```yml
@@ -100,8 +100,7 @@ vars:
   using_opportunity_history_mode_active_records: true  # false by default. Only use if you have history mode enabled.
   using_user_role_history_mode_active_records: true    # false by default. Only use if you have history mode enabled.
   using_user_history_mode_active_records: true         # false by default. Only use if you have history mode enabled.
-```
-
+```### Disabling Models
 ### Disabling Models
 Your connector may not be syncing all tabes that this package references. This might be because you are excluding those tables. If you are not using those tables, you can disable the corresponding functionality in the package by specifying the variable in your `dbt_project.yml`. The metrics from the disabled tables will not populate in downstream models. By default, all packages are assumed to be true. You only have to add variables for tables you want to disable, like so:
 
@@ -114,6 +113,15 @@ config-version: 2
 vars:
   salesforce__user_role_enabled: false # Disable if you do not have the user_role table
 
+```
+## Changing Source Tables
+Source tables are referenced using default names. In the event you wish to reference another table name, the `identifier` variable enables that flexibility. Add the following configuration to your root `dbt_project.yml` file to take advantage of this feature:
+```yml
+# dbt_project.yml
+...
+config-version: 2
+vars:
+    <package_name>__<default_source_table_name>_identifier: your_table_name
 ```
 ## Step 5: Finish Setup
 Your dbt project is now setup to successfully run the dbt package models! You can now execute `dbt run` and `dbt test` to have the models materialize in your warehouse and execute the data integrity tests applied within the package.
@@ -145,13 +153,3 @@ We highly encourage and welcome contributions to this package. Check out [this p
 - If you encounter any questions or want to reach out for help, please refer to the [GitHub Issue](https://github.com/fivetran/dbt_salesforce/issues/new/choose) section to find the right avenue of support for you.
 - If you would like to provide feedback to the dbt package team at Fivetran, or would like to request a future dbt package to be developed, then feel free to fill out our [Feedback Form](https://www.surveymonkey.com/r/DQ7K7WW).
 - Have questions or want to just say hi? Book a time during our office hours [here](https://calendly.com/fivetran-solutions-team/fivetran-solutions-team-office-hours) or send us an email at solutions@fivetran.com.
-
-### Databricks Dispatch Configuration
-dbt `v0.20.0` introduced a new project-level dispatch configuration that enables an "override" setting for all dispatched macros. If you are using a Databricks destination with this package you will need to add the below (or a variation of the below) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
-```yml
-# dbt_project.yml
-
-dispatch:
-  - macro_namespace: dbt_utils
-    search_order: ['spark_utils', 'dbt_utils']
-```
