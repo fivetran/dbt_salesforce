@@ -7,7 +7,7 @@ The main focus of this package is enable users to better understand the performa
 
 ## Models
 
-The primary outputs of this package are described below. Staging and intermediate models are used to create these output models.
+The primary outputs of this package are described below. Staging and intermediate models are used to create these output models. This package contains transformation models, designed to work simultaneously with staging models in our [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source).
 
 **model**|**description**
 -----|-----
