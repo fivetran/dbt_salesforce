@@ -17,6 +17,7 @@ Examples of good PR titles:
 
 ## To-do before merge
 Include any notes about things that need to happen before this PR is merged, e.g.:
+- [ ] Refresh GDS Data Source
 - [ ] Update dbt Cloud jobs
 - [ ] Update package repo PR #__
 - [ ] Ensure PR #__ is merged
