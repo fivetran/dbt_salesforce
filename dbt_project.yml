@@ -13,8 +13,27 @@ vars:
     opportunity: "{{ ref('stg_salesforce__opportunity') }}"
     user: "{{ ref('stg_salesforce__user') }}"
     user_role: "{{ ref('stg_salesforce__user_role') }}"
-    opportunity_enhanced_pass_through_columns: []
+    contact: "{{ ref('stg_salesforce__contact') }}"
+    lead: "{{ ref('stg_salesforce__lead') }}"
+    task: "{{ ref('stg_salesforce__task') }}"
+    event: "{{ ref('stg_salesforce__event') }}"
+    product_2: "{{ ref('stg_salesforce__product_2') }}"
+    order: "{{ ref('stg_salesforce__order') }}"
+    opportunity_line_item: "{{ ref('stg_salesforce__opportunity_line_item') }}"
 
+    # Salesforce pass through column variables
+    account_pass_through_columns: []
+    contact_pass_through_columns: []
+    event_pass_through_columns: []
+    lead_pass_through_columns: []
+    opportunity_pass_through_columns: []
+    opportunity_line_item_pass_through_columns: []
+    order_pass_through_columns: []
+    product_2_pass_through_columns: []
+    task_pass_through_columns: []
+    user_role_pass_through_columns: []
+    user_pass_through_columns: []
+    
     # Variable for whether you are using the user_role table (default is set to True)
     salesforce__user_role_enabled: true
 
