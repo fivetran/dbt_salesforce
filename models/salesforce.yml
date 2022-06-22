@@ -358,4 +358,9 @@ models:
         description: '{{ doc("win_percent_this_month") }}'
       - name: win_percent_this_quarter
         description: '{{ doc("win_percent_this_quarter") }}'
-     
+
+  - name: salesforce__contact_enhanced
+    description: complete
+    columns:
+      - name: complete
+        description: complete

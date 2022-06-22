@@ -8,6 +8,12 @@ account as (
 
     select *
     from {{ var('account') }}
+),
+
+user as (
+
+    select *
+    from {{ var('user') }}
 )
 
 select 
@@ -36,6 +42,7 @@ select
     account.billing_state_code,
     account.billing_street,
     account.description,
+    account.account_id,
     account.industry,
     account.is_deleted,
     account.last_activity_date,
@@ -47,8 +54,12 @@ select
     account.rating,
     account.record_type_id,
     account.type,
-    account.website
+    account.website,
+    user.user_name as owner_name,
+
 
 from contact
 left join account 
-    on contact.account_id = account.id
+    on contact.account_id = account.account_id
+left join user
+    on contact.owner_id = user.user_id
