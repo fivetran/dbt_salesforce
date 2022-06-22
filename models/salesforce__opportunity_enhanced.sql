@@ -4,7 +4,7 @@ with opportunity as (
     from {{ var('opportunity') }}
 ), 
 
-salesforce_user as (
+user as (
 
     select *
     from {{ var('user') }}  
@@ -77,9 +77,9 @@ add_fields as (
     from opportunity
     left join account 
         on opportunity.account_id = account.account_id
-    left join salesforce_user as opportunity_owner 
+    left join user as opportunity_owner 
         on opportunity.owner_id = opportunity_owner.user_id
-    left join salesforce_user as opportunity_manager 
+    left join user as opportunity_manager 
         on opportunity_owner.manager_id = opportunity_manager.user_id
     left join user_role 
         on opportunity_owner.user_id = user_role.user_role_id

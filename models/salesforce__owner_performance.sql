@@ -4,7 +4,7 @@ with opportunity_aggregation_by_owner as (
     from {{ ref('salesforce__opportunity_aggregation_by_owner') }}  
 ), 
 
-salesforce_user as (
+user as (
 
     select *
     from {{ var('user') }}
@@ -12,9 +12,9 @@ salesforce_user as (
 
 select 
     opportunity_aggregation_by_owner.*,
-    salesforce_user.user_name as owner_name,
-    salesforce_user.city as owner_city,
-    salesforce_user.state as owner_state,
+    user.user_name as owner_name,
+    user.city as owner_city,
+    user.state as owner_state,
     case 
         when (bookings_amount_closed_this_month + lost_amount_this_month) > 0 
             then bookings_amount_closed_this_month / (bookings_amount_closed_this_month + lost_amount_this_month) * 100
@@ -31,5 +31,5 @@ select
         else 0 
     end as total_win_percent
 from opportunity_aggregation_by_owner
-join salesforce_user 
-    on salesforce_user.user_id = opportunity_aggregation_by_owner.owner_id
+join user 
+    on user.user_id = opportunity_aggregation_by_owner.owner_id
