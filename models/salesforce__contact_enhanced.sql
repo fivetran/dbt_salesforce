@@ -10,7 +10,7 @@ account as (
     from {{ var('account') }}
 ),
 
-user as (
+salesforce_user as (
 
     select *
     from {{ var('user') }}
@@ -55,11 +55,11 @@ select
     account.record_type_id,
     account.type,
     account.website,
-    user.user_name as owner_name,
+    salesforce_user.user_name as owner_name,
 
 
 from contact
 left join account 
     on contact.account_id = account.account_id
-left join user
-    on contact.owner_id = user.user_id
+left join salesforce_user
+    on contact.owner_id = salesforce_user.user_id
