@@ -6,18 +6,33 @@ profile: 'integration_tests'
 
 vars:
 
+  salesforce:
+    account: "{{ ref('stg_salesforce__account') }}"
+    opportunity: "{{ ref('stg_salesforce__opportunity') }}"
+    user: "{{ ref('stg_salesforce__user') }}"
+    user_role: "{{ ref('stg_salesforce__user_role') }}"
+    contact: "{{ ref('stg_salesforce__contact') }}"
+    lead: "{{ ref('stg_salesforce__lead') }}"
+    task: "{{ ref('stg_salesforce__task') }}"
+    event: "{{ ref('stg_salesforce__event') }}"
+    product_2: "{{ ref('stg_salesforce__product_2') }}"
+    order: "{{ ref('stg_salesforce__order') }}"
+    opportunity_line_item: "{{ ref('stg_salesforce__opportunity_line_item') }}"
+    salesforce_schema: salesforce_integration_tests
+
   salesforce_source:
-    salesforce_account_identifier: "sf_account_data"
-    salesforce_opportunity_identifier: "sf_opportunity_data"
-    salesforce_user_identifier: "sf_user_data"
-    salesforce_user_role_identifier: "sf_user_role_data"
-    salesforce_contact_identifier: "sf_contact_data"
-    salesforce_lead_identifier: "sf_lead_data"
-    salesforce_task_identifier: "sf_task_data"
-    salesforce_event_identifier: "sf_event_data"
-    salesforce_product_2_identifier: "sf_product_2_data"
-    salesforce_order_identifier: "sf_order_data"
-    salesforce_opportunity_line_item_identifier: "sf_opportunity_line_item_data"
+    salesforce_account: "{{ ref('sf_account_data') }}"
+    salesforce_opportunity: "{{ ref('sf_opportunity_data') }}"
+    salesforce_user: "{{ ref('sf_user_data') }}"
+    salesforce_user_role: "{{ ref('sf_user_role_data') }}"
+    salesforce_contact: "{{ ref('sf_contact_data') }}"
+    salesforce_lead: "{{ ref('sf_lead_data') }}"
+    salesforce_task: "{{ ref('sf_task_data') }}"
+    salesforce_event: "{{ ref('sf_event_data') }}"
+    salesforce_product_2: "{{ ref('sf_product_2_data') }}"
+    salesforce_order: "{{ ref('sf_order_data') }}"
+    salesforce_opportunity_line_item: "{{ ref('sf_opportunity_line_item_data') }}"
+    salesforce_schema: salesforce_source_integration_tests_1
 
 seeds:
   salesforce_source_integration_tests:
