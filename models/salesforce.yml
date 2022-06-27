@@ -364,3 +364,9 @@ models:
     columns:
       - name: complete
         description: complete
+
+  - name: salesforce__daily_funnel
+    description: complete
+    columns:
+      - name: complete
+        description: complete
