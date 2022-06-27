@@ -11,7 +11,7 @@ vars:
     salesforce_opportunity_identifier: "opportunity_data"
     salesforce_user_identifier: "user_data"
     salesforce_user_role_identifier: "user_role_data"
-    salesforce_schema: salesforce_source_integration_tests_1
+    salesforce_schema: salesforce_integration_tests
 
 dispatch:
   - macro_namespace: dbt_utils
