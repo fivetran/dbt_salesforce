@@ -37,6 +37,7 @@ salesforce_lead as (
         converted_account_id,
         owner_id,
         {{ dbt_utils.date_trunc('day', 'created_date') }} as created_date,
+        {{ dbt_utils.date_trunc('day', 'converted_date') }} as converted_date,
         status
 
     from {{ var('lead') }}
@@ -63,7 +64,7 @@ account as (
     from {{ var('account') }}
 ),
 
-opportunity_open as (
+opportunity as (
 
     select 
         opportunity_id,
@@ -82,38 +83,23 @@ opportunity_open as (
 
 
 select
-    -- salesforce_lead.created_date,	
-    -- salesforce_lead.lead_id
-    -- ,
-    
-    -- opportunity.opportunity_id,
-    -- opportunity.stage_name
-    -- ,
-    -- count(distinct salesforce_converted_lead.converted_account_id) as converted_account_count,
-    -- count(task.task_id) as task_count,
-    -- count(salesforce_event.event_id) as event_count,
-    -- count(distinct(case when opportunity.is_won then opportunity.opportunity_id else null end)) as won_opportunity_count 
 
 
-    -- from salesforce_lead
-    -- left join salesforce_converted_lead
-    --     on salesforce_lead.created_date = salesforce_converted_lead.converted_date
-    -- left join task 
-    --     on salesforce_lead.created_date = task.activity_date
-    -- left join salesforce_event
-    --     on salesforce_lead.created_date = salesforce_event.activity_date
-    -- left join opportunity
-    --     on salesforce_lead.converted_account_id = opportunity.account_id
-        -- on salesforce_lead.created_date = opportunity.close_date -- concern is if this doesn't exactly equal the date the opportunity was won, need to figure that out
-
-
+    salesforce_lead.created_date as lead_created_date,
     salesforce_lead.lead_id,
-    salesforce_converted_lead.converted_account_id,
-    opportunity.opportunity_id 
+    salesforce_lead.converted_account_id,
+    salesforce_lead.converted_date as lead_converted_date,
+    opportunity.opportunity_id,
+    opportunity.created_date as opportunity_created_date,
+    task.task_id,
+    task.activity_date as task_activity_date,
+    salesforce_event.event_id,
+    salesforce_event.activity_date as event_activity_date
 
-    from salesforce_lead, salesforce_converted_lead,opportunity
-
-    where 
-    salesforce_lead.created_date = cast(current_date as {{ dbt_utils.type_timestamp() }}) 
-    and salesforce_converted_lead.converted_date = cast(current_date as {{ dbt_utils.type_timestamp() }}) 
-    and opportunity.created_date = cast(current_date as {{ dbt_utils.type_timestamp() }}) 
+    from salesforce_lead
+    left join opportunity
+        on salesforce_lead.converted_account_id = opportunity.account_id
+    left join task 
+        on salesforce_lead.converted_account_id = task.account_id
+    left join salesforce_event
+        on salesforce_lead.converted_account_id = salesforce_event.account_id
