@@ -81,9 +81,14 @@ add_fields as (
         on opportunity.owner_id = opportunity_owner.user_id
     left join salesforce_user as opportunity_manager 
         on opportunity_owner.manager_id = opportunity_manager.user_id
+
+    -- If using user_role table, the following will be included, otherwise it will not.
+    {% if var('salesforce__user_role_enabled', True) %}
     left join user_role 
         on opportunity_owner.user_id = user_role.user_role_id
-)
+
+    {% else %}
+    )
 
 select *
 from add_fields

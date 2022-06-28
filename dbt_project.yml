@@ -6,7 +6,7 @@ models:
   salesforce:
     materialized: table
     intermediate:
-      materialized: ephemeral
+      materialized: view
 vars:
   salesforce:
     account: "{{ ref('stg_salesforce__account') }}"
