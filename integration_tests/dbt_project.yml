@@ -7,17 +7,17 @@ profile: 'integration_tests'
 vars:
 
   salesforce_source:
-    salesforce_account: "{{ ref('sf_account_data') }}"
-    salesforce_opportunity: "{{ ref('sf_opportunity_data') }}"
-    salesforce_user: "{{ ref('sf_user_data') }}"
-    salesforce_user_role: "{{ ref('sf_user_role_data') }}"
-    salesforce_contact: "{{ ref('sf_contact_data') }}"
-    salesforce_lead: "{{ ref('sf_lead_data') }}"
-    salesforce_task: "{{ ref('sf_task_data') }}"
-    salesforce_event: "{{ ref('sf_event_data') }}"
-    salesforce_product_2: "{{ ref('sf_product_2_data') }}"
-    salesforce_order: "{{ ref('sf_order_data') }}"
-    salesforce_opportunity_line_item: "{{ ref('sf_opportunity_line_item_data') }}"
+    account: "{{ ref('sf_account_data') }}"
+    opportunity: "{{ ref('sf_opportunity_data') }}"
+    user: "{{ ref('sf_user_data') }}"
+    user_role: "{{ ref('sf_user_role_data') }}"
+    contact: "{{ ref('sf_contact_data') }}"
+    lead: "{{ ref('sf_lead_data') }}"
+    task: "{{ ref('sf_task_data') }}"
+    event: "{{ ref('sf_event_data') }}"
+    product_2: "{{ ref('sf_product_2_data') }}"
+    order: "{{ ref('sf_order_data') }}"
+    opportunity_line_item: "{{ ref('sf_opportunity_line_item_data') }}"
     salesforce_schema: salesforce_integration_tests_1
 
 seeds:
