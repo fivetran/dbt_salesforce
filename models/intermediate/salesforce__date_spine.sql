@@ -51,5 +51,8 @@ with spine as (
     }}
 )
 
-select *
+select 
+
+distinct(date_day)
+
 from spine
