@@ -1,75 +1,46 @@
-
--- for any given day, see what leads/accounts/opportunities are in the pipeline
 with date_spine as (
+    
     select 
         {{ dbt_utils.date_trunc('day', 'date_day') }} as date_day
-    
     from {{ ref('salesforce__date_spine') }}
-
 ),
 
 task as (
     
     select 
-        task_id,
-        account_id,
         {{ dbt_utils.date_trunc('day', 'activity_date') }} as activity_date,
-        completed_date_time,
-        is_closed,
-        is_deleted,
-        owner_id,
-        status,
-        type,
-        task_subtype
-    from  {{ var('task') }}
+        count(task_id) as tasks
+    from {{ var('task') }}
+    group by 1
 ), 
 
 salesforce_event as (
 
     select 
-        event_id,
-        account_id,
         {{ dbt_utils.date_trunc('day', 'activity_date') }} as activity_date,
-        created_date,
-        event_subtype,
-        owner_id,
-        type
+        count(event_id) as events
     from {{ var('event') }}  
+    group by 1
 ), 
 
 salesforce_lead as (
 
     select 
-        lead_id,
-        converted_account_id,
-        owner_id,
         {{ dbt_utils.date_trunc('day', 'created_date') }} as created_date,
-        {{ dbt_utils.date_trunc('day', 'converted_date') }} as converted_date,
-        status
-
+        count(lead_id) as leads_created
     from {{ var('lead') }}
+    group by 1
 ), 
 
 salesforce_converted_lead as (
 
     select 
-        lead_id,
-        converted_account_id,
-        owner_id,
         {{ dbt_utils.date_trunc('day', 'converted_date') }} as converted_date,
-        status
+        count(lead_id) as leads_converted
     from {{ var('lead') }}
     where is_converted is true
-
+    group by 1
 ), 
-
-account as (
-    select
-        account_id,
-        owner_id,
-        type
-    from {{ var('account') }}
-),
 
 opportunity as (
 
@@ -91,32 +62,44 @@ opportunity as (
             else 'Other'
         end as status
     from {{ var('opportunity') }}
+),
+
+opportunities_created as (
+    select
+        created_date,
+        count(opportunity_id) as opportunities_created
+    from opportunity
+    group by 1
+),
+
+opportunities_closed as (
+    select
+        close_date,
+        count(case when status = 'Won' then opportunity_id else null end) as won_opportunities,
+        count(case when status = 'Lost' then opportunity_id else null end) as lost_opportunities
+    from opportunity
+    group by 1
 )
 
-
-
 select
-
     date_spine.date_day,
-    case
-        when opportunity.status = 'Won' then count(distinct opportunity.opportunity_id) 
-        else 0 
-    end as won_opportunities,
-    case
-        when opportunity.status = 'Lost' then count(distinct opportunity.opportunity_id) 
-        else 0 
-    end as lost_opportunities,
-    count(distinct task.task_id) as tasks,
-    count(distinct salesforce_event.event_id) as events
-
-
-    from date_spine
-    left join opportunity
-        on date_spine.date_day = opportunity.close_date
-    left join task  
-        on date_spine.date_day = task.activity_date
-    left join salesforce_event
-        on date_spine.date_day = salesforce_event.activity_date
-
-    group by date_day, opportunity.status
-
+    salesforce_lead.leads_created,
+    salesforce_converted_lead.leads_converted,
+    task.tasks,
+    salesforce_event.events,
+    opportunities_created.opportunities_created,
+    opportunities_closed.won_opportunities,
+    opportunities_closed.lost_opportunities
+from date_spine
+left join salesforce_lead
+    on date_spine.date_day = salesforce_lead.created_date
+left join salesforce_converted_lead
+    on date_spine.date_day = salesforce_converted_lead.converted_date
+left join task
+    on date_spine.date_day = task.activity_date
+left join salesforce_event
+    on date_spine.date_day = salesforce_event.activity_date
+left join opportunities_created
+    on date_spine.date_day = opportunities_created.created_date
+left join opportunities_closed
+    on date_spine.date_day = opportunities_closed.close_date
