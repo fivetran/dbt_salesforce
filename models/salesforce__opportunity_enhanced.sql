@@ -87,7 +87,7 @@ add_fields as (
     left join user_role 
         on opportunity_owner.user_id = user_role.user_role_id
 
-    {% else %}
+    {% endif %}
     )
 
 select *
