@@ -1,4 +1,4 @@
-name: 'salesforce_integration_tests_1'
+name: 'salesforce_integration_tests'
 version: '1.0.0'
 config-version: 2
 
@@ -21,7 +21,7 @@ vars:
     salesforce_schema: salesforce_integration_tests_1
 
 seeds:
-  salesforce_source_integration_tests:
+  salesforce_integration_tests:
     +quote_columns: "{{ true if target.type in ('redshift', 'postgres') else false }}"
     +column_types:
       _fivetran_synced: timestamp
