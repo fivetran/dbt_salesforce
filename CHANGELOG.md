@@ -1,4 +1,4 @@
-# dbt_salesforce 0.6.1
+# dbt_salesforce 0.7.0
 🎉 Salesforce Package Updates 🎉
 
 We are updating the Salesforce package! To improve its utility, the changes include the following:
