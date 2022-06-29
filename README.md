@@ -21,7 +21,7 @@
   - Understand the performance of your opportunities
   - Understand what is going on in your sales funnel and 
   - Drill into how the members of your sales team are performing
-  - Have a daily view of sales activities 
+  - Have a daily summary of sales activities 
   - Access an enhanced contact list
 
 This package also generates a comprehensive data dictionary of your source and modeled Salesforce data via the [dbt docs site](https://fivetran.github.io/dbt_salesforce/)
@@ -80,7 +80,7 @@ vars:
     salesforce__<default_source_table_name>_identifier: your_table_name
 ```
 ### Adding Passthrough Columns
-This package allows users to add additional columns to the `opportunity enhanced` model and `contact enhanced` model. Columns passed through must be present in the downstream source account, contact, or user table. If you want to include a column from the user table, you must specify if you want it to be a field relate to the opportunity_manager or opportunity_owner.
+This package allows users to add additional columns to the `opportunity enhanced` model and `contact enhanced` model. Columns passed through must be present in the downstream source account, contact, or user table. If you want to include a column from the user table, you must specify if you want it to be a field related to the opportunity_manager or opportunity_owner.
 
 ```yml
 # dbt_project.yml
