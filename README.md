@@ -21,6 +21,8 @@
   - Understand the performance of your opportunities
   - Understand what is going on in your sales funnel and 
   - Drill into how the members of your sales team are performing
+  - Have a daily view of sales activities 
+  - Access an enhanced contact list
 
 This package also generates a comprehensive data dictionary of your source and modeled Salesforce data via the [dbt docs site](https://fivetran.github.io/dbt_salesforce/)
 You can also refer to the table below for a detailed view of all models materialized by default within this package.
@@ -31,6 +33,8 @@ You can also refer to the table below for a detailed view of all models material
 | [salesforce_owner_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__owner_performance)         |Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, losses, and win percentages.
 | [salesforce_sales_snapshot](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__sales_snapshot)               |A single row snapshot that provides various metrics about your sales funnel.
 | [salesforce__opportunity_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_enhanced)  |Each record represents an opportunity, enriched with related data about the account and opportunity owner.
+| [salesforce__contact_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_enhanced)  |Each record represents a contact with additional account and owner information.
+| [salesforce__daily_activity](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__daily_activity)  |Each record represents a daily summary of the number of sales activities, for example tasks and opportunities closed.
 
 # 🤔 Who is the target user of this dbt package?
 - You use Fivetran's [Salesforce connector](https://fivetran.com/docs/applications/salesforce)
@@ -58,7 +62,7 @@ Include the following salesforce_source package version in your `packages.yml`
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: [">=0.6.0", "<0.7.0"]
+    version: [">=1.0.0", "<2.0.0"]
 ```
 ## Step 3: Configure Your Variables
 ### Database and Schema Variables
@@ -76,7 +80,7 @@ vars:
     salesforce__<default_source_table_name>_identifier: your_table_name
 ```
 ### Adding Passthrough Columns
-This package allows users to add additional columns to the opportunity enhanced table. Columns passed through must be present in the downstream source account table or user table. If you want to include a column from the user table, you must specify if you want it to be a field relate to the opportunity_manager or opportunity_owner.
+This package allows users to add additional columns to the `opportunity enhanced` model and `contact enhanced` model. Columns passed through must be present in the downstream source account, contact, or user table. If you want to include a column from the user table, you must specify if you want it to be a field relate to the opportunity_manager or opportunity_owner.
 
 ```yml
 # dbt_project.yml
@@ -85,7 +89,8 @@ This package allows users to add additional columns to the opportunity enhanced 
 vars:
   opportunity_enhanced_pass_through_columns: [account_custom_field_1, account_custom_field_2, opportunity_manager.user_custom_column]
   account_pass_through_columns: [account_custom_field_1, account_custom_field_2]
-  user_pass_through_columns: [user_custom_column]
+  user_pass_through_columns: [user_custom_column_1,user_custom_column_2]
+  contact_pass_through_columns: [contact_custom_field_1, contact_custom_field_2]
 ```
 
 ### Salesforce History Mode
@@ -99,7 +104,14 @@ vars:
   using_opportunity_history_mode_active_records: true  # false by default. Only use if you have history mode enabled.
   using_user_role_history_mode_active_records: true    # false by default. Only use if you have history mode enabled.
   using_user_history_mode_active_records: true         # false by default. Only use if you have history mode enabled.
-```### Disabling Models
+  using_contact_history_mode_active_records: true      # false by default. Only use if you have history mode enabled.
+  using_lead_history_mode_active_records: true         # false by default. Only use if you have history mode enabled.
+  using_task_history_mode_active_records: true         # false by default. Only use if you have history mode enabled.
+  using_event_history_mode_active_records: true        # false by default. Only use if you have history mode enabled.
+  using_product_2_history_mode_active_records: true    # false by default. Only use if you have history mode enabled.
+  using_order_history_mode_active_records: true        # false by default. Only use if you have history mode enabled.
+  using_opportunity_line_item_history_mode_active_records: true       # false by default. Only use if you have history mode enabled.
+```
 ### Disabling Models
 Your connector may not be syncing all tabes that this package references. This might be because you are excluding those tables. If you are not using those tables, you can disable the corresponding functionality in the package by specifying the variable in your `dbt_project.yml`. The metrics from the disabled tables will not populate in downstream models. By default, all packages are assumed to be true. You only have to add variables for tables you want to disable, like so:
 
@@ -122,10 +134,7 @@ config-version: 2
 vars:
     <package_name>__<default_source_table_name>_identifier: your_table_name
 ```
-## Step 5: Finish Setup
-Your dbt project is now setup to successfully run the dbt package models! You can now execute `dbt run` and `dbt test` to have the models materialize in your warehouse and execute the data integrity tests applied within the package.
-
-## (Optional) Step 6: Orchestrate your package models with Fivetran
+## (Optional) Step 5: Orchestrate your package models with Fivetran
 Fivetran offers the ability for you to orchestrate your dbt project through the [Fivetran Transformations for dbt Core](https://fivetran.com/docs/transformations/dbt) product. Refer to the linked docs for more information on how to setup your project for orchestration through Fivetran. 
 
 # 🔍 Does this package have dependencies?
@@ -134,7 +143,7 @@ This dbt package is dependent on the following dbt packages. For more informatio
 ```yml
 packages:
     - package: fivetran/salesforce_source
-      version: [">=0.5.0", "<0.6.0"]
+      version: [">=1.0.0", "<2.0.0"]
     - package: fivetran/fivetran_utils
       version: [">=0.3.0", "<0.4.0"]
     - package: dbt-labs/dbt_utils
