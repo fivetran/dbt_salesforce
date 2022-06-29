@@ -26,18 +26,6 @@ jobs:
             mkdir -p ~/.dbt
             cp integration_tests/ci/sample.profiles.yml ~/.dbt/profiles.yml
       - run:
-          name: "Run Tests - Postgres"
-          command: |
-            . venv/bin/activate
-            echo `pwd`
-            cd integration_tests
-            dbt deps
-            dbt seed --target postgres --full-refresh
-            dbt run --vars '{using_account_history_mode_active_records: true, using_opportunity_history_mode_active_records: true, using_user_role_history_mode_active_records: true, using_user_history_mode_active_records: true, salesforce__user_role_enabled: false}' --target postgres --full-refresh
-            dbt test --vars '{salesforce__user_role_enabled: false}' --target postgres
-            dbt run --target postgres --full-refresh
-            dbt test --target postgres
-      - run:
           name: "Run Tests - Spark"
           command: |
             . venv/bin/activate
@@ -88,6 +76,18 @@ jobs:
             dbt test --vars '{salesforce__user_role_enabled: false}' --target bigquery
             dbt run --target bigquery --full-refresh
             dbt test --target bigquery
+      - run:
+          name: "Run Tests - Postgres"
+          command: |
+            . venv/bin/activate
+            echo `pwd`
+            cd integration_tests
+            dbt deps
+            dbt seed --target postgres --full-refresh
+            dbt run --vars '{using_account_history_mode_active_records: true, using_opportunity_history_mode_active_records: true, using_user_role_history_mode_active_records: true, using_user_history_mode_active_records: true, salesforce__user_role_enabled: false}' --target postgres --full-refresh
+            dbt test --vars '{salesforce__user_role_enabled: false}' --target postgres
+            dbt run --target postgres --full-refresh
+            dbt test --target postgres
       - save_cache:
           key: deps2-{{ .Branch }}
           paths:
