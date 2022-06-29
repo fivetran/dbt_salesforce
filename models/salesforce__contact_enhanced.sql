@@ -53,7 +53,22 @@ select
     account.rating as account_rating,
     account.type as account_type
 
+        --The below scripts allows for pass through columns.
+    {% if var('contact_pass_through_columns',[]) != [] %}
+    , {{ var('contact_pass_through_columns') | join (", contact.")}}
 
+    {% endif %}
+
+    {% if var('account_pass_through_columns',[]) != [] %}
+    , {{ var('account_pass_through_columns') | join (", account.")}}
+
+    {% endif %}
+
+    {% if var('user_pass_through_columns',[]) != [] %}
+    , {{ var('user_pass_through_columns') | join (", user.")}}
+
+    {% endif %}
+    
 from contact
 left join account 
     on contact.account_id = account.account_id
