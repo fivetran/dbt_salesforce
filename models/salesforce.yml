@@ -365,8 +365,10 @@ models:
       - name: complete
         description: complete
 
-  - name: salesforce__daily_funnel
+  - name: salesforce__daily_activity
     description: complete
     columns:
       - name: complete
         description: complete
+      - name: date_day
+        description: Date of activity, in UTC.
