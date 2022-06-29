@@ -65,6 +65,7 @@ opportunity as (
 ),
 
 opportunities_created as (
+
     select
         created_date,
         count(opportunity_id) as opportunities_created
@@ -73,6 +74,7 @@ opportunities_created as (
 ),
 
 opportunities_closed as (
+
     select
         close_date,
         count(case when status = 'Won' then opportunity_id else null end) as won_opportunities,
