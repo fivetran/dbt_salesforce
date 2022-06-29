@@ -1,3 +1,11 @@
+# dbt_salesforce 1.0.0
+🎉 Salesforce Package Updates 🎉
+
+We are updating the Salesforce package! To improve its utility, the changes include the following:
+## Features
+  - Creating a new Contact Enhanced and Daily Activity model as well as updating the Opportunity Enhanced model.
+  - Allowing formula fields to be added as passthrough columns. We added integration with the Salesforce Formula package by embedding the macro outputs as part of our staging models so that your custom formula fields can be included.
+  - ([#30](https://github.com/fivetran/dbt_salesforce/pull/30))
 # dbt_salesforce v0.6.0
 ## Features
 - Updated package to align with most recent standards:
