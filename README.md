@@ -21,6 +21,7 @@
   - Drill into how the members of your sales team are performing
   - Have a daily summary of sales activities 
   - Access an enhanced contact list
+  - View more details about opportunity line items
 
 This package also generates a comprehensive data dictionary of your source and modeled Salesforce data via the [dbt docs site](https://fivetran.github.io/dbt_salesforce/)
 You can also refer to the table below for a detailed view of all models materialized by default within this package.
@@ -56,12 +57,12 @@ dispatch:
 ```
 - **dbt Version**: This dbt package requires you have a functional dbt project that utilizes a dbt version within the respective range `>=1.0.0, <2.0.0`.
 ## Step 2: Installing the Package
-Include the following salesforce_source package version in your `packages.yml`
+Include the following salesforce package version in your `packages.yml`
 > Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: [">=1.0.0", "<2.0.0"]
+    version: [">=0.6.0", "<0.7.0"]
 ```
 ## Step 3: Configure Your Variables
 ### Database and Schema Variables
@@ -166,15 +167,22 @@ Additionally, you may add additional columns to the staging models, like in `stg
 
 ...
 vars:
-  opportunity_enhanced_pass_through_columns: [account_custom_field_1, account_custom_field_2, opportunity_manager.user_custom_column]
+  opportunity_enhanced_pass_through_columns: [account_custom_field_1, account_custom_field_2, user_role_custom_field_1, opportunity_manager.user_custom_column_1]
   account_pass_through_columns: [account_custom_field_1, account_custom_field_2]
   user_pass_through_columns: [user_custom_column_1,user_custom_column_2]
   contact_pass_through_columns: [contact_custom_field_1, contact_custom_field_2]
-   product_2_pass_through_columns: [product_2_custom_field_1, product_2_custom_field_2]
+  opportunity_pass_through_columns: [my_opp_custom_field]
+  lead_pass_through_columns: [lead_custom_field_1, lead_custom_field_2]
+  task_pass_through_columns: [task_custom_field_1, task_custom_field_2]
+  event_pass_through_columns: [event_custom_field_1, event_custom_field_2]
+  product_2_pass_through_columns: [product_2_custom_field_1, product_2_custom_field_2]
+  order_pass_through_columns: [order_custom_field_1, order_custom_field_2]
+  opportunity_line_item_pass_through_columns: [opportunity_line_item_custom_field_1, opportunity_line_item_custom_field_2]
+  user_role_pass_through_columns: [user_role_custom_field_1, user_role_custom_field_2]
 ```
 
-## (Optional) Step 5: Orchestrate your package models with Fivetran
-Fivetran offers the ability for you to orchestrate your dbt project through the [Fivetran Transformations for dbt Core](https://fivetran.com/docs/transformations/dbt) product. Refer to the linked docs for more information on how to setup your project for orchestration through Fivetran. 
+## (Optional) Step 5: Orchestrate your models with Fivetran Transformations for dbt Core™
+Fivetran offers the ability for you to orchestrate your dbt project through the [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt) product. Refer to the linked docs for more information on how to setup your project for orchestration through Fivetran. 
 
 # 🔍 Does this package have dependencies?
 This dbt package is dependent on the following dbt packages. For more information on the below packages, refer to the [dbt hub](https://hub.getdbt.com/) site.
