@@ -6,8 +6,9 @@ profile: 'integration_tests'
 
 models:
   salesforce:
+    materialized: table
     intermediate:
-      materialized: view
+      materialized: table
 
 vars:
 
