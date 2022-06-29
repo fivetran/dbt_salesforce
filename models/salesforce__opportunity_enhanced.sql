@@ -46,7 +46,7 @@ add_fields as (
 
         -- If using user_role table, the following will be included, otherwise it will not.
         {% if var('salesforce__user_role_enabled', True) %}
-        user_role.user_role_name as position as owner_position, 
+        user_role.user_role_name as owner_position, 
         user_role.developer_name as owner_developer_name,
         user_role.parent_role_id as owner_parent_role_id,
         user_role.rollup_description as owner_rollup_description,
