@@ -77,7 +77,8 @@ left join salesforce_user as manager
 
 -- If using user_role table, the following will be included, otherwise it will not.
 {% if var('salesforce__user_role_enabled', True) %}
-left join user_role using (user_role_id)
+left join user_role
+    on opportunity_aggregation_by_owner.user_role_id = user_role.user_role_id
 
 group by 1, 2, 3, 4, 5
 
