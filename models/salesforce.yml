@@ -364,6 +364,11 @@ models:
     columns:
       - name: complete
         description: complete
+      - name: contact_id
+        description: complete
+        tests:
+          - unique
+          - not_null
 
   - name: salesforce__daily_activity
     description: complete
@@ -372,3 +377,6 @@ models:
         description: complete
       - name: date_day
         description: Date of activity, in UTC.
+        tests:
+          - unique
+          - not_null

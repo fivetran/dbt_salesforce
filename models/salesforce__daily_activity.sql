@@ -38,7 +38,7 @@ salesforce_converted_lead as (
         {{ dbt_utils.date_trunc('day', 'converted_date') }} as converted_date,
         count(lead_id) as leads_converted
     from {{ var('lead') }}
-    where is_converted is true
+    where is_converted
     group by 1
 ), 
 
