@@ -18,7 +18,7 @@ final as (
         oli.opportunity_line_item_description,
         oli.opportunity_id,
         row_number() over (partition by oli.opportunity_id order by oli.created_date) as line_item_index,
-        count(distinct opportunity_line_item_id) over (partition by oli.opportunity_id) as total_line_items,
+        count(opportunity_line_item_id) over (partition by oli.opportunity_id) as total_line_items,
         oli.created_date,
         oli.last_modified_date,
         oli.service_date,
