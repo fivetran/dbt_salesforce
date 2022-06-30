@@ -5,6 +5,7 @@ with date_spine as (
     from {{ ref('int_salesforce__date_spine') }}
 ),
 
+{% if var('salesforce__task_enabled', True) %}
 task as (
     
     select 
@@ -13,7 +14,9 @@ task as (
     from {{ var('task') }}
     group by 1
 ), 
+{% endif %}
 
+{% if var('salesforce__event_enabled', True) %}
 salesforce_event as (
 
     select 
@@ -22,7 +25,9 @@ salesforce_event as (
     from {{ var('event') }}  
     group by 1
 ), 
+{% endif %}
 
+{% if var('salesforce__lead_enabled', True) %}
 salesforce_lead as (
 
     select 
@@ -41,6 +46,7 @@ salesforce_converted_lead as (
     where is_converted
     group by 1
 ), 
+{% endif %}
 
 opportunity as (
 
@@ -85,22 +91,42 @@ opportunities_closed as (
 
 select
     date_spine.date_day,
+
+    {% if var('salesforce__lead_enabled', True) %}
     salesforce_lead.leads_created,
     salesforce_converted_lead.leads_converted,
+    {% endif %}
+    
+    {% if var('salesforce__task_enabled', True) %}
     task.tasks,
+    {% endif %}
+
+    {% if var('salesforce__event_enabled', True) %}
     salesforce_event.events,
+    {% endif %}
+
     opportunities_created.opportunities_created,
     opportunities_closed.won_opportunities,
     opportunities_closed.lost_opportunities
 from date_spine
+
+{% if var('salesforce__lead_enabled', True) %}
 left join salesforce_lead
     on date_spine.date_day = salesforce_lead.created_date
 left join salesforce_converted_lead
     on date_spine.date_day = salesforce_converted_lead.converted_date
+{% endif %}
+
+{% if var('salesforce__task_enabled', True) %}
 left join task
     on date_spine.date_day = task.activity_date
+{% endif %}
+
+{% if var('salesforce__event_enabled', True) %}
 left join salesforce_event
     on date_spine.date_day = salesforce_event.activity_date
+{% endif %}
+
 left join opportunities_created
     on date_spine.date_day = opportunities_created.created_date
 left join opportunities_closed

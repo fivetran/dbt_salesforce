@@ -1,14 +1,20 @@
+--This model will only run if you have the underlying opportunity line item table.
+{{ config(enabled=var('salesforce__opportunity_line_item_enabled', True)) }}
+
 with opportunity_line_item as (
     
     select *
     from {{ var('opportunity_line_item') }}
 ), 
 
+-- If using product_2 table, the following will be included, otherwise it will not.
+{% if var('salesforce__product_2_enabled', True) %}
 product_2 as (
 
-    select *
-    from {{ var('product_2') }}
+select *
+from {{ var('product_2') }}
 ),
+{% endif %}
 
 final as (
 
@@ -24,15 +30,18 @@ final as (
         oli.service_date,
         oli.pricebook_entry_id,
         oli.product_2_id,
-        product_2.product_2_name,
-        product_2.product_code,
-        product_2.product_2_description,
         oli.list_price,
         oli.quantity,
         oli.unit_price,
         oli.total_price,
         oli.has_quantity_schedule,
-        oli.has_revenue_schedule,
+        oli.has_revenue_schedule
+
+        {% if var('salesforce__product_2_enabled', True) %}
+        ,
+        product_2.product_2_name,
+        product_2.product_code,
+        product_2.product_2_description,
         product_2.external_id as product_external_id,
         product_2.family as product_family,
         product_2.is_active as product_is_active,
@@ -45,7 +54,7 @@ final as (
         product_2.number_of_revenue_installments as product_number_of_revenue_installments,
         product_2.revenue_installment_period as product_revenue_installment_period,
         product_2.revenue_schedule_type as product_revenue_schedule_type
-
+        {% endif %}
 
         --The below script allows for pass through columns.
         {% if var('opportunity_line_item_pass_through_columns',[]) != [] %}
@@ -59,8 +68,11 @@ final as (
         {% endif %}
 
     from opportunity_line_item as oli
+
+    {% if var('salesforce__product_2_enabled', True) %}
     left join product_2
         on oli.product_2_id = product_2.product_2_id
+    {% endif %}
 )
 
 select * 
