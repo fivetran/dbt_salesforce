@@ -2,7 +2,7 @@ with date_spine as (
     
     select 
         {{ dbt_utils.date_trunc('day', 'date_day') }} as date_day
-    from {{ ref('salesforce__date_spine') }}
+    from {{ ref('int_salesforce__date_spine') }}
 ),
 
 task as (

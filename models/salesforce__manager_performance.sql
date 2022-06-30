@@ -1,7 +1,7 @@
 with opportunity_aggregation_by_owner as (
     
     select *
-    from {{ ref('salesforce__opportunity_aggregation_by_owner') }}
+    from {{ ref('int_salesforce__opportunity_aggregation_by_owner') }}
 ), 
 
 -- If using user_role table, the following will be included, otherwise it will not.
@@ -78,7 +78,7 @@ left join salesforce_user as manager
 -- If using user_role table, the following will be included, otherwise it will not.
 {% if var('salesforce__user_role_enabled', True) %}
 left join user_role
-    on opportunity_aggregation_by_owner.user_role_id = user_role.user_role_id
+    on manager.user_role_id = user_role.user_role_id
 
 group by 1, 2, 3, 4, 5
 

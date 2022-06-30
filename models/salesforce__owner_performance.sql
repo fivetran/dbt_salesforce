@@ -1,7 +1,7 @@
 with opportunity_aggregation_by_owner as (
     
     select *
-    from {{ ref('salesforce__opportunity_aggregation_by_owner') }}  
+    from {{ ref('int_salesforce__opportunity_aggregation_by_owner') }}  
 ), 
 
 salesforce_user as (

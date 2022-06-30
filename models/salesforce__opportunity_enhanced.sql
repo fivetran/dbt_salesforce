@@ -37,6 +37,7 @@ add_fields as (
         account.type as account_type,
         opportunity_owner.user_id as opportunity_owner_id,
         opportunity_owner.user_name as opportunity_owner_name,
+        opportunity_owner.user_role_id as opportunity_owner_role_id,
         opportunity_owner.city opportunity_owner_city,
         opportunity_owner.state as opportunity_owner_state,
         opportunity_manager.user_id as opportunity_manager_id,
@@ -46,10 +47,10 @@ add_fields as (
 
         -- If using user_role table, the following will be included, otherwise it will not.
         {% if var('salesforce__user_role_enabled', True) %}
-        user_role.user_role_name as owner_position, 
-        user_role.developer_name as owner_developer_name,
-        user_role.parent_role_id as owner_parent_role_id,
-        user_role.rollup_description as owner_rollup_description,
+        user_role.user_role_name as opportunity_owner_position, 
+        user_role.developer_name as opportunity_owner_developer_name,
+        user_role.parent_role_id as opportunity_owner_parent_role_id,
+        user_role.rollup_description as opportunity_owner_rollup_description,
         {% endif %}
 
         case
