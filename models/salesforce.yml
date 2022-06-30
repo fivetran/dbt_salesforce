@@ -380,3 +380,12 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: salesforce__opportunity_line_item_enhanced
+    description: Each record represents a line item belonging to a specific opportunity, with additional details about each product.
+    columns:
+      - name: opportunity_line_item_id,
+        description: Unique id for each record.
+        tests:
+          - unique
+          - not_null
