@@ -17,10 +17,9 @@
 
 - This package enables users to:
   - Understand the performance of your opportunities
-  - Understand what is going on in your sales funnel and 
   - Drill into how the members of your sales team are performing
   - Have a daily summary of sales activities 
-  - Access an enhanced contact list
+  - Leverage an enhanced contact list
   - View more details about opportunity line items
 
 This package also generates a comprehensive data dictionary of your source and modeled Salesforce data via the [dbt docs site](https://fivetran.github.io/dbt_salesforce/)
@@ -62,7 +61,7 @@ Include the following salesforce package version in your `packages.yml`
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: [">=0.6.0", "<0.7.0"]
+    version: [">=0.7.0", "<0.8.0"]
 ```
 ## Step 3: Configure Your Variables
 ### Database and Schema Variables
