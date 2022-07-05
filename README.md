@@ -27,7 +27,7 @@ You can also refer to the table below for a detailed view of all models material
 
 |**model**|**description**
 -----|-----
-| [salesforce_manager_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__manager_performance)     |Each record represents a manager, enriched with data about their team's pipeline, bookings, losses, and win percentages.
+| [salesforce__manager_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__manager_performance)     |Each record represents a manager, enriched with data about their team's pipeline, bookings, losses, and win percentages.
 | [salesforce_owner_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__owner_performance)         |Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, losses, and win percentages.
 | [salesforce_sales_snapshot](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__sales_snapshot)               |A single row snapshot that provides various metrics about your sales funnel.
 | [salesforce__opportunity_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_enhanced)  |Each record represents an opportunity, enriched with related data about the account and opportunity owner.
