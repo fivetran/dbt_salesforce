@@ -448,16 +448,16 @@ models:
         description: '{{ doc("leads_created") }}'
       - name: leads_converted
         description: '{{ doc("leads_converted") }}'
-      - name: tasks
-        description: '{{ doc("tasks") }}'
-      - name: events
-        description: '{{ doc("events") }}'
+      - name: tasks_completed
+        description: '{{ doc("tasks_completed") }}'
+      - name: events_completed
+        description: '{{ doc("events_completed") }}'
       - name: opportunities_created
         description: '{{ doc("opportunities_created") }}'
-      - name: won_opportunities
-        description: '{{ doc("won_opportunities") }}'
-      - name: lost_opportunities
-        description: '{{ doc("lost_opportunities") }}'
+      - name: opportunities_won
+        description: '{{ doc("opportunities_won") }}'
+      - name: opportunities_lost
+        description: '{{ doc("opportunities_lost") }}'
 
   - name: salesforce__opportunity_line_item_enhanced
     description: Each record represents a line item belonging to a certain opportunity, with additional product details.
@@ -467,8 +467,6 @@ models:
         tests:
           - unique
           - not_null
-      - name: opportunity_line_item_id
-        description: '{{ doc("opportunity_line_item_id") }}'
       - name: opportunity_line_item_name
         description: '{{ doc("opportunity_line_item_name") }}'
       - name: opportunity_line_item_description

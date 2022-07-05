@@ -28,8 +28,8 @@ You can also refer to the table below for a detailed view of all models material
 |**model**|**description**
 -----|-----
 | [salesforce__manager_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__manager_performance)     |Each record represents a manager, enriched with data about their team's pipeline, bookings, losses, and win percentages.
-| [salesforce_owner_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__owner_performance)         |Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, losses, and win percentages.
-| [salesforce_sales_snapshot](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__sales_snapshot)               |A single row snapshot that provides various metrics about your sales funnel.
+| [salesforce__owner_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__owner_performance)         |Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, losses, and win percentages.
+| [salesforce__sales_snapshot](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__sales_snapshot)               |A single row snapshot that provides various metrics about your sales funnel.
 | [salesforce__opportunity_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_enhanced)  |Each record represents an opportunity, enriched with related data about the account and opportunity owner.
 | [salesforce__contact_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_enhanced)  |Each record represents a contact with additional account and owner information.
 | [salesforce__daily_activity](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__daily_activity)  |Each record represents a daily summary of the number of sales activities, for example tasks and opportunities closed.
@@ -157,16 +157,16 @@ Include the following within your `dbt_project.yml` file:
 ```
 
 ### Adding Passthrough Columns
-This package allows users to add additional columns to the `opportunity enhanced` model and `contact enhanced` model. Columns passed through must be present in the upstream source `account`, `contact`, or `user` table. If you want to include a column from the user table, you must specify if you want it to be a field related to the opportunity_manager or opportunity_owner.
+This package allows users to add additional columns to the `opportunity enhanced` model and `contact enhanced` model. - For the `opportunity enhanced` model, columns passed through in `opportunity_enhanced_pass_through_columns` must also be present in the upstream source `opportunity`, `account`, `user`, or `user_role` table. If you want to include a column from the `user` table, you must specify if you want it to be a field related to the opportunity_manager or opportunity_owner.
 
-Additionally, you may add additional columns to the staging models, like in `stg_salesforce__product_2`.
+Additionally, you may add additional columns to the staging models. For example, for passing columns to `stg_salesforce__product_2` you would need to configure `product_2_pass_through_columns`.
 
 ```yml
 # dbt_project.yml
 
 ...
 vars:
-  opportunity_enhanced_pass_through_columns: [account_custom_field_1, account_custom_field_2, user_role_custom_field_1, opportunity_manager.user_custom_column_1]
+  opportunity_enhanced_pass_through_columns: [account_custom_field_1, my_opp_custom_field, user_role_custom_field_1, opportunity_manager.user_custom_column_1]
   account_pass_through_columns: [account_custom_field_1, account_custom_field_2]
   user_pass_through_columns: [user_custom_column_1,user_custom_column_2]
   contact_pass_through_columns: [contact_custom_field_1, contact_custom_field_2]

@@ -10,7 +10,7 @@ task as (
     
     select 
         {{ dbt_utils.date_trunc('day', 'activity_date') }} as activity_date,
-        count(task_id) as tasks
+        count(task_id) as tasks_completed
     from {{ var('task') }}
     group by 1
 ), 
@@ -20,8 +20,8 @@ task as (
 salesforce_event as (
 
     select 
-        {{ dbt_utils.date_trunc('day', 'activity_date') }} as activity_date,
-        count(event_id) as events
+        coalesce({{ dbt_utils.date_trunc('day', 'activity_date') }}, {{ dbt_utils.date_trunc('day', 'activity_date_time') }}) as activity_date,
+        count(event_id) as events_completed
     from {{ var('event') }}  
     group by 1
 ), 
@@ -83,8 +83,8 @@ opportunities_closed as (
 
     select
         close_date,
-        count(case when status = 'Won' then opportunity_id else null end) as won_opportunities,
-        count(case when status = 'Lost' then opportunity_id else null end) as lost_opportunities
+        count(case when status = 'Won' then opportunity_id else null end) as opportunities_won,
+        count(case when status = 'Lost' then opportunity_id else null end) as opportunities_lost
     from opportunity
     group by 1
 )
@@ -98,16 +98,16 @@ select
     {% endif %}
     
     {% if var('salesforce__task_enabled', True) %}
-    task.tasks,
+    task.tasks_completed,
     {% endif %}
 
     {% if var('salesforce__event_enabled', True) %}
-    salesforce_event.events,
+    salesforce_event.events_completed,
     {% endif %}
 
     opportunities_created.opportunities_created,
-    opportunities_closed.won_opportunities,
-    opportunities_closed.lost_opportunities
+    opportunities_closed.opportunities_won,
+    opportunities_closed.opportunities_lost
 from date_spine
 
 {% if var('salesforce__lead_enabled', True) %}

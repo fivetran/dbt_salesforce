@@ -276,11 +276,11 @@ Number of leads created on that date.
 Number of leads converted on that date.
 {% enddocs %}
 
-{% docs tasks -%}
+{% docs tasks_completed -%}
 Number of tasks for that activity date.
 {% enddocs %}
 
-{% docs events -%}
+{% docs events_completed -%}
 Number of events for that activity date.
 {% enddocs %}
 
@@ -288,11 +288,11 @@ Number of events for that activity date.
 Number of opportunities created on that date.
 {% enddocs %}
 
-{% docs won_opportunities -%}
+{% docs opportunities_won -%}
 Number of opportunities won on that close date.
 {% enddocs %}
 
-{% docs lost_opportunities -%}
+{% docs opportunities_lost -%}
 Number of opportunities lost on that close date.
 {% enddocs %}
 
