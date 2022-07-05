@@ -1,7 +1,7 @@
 # dbt_salesforce 0.7.0
 🎉 Salesforce Package Updates 🎉
 
-We are updating the Salesforce package! To improve its utility, the changes include the following:
+PR [#30](https://github.com/fivetran/dbt_salesforce/pull/30) includes various updates to the Salesforce package! To improve its utility, the changes include the following:
 ## Features
   - Creating a new Contact Enhanced, Daily Activity, and Opportunity Line Item Enhanced model as well as updating the Opportunity Enhanced model.
   - Allowing formula fields to be added as passthrough columns. We added integration with the Salesforce Formula package by embedding the macro outputs as part of our staging models so that your custom formula fields can be included.
