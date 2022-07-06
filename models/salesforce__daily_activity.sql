@@ -86,10 +86,10 @@ opportunities_closed as (
     select
         close_date,
         count(case when status = 'Won' then opportunity_id else null end) as opportunities_won,
-        sum(case when status = 'Won' then amount else 0 end) as opportunities_won_amount,
+        round(sum(case when status = 'Won' then amount else 0 end)) as opportunities_won_amount,
         count(case when status = 'Lost' then opportunity_id else null end) as opportunities_lost,
-        sum(case when status = 'Lost' then amount else null end) as opportunities_lost_amount,
-        sum(case when status = 'Pipeline' then amount else null end) as pipeline_amount
+        round(sum(case when status = 'Lost' then amount else null end)) as opportunities_lost_amount,
+        round(sum(case when status = 'Pipeline' then amount else null end)) as pipeline_amount
     from opportunity
     group by 1
 )

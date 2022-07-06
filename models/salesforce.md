@@ -263,175 +263,190 @@ The account’s prospect rating, for example Hot, Warm, or Cold.
 
 {% docs account_type -%}
 Type of account, for example, Customer, Competitor, or Partner.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs date_day -%}
 Day of event, in UTC.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs leads_created -%}
 Number of leads created on that date.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs leads_converted -%}
 Number of leads converted on that date.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs tasks_completed -%}
 Number of tasks for that activity date.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs events_completed -%}
 Number of events for that activity date.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs opportunities_created -%}
 Number of opportunities created on that date.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs opportunities_won -%}
 Number of opportunities won on that close date.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs opportunities_lost -%}
 Number of opportunities lost on that close date.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs opportunity_line_item_id -%}
 The unique ID for each opportunity line item.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs opportunity_line_item_name -%}
 The unique name for each opportunity line item.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs opportunity_line_item_description -%}
 Text description of the opportunity line item.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs opportunity_id -%}
 ID of the associated Opportunity.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs line_item_index -%}
 The index number of the specific line item, relative to all line items in that opportunity.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs total_line_items -%}
 The total number of line items belonging to the same opportunity.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs created_date -%}
 Created date.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs last_modified_date -%}
 Last Modified Date.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs service_date -%}
 Date when the product revenue will be recognized and the product quantity will be shipped. Opportunity Close Date—ServiceDate is ignored.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs pricebook_entry_id -%}
 ID of the associated PricebookEntry. Exists only for those organizations that have Products enabled as a feature. In API versions 1.0 and 2.0, you can specify values for either this field or ProductId, but not both. For this reason, both fields are declared nillable. In API version 3.0 and later, you must specify values for this field instead of ProductId. This is a relationship field.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_2_id -%}
 The ID of the related Product2 record. This is a read-only field available in API version 30.0 and later.
 Use the PricebookEntryId field instead, specifying the ID of the PricebookEntry record.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_2_name -%}
 Default name of the product.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_code -%}
 This read-only field is available in API version 30.0 and later. It references the value in the ProductCode field of the related Product2 record.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_2_description -%}
 A text description of the product. 
-{% enddocs %}
+{%- enddocs %}
 
 {% docs list_price -%}
 Corresponds to the UnitPrice on the PricebookEntry that is associated with this line item, which can be in the standard price book or a custom price book. A client application can use this information to show whether the unit price (or sales price) of the line item differs from the price book entry list price.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs quantity -%}
 Read-only if this record has a quantity schedule, a revenue schedule, or both a quantity and a revenue schedule.
 When updating these records:
 If you specify Quantity without specifying the UnitPrice, the UnitPrice value will be adjusted to accommodate the new Quantity value, and the TotalPrice will be held constant.
 If you specify both Discount and Quantity, you must also specify either TotalPrice or UnitPrice so the system can determine which one to automatically adjust.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs unit_price -%}
 The unit price for the opportunity line item. In the Salesforce user interface, this field’s value is calculated by dividing the total price of the opportunity line item by the quantity listed for that line item. Label is Sales Price.
 This field or TotalPrice is required. You can’t specify both.
 
 If you specify Discount and Quantity, this field or TotalPrice is required.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs total_price -%}
 This field is available only for backward compatibility. It represents the total price of the OpportunityLineItem.
 If you do not specify UnitPrice, this field is required. If you specify Discount and Quantity, this field or UnitPrice is required. When updating these records, you can change either this value or the UnitPrice, but not both at the same time.
 
 This field is nullable, but you can’t set both TotalPrice and UnitPrice to null in the same update request. To insert the TotalPrice via the API (given only a unit price and the quantity), calculate this field as the unit price multiplied by the quantity. This field is read-only if the opportunity line item has a revenue schedule. If the opportunity line item does not have a schedule or only has quantity schedule, this field can be updated.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs has_quantity_schedule -%}
 Indicates whether a quantity schedule has been created for this object (true) or not (false). 
-{% enddocs %}
+{%- enddocs %}
 
 {% docs has_revenue_schedule -%}
 Indicates whether a revenue schedule has been created for this object (true) or not (false). If this object has a revenue schedule, the Quantity and TotalPrice fields can’t be updated. In addition, the Quantity field can’t be updated if this object has a quantity schedule. Update requests aren’t rejected but the updated values are ignored.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_external_id -%}
 The unique identifier of the product in the linked external data source. For example, ID #123.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_family -%}
 Name of the product family associated with this record. Product families are configured as picklists in the user interface. To obtain a list of valid values, call describeSObjects() and process the DescribeSObjectResult for the values associated with the Family field. Label is Product Family.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_is_active -%}
 Indicates whether product is active (true) or not (false). Inactive Product2 records are hidden in many areas in the user interface. You can change the IsActive flag on a Product2 object as often as necessary. Label is Active.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_is_archived -%}
 Describes whether the product is archived. The default value is false.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_is_deleted -%}
 Indicates whether the object has been moved to the Recycle Bin (true) or not (false). Label is Deleted.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_number_of_quantity_installments -%}
 If the product has a quantity schedule, the number of installments.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_quantity_installment_period -%}
 If the product has a quantity schedule, the amount of time covered by the schedule.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_quantity_schedule_type -%}
 The type of the quantity schedule, if the product has one.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_quantity_unit_of_measure -%}
 Unit of the product; for example, kilograms, liters, or cases. This field comes with only one value, Each, so consider creating your own. The QuantityUnitOfMeasure field on ProductItem inherits this field’s values.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_number_of_revenue_installments -%}
 If the product has a revenue schedule, the number of installments.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_revenue_installment_period -%}
 If the product has a revenue schedule, the time period covered by the schedule.
-{% enddocs %}
+{%- enddocs %}
 
 {% docs product_revenue_schedule_type -%}
 The type of the revenue schedule, if the product has one.
-{% enddocs %}
+{%- enddocs %}
 
+{% docs opportunities_created_amount -%}
+The dollar amount of all opportunities created for this day. 
+{%- enddocs %}
+
+{% docs opportunities_won_amount -%}
+The dollar amount of all opportunities won for this day.
+{%- enddocs %}
+
+{% docs opportunities_lost_amount -%}
+The dollar amount of all opportunities lost for this day.
+{%- enddocs %}
+
+{% docs pipeline_amount -%}
+The dollar amount of all opportunities in the pipeline for this day.
+{%- enddocs %}
