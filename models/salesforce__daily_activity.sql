@@ -61,6 +61,7 @@ opportunity as (
         owner_id, 
         stage_name,
         type,
+        amount,
         case
             when is_won then 'Won'
             when not is_won and is_closed then 'Lost'
@@ -84,7 +85,9 @@ opportunities_closed as (
     select
         close_date,
         count(case when status = 'Won' then opportunity_id else null end) as opportunities_won,
-        count(case when status = 'Lost' then opportunity_id else null end) as opportunities_lost
+        sum(case when status = 'Won' then amount else 0 end) as opportunities_won_amount,
+        count(case when status = 'Lost' then opportunity_id else null end) as opportunities_lost,
+        sum(case when status = 'Lost' then amount else null end) as opportunities_lost_amount
     from opportunity
     group by 1
 )
@@ -107,7 +110,9 @@ select
 
     opportunities_created.opportunities_created,
     opportunities_closed.opportunities_won,
+    opportunities_closed.opportunities_won_amount,
     opportunities_closed.opportunities_lost
+    opportunities_closed.opportunities_lost_amount
 from date_spine
 
 {% if var('salesforce__lead_enabled', True) %}
