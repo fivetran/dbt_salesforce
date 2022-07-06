@@ -75,7 +75,8 @@ opportunities_created as (
 
     select
         created_date,
-        count(opportunity_id) as opportunities_created
+        count(opportunity_id) as opportunities_created,
+        sum(amount) as opportunities_created_amount
     from opportunity
     group by 1
 ),
@@ -87,7 +88,8 @@ opportunities_closed as (
         count(case when status = 'Won' then opportunity_id else null end) as opportunities_won,
         sum(case when status = 'Won' then amount else 0 end) as opportunities_won_amount,
         count(case when status = 'Lost' then opportunity_id else null end) as opportunities_lost,
-        sum(case when status = 'Lost' then amount else null end) as opportunities_lost_amount
+        sum(case when status = 'Lost' then amount else null end) as opportunities_lost_amount,
+        sum(case when status = 'Pipeline' then amount else null end) as pipeline_amount
     from opportunity
     group by 1
 )
@@ -109,10 +111,12 @@ select
     {% endif %}
 
     opportunities_created.opportunities_created,
+    opportunities_created.opportunities_created_amount,
     opportunities_closed.opportunities_won,
     opportunities_closed.opportunities_won_amount,
-    opportunities_closed.opportunities_lost
-    opportunities_closed.opportunities_lost_amount
+    opportunities_closed.opportunities_lost,
+    opportunities_closed.opportunities_lost_amount,
+    opportunities_closed.pipeline_amount
 from date_spine
 
 {% if var('salesforce__lead_enabled', True) %}
