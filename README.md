@@ -35,12 +35,7 @@ You can also refer to the table below for a detailed view of all models material
 | [salesforce__daily_activity](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__daily_activity)  |Each record represents a daily summary of the number of sales activities, for example tasks and opportunities closed.
 | [salesforce__opportunity_line_item_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_line_item_enhanced)  |Each record represents a line item belonging to a certain opportunity, with additional product details.
 
-# 🤔 Who is the target user of this dbt package?
-- You use Fivetran's [Salesforce connector](https://fivetran.com/docs/applications/salesforce)
-- You use dbt
-- You want a staging layer that cleans, tests, and prepares your Salesforce data for analysis as well as leverage the analysis ready models outlined above.
 # 🎯 How do I use the dbt package?
-To effectively install this package and leverage the pre-made models, you will follow the below steps:
 ## Step 1: Pre-Requisites
 You will need to ensure you have the following before leveraging the dbt package.
 - **Connector**: Have the Fivetran Salesforce connector syncing data into your warehouse. 
