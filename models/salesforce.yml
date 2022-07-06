@@ -458,14 +458,14 @@ models:
         description: '{{ doc("opportunities_won") }}'
       - name: opportunities_lost
         description: '{{ doc("opportunities_lost") }}'
-      # - name: opportunities_created_amount
-      #   description: '{{ doc("opportunities_created_amount") }}'
-      # - name: opportunities_won_amount
-      #   description: '{{ doc("opportunities_won_amount") }}'
-      # - name: opportunities_lost_amount
-      #   description: '{{ doc("opportunities_lost_amount") }}'
-      # - name: pipeline_amount
-      #   description: '{{ doc("pipeline_amount") }}'
+      - name: opportunities_created_amount
+        description: '{{ doc("opportunities_created_amount") }}'
+      - name: opportunities_won_amount
+        description: '{{ doc("opportunities_won_amount") }}'
+      - name: opportunities_lost_amount
+        description: '{{ doc("opportunities_lost_amount") }}'
+      - name: pipeline_amount
+        description: '{{ doc("pipeline_amount") }}'
 
   - name: salesforce__opportunity_line_item_enhanced
     description: Each record represents a line item belonging to a certain opportunity, with additional product details.
