@@ -76,7 +76,7 @@ opportunities_created as (
     select
         created_date,
         count(opportunity_id) as opportunities_created,
-        sum(amount) as opportunities_created_amount
+        round(sum(amount)) as opportunities_created_amount
     from opportunity
     group by 1
 ),
