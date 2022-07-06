@@ -173,8 +173,9 @@ Mailing address details.
 {%- enddocs %}
 
 {% docs mailing_country_code -%}
-
+Mailing address details. 
 {%- enddocs %}
+
 {% docs mailing_postal_code -%}
 The ISO codes for the mailing address’s state and country.
 {%- enddocs %}
