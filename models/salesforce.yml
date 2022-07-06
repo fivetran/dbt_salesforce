@@ -176,8 +176,12 @@ models:
           - unique
       - name: _fivetran_synced 
         description: The time at which fivetran last synced this record 
+      - name: account_number
+        description: Number of the account associated with this opportunity.
       - name: account_id
         description: ID of the account associated with this opportunity.
+      - name: account_type
+        description: Type of account, for example, Customer, Competitor, or Partner.
       - name: amount
         description: Estimated total sale amount. For opportunities with products, the amount is the sum of the related products.
       - name: campaign_id
@@ -186,7 +190,7 @@ models:
         description: Required. Date when the opportunity is expected to close.
       - name: created_date
         description: Date when the opportunity is was created.
-      - name: description
+      - name: opportunity_description
         description: Text description of the opportunity.
       - name: expected_revenue
         description: Read-only field that is equal to the product of the opportunity Amount field and the Probability.
@@ -288,10 +292,20 @@ models:
         description: The first and last name of the owner.
       - name: opportunity_owner_state
         description: The state associated with the owner.
+      - name: opportunity_owner_role_id
+        description: The ID associated with the owner's user role.
       - name: owner_id
         description: '{{ doc("owner_id") }}'
       - name: status
         description: Whether the opportunity is won, lost, in the pipeline, or other.
+      - name: opportunity_owner_position
+        description: Name of the position of the opportunity owner.
+      - name: opportunity_owner_developer_name
+        description: The name of the object of the opportunity owner.
+      - name: opportunity_owner_parent_role_id
+        description: The ID of the parent role of the opportunity owner.
+      - name: opportunity_owner_rollup_description
+        description: Description of the forecast rollup of the opportunity owner..
 
   - name: salesforce__sales_snapshot
     description: >
