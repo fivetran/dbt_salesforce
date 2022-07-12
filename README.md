@@ -143,6 +143,7 @@ packages:
 Include the following within your `dbt_project.yml` file:
 ```yml
 # Using the opportunity source table as example, update the opportunity variable to reference your newly created model that contains the formula fields:
+vars:
   opportunity: "{{ ref('my_opportunity_formula_table') }}"
 
 # In addition, add the desired field names as pass through columns
