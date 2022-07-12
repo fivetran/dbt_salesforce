@@ -1,4 +1,4 @@
-# dbt_salesforce 0.7.0
+# dbt_salesforce v0.7.0
 🎉 Salesforce Package Updates 🎉
 
 PR [#30](https://github.com/fivetran/dbt_salesforce/pull/30) includes various updates to the Salesforce package! To improve its utility, the changes include the following:
