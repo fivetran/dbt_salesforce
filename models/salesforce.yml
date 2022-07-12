@@ -176,8 +176,12 @@ models:
           - unique
       - name: _fivetran_synced 
         description: The time at which fivetran last synced this record 
+      - name: account_number
+        description: Number of the account associated with this opportunity.
       - name: account_id
         description: ID of the account associated with this opportunity.
+      - name: account_type
+        description: Type of account, for example, Customer, Competitor, or Partner.
       - name: amount
         description: Estimated total sale amount. For opportunities with products, the amount is the sum of the related products.
       - name: campaign_id
@@ -186,7 +190,7 @@ models:
         description: Required. Date when the opportunity is expected to close.
       - name: created_date
         description: Date when the opportunity is was created.
-      - name: description
+      - name: opportunity_description
         description: Text description of the opportunity.
       - name: expected_revenue
         description: Read-only field that is equal to the product of the opportunity Amount field and the Probability.
@@ -288,10 +292,20 @@ models:
         description: The first and last name of the owner.
       - name: opportunity_owner_state
         description: The state associated with the owner.
+      - name: opportunity_owner_role_id
+        description: The ID associated with the owner's user role.
       - name: owner_id
         description: '{{ doc("owner_id") }}'
       - name: status
         description: Whether the opportunity is won, lost, in the pipeline, or other.
+      - name: opportunity_owner_position
+        description: Name of the position of the opportunity owner.
+      - name: opportunity_owner_developer_name
+        description: The name of the object of the opportunity owner.
+      - name: opportunity_owner_parent_role_id
+        description: The ID of the parent role of the opportunity owner.
+      - name: opportunity_owner_rollup_description
+        description: Description of the forecast rollup of the opportunity owner..
 
   - name: salesforce__sales_snapshot
     description: >
@@ -358,4 +372,182 @@ models:
         description: '{{ doc("win_percent_this_month") }}'
       - name: win_percent_this_quarter
         description: '{{ doc("win_percent_this_quarter") }}'
-     
+
+  - name: salesforce__contact_enhanced
+    description: Each record represents a contact with additional account and owner information.
+    columns:
+      - name: contact_id
+        description: '{{ doc("contact_id") }}'
+        tests:
+          - unique
+          - not_null
+      - name: contact_name
+        description:  '{{ doc("contact_name") }}'
+      - name: account_id
+        description: '{{ doc("account_id") }}'
+      - name: department
+        description: '{{ doc("department") }}'
+      - name: contact_description
+        description: '{{ doc("contact_description") }}'
+      - name: email
+        description: '{{ doc("email") }}'
+      - name: individual_id
+        description: '{{ doc("individual_id") }}'
+      - name: contact_is_deleted
+        description: '{{ doc("contact_is_deleted") }}'
+      - name: last_activity_date
+        description: '{{ doc("last_activity_date") }}'
+      - name: lead_source
+        description: '{{ doc("lead_source") }}'
+      - name: mailing_city
+        description: '{{ doc("mailing_city") }}'
+      - name: mailing_country
+        description: '{{ doc("mailing_country") }}'
+      - name: mailing_country_code
+        description: '{{ doc("mailing_country_code") }}'
+      - name: mailing_postal_code
+        description: '{{ doc("mailing_postal_code") }}'
+      - name: mailing_state
+        description: '{{ doc("mailing_state") }}'
+      - name: mailing_state_code
+        description: '{{ doc("mailing_state_code") }}'
+      - name: mailing_street
+        description: '{{ doc("mailing_street") }}'
+      - name: master_record_id
+        description: '{{ doc("master_record_id") }}'
+      - name: mobile_phone
+        description: '{{ doc("mobile_phone") }}'
+      - name: contact_owner_id
+        description: '{{ doc("contact_owner_id") }}'
+      - name: phone
+        description: '{{ doc("phone") }}'
+      - name: reports_to_id
+        description: '{{ doc("reports_to_id") }}'
+      - name: contact_owner_name
+        description: '{{ doc("contact_owner_name") }}'
+      - name: account_name
+        description: '{{ doc("account_name") }}'
+      - name: account_number
+        description: '{{ doc("account_number") }}'
+      - name: account_source
+        description: '{{ doc("account_source") }}'
+      - name: account_annual_revenue
+        description: '{{ doc("account_annual_revenue") }}'
+      - name: account_description
+        description: '{{ doc("account_description") }}'
+      - name: account_industry
+        description: '{{ doc("account_industry") }}'
+      - name: account_is_deleted
+        description: '{{ doc("account_is_deleted") }}'
+      - name: account_number_of_employees
+        description: '{{ doc("account_number_of_employees") }}'
+      - name: account_owner_id
+        description: '{{ doc("account_owner_id") }}'
+      - name: account_parent_id
+        description: '{{ doc("account_parent_id") }}'
+      - name: account_rating
+        description: '{{ doc("account_rating") }}'
+      - name: account_type
+        description: '{{ doc("account_type") }}'
+
+  - name: salesforce__daily_activity
+    description: Each record represents a daily summary of the number of sales activities, for example tasks and opportunities closed.
+    columns:
+      - name: date_day
+        description: '{{ doc("date_day") }}'
+        tests:
+          - unique
+          - not_null
+      - name: leads_created
+        description: '{{ doc("leads_created") }}'
+      - name: leads_converted
+        description: '{{ doc("leads_converted") }}'
+      - name: tasks_completed
+        description: '{{ doc("tasks_completed") }}'
+      - name: events_completed
+        description: '{{ doc("events_completed") }}'
+      - name: opportunities_created
+        description: '{{ doc("opportunities_created") }}'
+      - name: opportunities_won
+        description: '{{ doc("opportunities_won") }}'
+      - name: opportunities_lost
+        description: '{{ doc("opportunities_lost") }}'
+      - name: opportunities_created_amount
+        description: '{{ doc("opportunities_created_amount") }}'
+      - name: opportunities_won_amount
+        description: '{{ doc("opportunities_won_amount") }}'
+      - name: opportunities_lost_amount
+        description: '{{ doc("opportunities_lost_amount") }}'
+      - name: pipeline_amount
+        description: '{{ doc("pipeline_amount") }}'
+
+  - name: salesforce__opportunity_line_item_enhanced
+    description: Each record represents a line item belonging to a certain opportunity, with additional product details.
+    columns:
+      - name: opportunity_line_item_id
+        description: Unique id for each record.
+        tests:
+          - unique
+          - not_null
+      - name: opportunity_line_item_name
+        description: '{{ doc("opportunity_line_item_name") }}'
+      - name: opportunity_line_item_description
+        description: '{{ doc("opportunity_line_item_description") }}'
+      - name: opportunity_id
+        description: '{{ doc("opportunity_id") }}'
+      - name: line_item_index
+        description: '{{ doc("line_item_index") }}'
+      - name: total_line_items
+        description: '{{ doc("total_line_items") }}'
+      - name: created_date
+        description: '{{ doc("created_date") }}'
+      - name: last_modified_date
+        description: '{{ doc("last_modified_date") }}'
+      - name: service_date
+        description: '{{ doc("service_date") }}'
+      - name: pricebook_entry_id
+        description: '{{ doc("pricebook_entry_id") }}'
+      - name: product_2_id
+        description: '{{ doc("product_2_id") }}'
+      - name: product_2_name
+        description: '{{ doc("product_2_name") }}'
+      - name: product_code
+        description: '{{ doc("product_code") }}'
+      - name: product_2_description
+        description: '{{ doc("product_2_description") }}'
+      - name: list_price
+        description: '{{ doc("list_price") }}'
+      - name: quantity
+        description: '{{ doc("quantity") }}'
+      - name: unit_price
+        description: '{{ doc("unit_price") }}'
+      - name: total_price
+        description: '{{ doc("total_price") }}'
+      - name: has_quantity_schedule
+        description: '{{ doc("has_quantity_schedule") }}'
+      - name: has_revenue_schedule
+        description: '{{ doc("has_revenue_schedule") }}'
+      - name: product_external_id
+        description: '{{ doc("product_external_id") }}'
+      - name: product_family
+        description: '{{ doc("product_family") }}'
+      - name: product_is_active
+        description: '{{ doc("product_is_active") }}'
+      - name: product_is_archived
+        description: '{{ doc("product_is_archived") }}'
+      - name: product_is_deleted
+        description: '{{ doc("product_is_deleted") }}'
+      - name: product_number_of_quantity_installments
+        description: '{{ doc("product_number_of_quantity_installments") }}'
+      - name: product_quantity_installment_period
+        description: '{{ doc("product_quantity_installment_period") }}'
+      - name: product_quantity_schedule_type
+        description: '{{ doc("product_quantity_schedule_type") }}'
+      - name: product_quantity_unit_of_measure
+        description: '{{ doc("product_quantity_unit_of_measure") }}'
+      - name: product_number_of_revenue_installments
+        description: '{{ doc("product_number_of_revenue_installments") }}'
+      - name: product_revenue_installment_period
+        description: '{{ doc("product_revenue_installment_period") }}'
+      - name: product_revenue_schedule_type
+        description: '{{ doc("product_revenue_schedule_type") }}'

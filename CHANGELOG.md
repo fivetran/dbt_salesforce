@@ -1,3 +1,23 @@
+# dbt_salesforce v0.7.0
+🎉 Salesforce Package Updates 🎉
+
+PR [#30](https://github.com/fivetran/dbt_salesforce/pull/30) includes various updates to the Salesforce package! To improve its utility, the changes include the following:
+## Features
+  - Creating a new `salesforce__contact_enhanced`, `salesforce__daily_activity`, and `salesforce__opportunity_line_item_enhanced` model as well as updating the `salesforce__opportunity_enhanced` model.
+  - Allowing [formula fields](https://github.com/fivetran/dbt_salesforce#adding-formula-fields-as-pass-through-columns) to be added as passthrough columns. We added integration with the Salesforce Formula package by embedding the macro outputs as part of our staging models so that your custom formula fields can be included.
+  - Add [enable/disable configs](https://github.com/fivetran/dbt_salesforce#disabling-models) for tables that you may not be syncing
+  - Add [identifier variables](https://github.com/fivetran/dbt_salesforce#change-the-source-table-references) in case a source table has a different name from the default
+  - Add [history mode configs](https://github.com/fivetran/dbt_salesforce#salesforce-history-mode) for the new source tables
+  - Add [passthrough column configs](https://github.com/fivetran/dbt_salesforce#adding-passthrough-columns) for additional columns that you wish to populate in the end models
+
+
+
+# dbt_salesforce v0.6.0
+## Features
+- Updated package to align with most recent standards:
+  - Updated formatting in our `sql` files.
+  - The README has been updated to reflect our rehaul of our documentation style to make it more straightforward. 
+([#28](https://github.com/fivetran/dbt_salesforce/pull/28))
 # dbt_salesforce v0.5.1
 ## Features
 - Support for Databricks compatibility! ([#24](https://github.com/fivetran/dbt_salesforce/pull/24))
