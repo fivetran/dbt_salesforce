@@ -90,6 +90,7 @@ vars:
 ```
 The corresponding metrics from the disabled tables will not populate in the downstream models.
 
+## (Optional) Step 4: Additional Configurations
 ### Change the Source Table References
 Source tables are referenced using default names. If an individual source table has a different name than expected, provide the name of the table as it appears in your warehouse to the respective variable: 
 > IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_salesforce_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
@@ -120,9 +121,6 @@ vars:
   using_order_history_mode_active_records: true        # false by default. Only use if you have history mode enabled.
   using_opportunity_line_item_history_mode_active_records: true       # false by default. Only use if you have history mode enabled.
 ```
-
-
-## (Optional) Step 4: Additional Configurations
 ### Change the Build Schema
 By default, this package builds the GitHub staging models within a schema titled (<target_schema> + `_stg_salesforce`) in your target database. If this is not where you would like your GitHub staging data to be written to, add the following configuration to your root `dbt_project.yml` file:
 
@@ -184,7 +182,7 @@ This dbt package is dependent on the following dbt packages. For more informatio
 ```yml
 packages:
     - package: fivetran/salesforce_source
-      version: [">=1.0.0", "<2.0.0"]
+      version: [">=0.5.0", "<0.6.0"]
     - package: fivetran/fivetran_utils
       version: [">=0.3.0", "<0.4.0"]
     - package: dbt-labs/dbt_utils
