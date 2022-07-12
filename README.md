@@ -129,26 +129,6 @@ models:
     salesforce_source:
       +schema: my_new_schema_name # leave blank for just the target_schema
 ```
-### Adding Formula Fields as Pass Through Columns
-The source tables Fivetran syncs do not include formula fields. If your company uses them, you can generate them by referring to the [Salesforce Formula Utils](https://github.com/fivetran/dbt_salesforce_formula_utils) package. To pass through the fields, add the following configuration. We recommend confirming your formula field models successfully populate before integrating with the Salesforce package. 
-
-Include the following within your `packages.yml` file:
-```yml
-packages:
-
-  - package: fivetran/salesforce_formula_utils
-    version: [">=0.6.0", "<0.7.0"]
-```
-
-Include the following within your `dbt_project.yml` file:
-```yml
-# Using the opportunity source table as example, update the opportunity variable to reference your newly created model that contains the formula fields:
-  opportunity: "{{ ref('my_opportunity_formula_table') }}"
-
-# In addition, add the desired field names as pass through columns
-  opportunity_pass_through_columns: ['formula_field_1','formula_field_2']
-```
-
 ### Adding Passthrough Columns
 This package allows users to add additional columns to the `opportunity enhanced` model and `contact enhanced` model. - For the `opportunity enhanced` model, columns passed through in `opportunity_enhanced_pass_through_columns` must also be present in the upstream source `opportunity`, `account`, `user`, or `user_role` table. If you want to include a column from the `user` table, you must specify if you want it to be a field related to the opportunity_manager or opportunity_owner.
 
@@ -173,7 +153,28 @@ vars:
   user_role_pass_through_columns: [user_role_custom_field_1, user_role_custom_field_2]
 ```
 
-## (Optional) Step 5: Orchestrate your models with Fivetran Transformations for dbt Core™
+## (Optional) Step 5: Adding Formula Fields as Pass Through Columns
+### Adding Formula Fields as Pass Through Columns
+The source tables Fivetran syncs do not include formula fields. If your company uses them, you can generate them by referring to the [Salesforce Formula Utils](https://github.com/fivetran/dbt_salesforce_formula_utils) package. To pass through the fields, add the following configuration. We recommend confirming your formula field models successfully populate before integrating with the Salesforce package. 
+
+Include the following within your `packages.yml` file:
+```yml
+packages:
+
+  - package: fivetran/salesforce_formula_utils
+    version: [">=0.6.0", "<0.7.0"]
+```
+
+Include the following within your `dbt_project.yml` file:
+```yml
+# Using the opportunity source table as example, update the opportunity variable to reference your newly created model that contains the formula fields:
+  opportunity: "{{ ref('my_opportunity_formula_table') }}"
+
+# In addition, add the desired field names as pass through columns
+  opportunity_pass_through_columns: ['formula_field_1','formula_field_2']
+```
+
+## (Optional) Step 6: Orchestrate your models with Fivetran Transformations for dbt Core™
 Fivetran offers the ability for you to orchestrate your dbt project through the [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt) product. Refer to the linked docs for more information on how to setup your project for orchestration through Fivetran. 
 
 # 🔍 Does this package have dependencies?
