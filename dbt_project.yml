@@ -22,6 +22,7 @@ vars:
     opportunity_line_item: "{{ ref('stg_salesforce__opportunity_line_item') }}"
 
     # Salesforce pass through column variables
+    opportunity_enhanced_pass_through_columns: []
     account_pass_through_columns: []
     contact_pass_through_columns: []
     event_pass_through_columns: []
