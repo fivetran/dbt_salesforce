@@ -1,6 +1,6 @@
 <p align="center">
     <a alt="License"
-        href="https://github.com/fivetran/dbt_salesforce_source/blob/main/LICENSE">
+        href="https://github.com/fivetran/dbt_salesforce/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
     <a alt="dbt-core">
         <img src="https://img.shields.io/badge/dbt_core™-version_>=1.0.0_<2.0.0-orange.svg" /></a>
@@ -129,30 +129,6 @@ models:
     salesforce_source:
       +schema: my_new_schema_name # leave blank for just the target_schema
 ```
-<<<<<<< HEAD
-=======
-### Adding Formula Fields as Pass Through Columns
-The source tables Fivetran syncs do not include formula fields. If your company uses them, you can generate them by referring to the [Salesforce Formula Utils](https://github.com/fivetran/dbt_salesforce_formula_utils) package. To pass through the fields, add the following configuration. We recommend confirming your formula field models successfully populate before integrating with the Salesforce package. 
-
-Include the following within your `packages.yml` file:
-```yml
-packages:
-
-  - package: fivetran/salesforce_formula_utils
-    version: [">=0.6.0", "<0.7.0"]
-```
-
-Include the following within your `dbt_project.yml` file:
-```yml
-# Using the opportunity source table as example, update the opportunity variable to reference your newly created model that contains the formula fields:
-vars:
-  opportunity: "{{ ref('my_opportunity_formula_table') }}"
-
-# In addition, add the desired field names as pass through columns
-  opportunity_pass_through_columns: ['formula_field_1','formula_field_2']
-```
-
->>>>>>> da77370e2ef24980b6443e92027ebd2407175d97
 ### Adding Passthrough Columns
 This package allows users to add additional columns to the `opportunity enhanced` model and `contact enhanced` model. For the `opportunity enhanced` model, columns passed through in `opportunity_enhanced_pass_through_columns` must also be present in the upstream source `opportunity`, `account`, `user`, or `user_role` table. If you want to include a column from the `user` table, you must specify if you want it to be a field related to the opportunity_manager or opportunity_owner.
 
