@@ -65,7 +65,7 @@ select
     {% endif %}
 
     {% if var('user_pass_through_columns',[]) != [] %}
-    , {{ var('user_pass_through_columns') | join (", user.")}}
+    , {{ var('user_pass_through_columns') | join (", salesforce_user.")}}
 
     {% endif %}
     
