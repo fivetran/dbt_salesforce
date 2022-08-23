@@ -1,6 +1,10 @@
 # dbt_salesforce v0.7.1
 ## Features
   - Resolving bug in `salesforce__contact_enhanced` when using user passthrough columns.  
+
+## Contributors
+- [@calder-holt](https://github.com/calder-holt) ([#32](https://github.com/fivetran/dbt_salesforce/pull/32))
+
 # dbt_salesforce v0.7.0
 🎉 Salesforce Package Updates 🎉
 
