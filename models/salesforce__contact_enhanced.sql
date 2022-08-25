@@ -55,17 +55,17 @@ select
 
         --The below scripts allows for pass through columns.
     {% if var('contact_pass_through_columns',[]) != [] %}
-    , {{ var('contact_pass_through_columns') | join (", contact.")}}
+    , contact.{{ var('contact_pass_through_columns') | join (", contact.")}}
 
     {% endif %}
 
     {% if var('account_pass_through_columns',[]) != [] %}
-    , {{ var('account_pass_through_columns') | join (", account.")}}
+    , account.{{ var('account_pass_through_columns') | join (", account.")}}
 
     {% endif %}
 
     {% if var('user_pass_through_columns',[]) != [] %}
-    , {{ var('user_pass_through_columns') | join (", user.")}}
+    , salesforce_user.{{ var('user_pass_through_columns') | join (", salesforce_user.")}}
 
     {% endif %}
     

@@ -58,12 +58,12 @@ final as (
 
         --The below script allows for pass through columns.
         {% if var('opportunity_line_item_pass_through_columns',[]) != [] %}
-        , {{ var('opportunity_line_item_pass_through_columns') | join (", oli.")}}
+        , oli.{{ var('opportunity_line_item_pass_through_columns') | join (", oli.")}}
 
         {% endif %}
 
         {% if var('product_2_pass_through_columns',[]) != [] %}
-        , {{ var('product_2_pass_through_columns') | join (", product_2.")}}
+        , product_2.{{ var('product_2_pass_through_columns') | join (", product_2.")}}
 
         {% endif %}
 
