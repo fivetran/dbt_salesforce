@@ -1,7 +1,9 @@
 # dbt_salesforce v0.7.2
-## Features
+PR [#35](https://github.com/fivetran/dbt_salesforce/pull/35) incorporates the following updates:
+## Bug Fixes
   - Add all model variables to the README "Disabling Models" section
-  - Remove variables from package's `dbt_project.yml` to avoid conflict with a user's settings when using the package.
+  - Remove model variables from this package's `dbt_project.yml` to avoid potential conflict with a user's settings.
+  
 
 # dbt_salesforce v0.7.1
 ## Features
