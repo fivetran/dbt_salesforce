@@ -63,11 +63,6 @@ packages:
 By default, this package will run using your target database and the `salesforce` schema. If this is not where your Salesforce data is, add the following configuration to your root `dbt_project.yml` file:
 
 ```yml
-# dbt_project.yml
-
-...
-config-version: 2
-
 vars:
     salesforce_database: your_database_name    
     salesforce_schema: your_schema_name
@@ -79,11 +74,6 @@ It is possible that your Salesforce connector does not sync every table that thi
 To disable the corresponding functionality in this package, you must add the corresponding variable(s) to your `dbt_project.yml`, which are listed below. By default, that is if none of these variables are added, all variables are assumed to be true. Add variables only for the tables you would like to disable:
 
 ```yml
-# dbt_project.yml
-
-...
-config-version: 2
-
 vars:
   salesforce__user_role_enabled: false # Disable if you do not have the user_role table
   salesforce__lead_enabled: false # Disable if you do not have the lead table
