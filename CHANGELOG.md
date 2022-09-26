@@ -1,3 +1,8 @@
+# dbt_salesforce v0.7.2
+## Features
+  - Add all model variables to the README "Disabling Models" section
+  - Remove variables from package's `dbt_project.yml` to avoid conflict with a user's settings when using the package.
+
 # dbt_salesforce v0.7.1
 ## Features
   - Resolving bug in `salesforce__contact_enhanced` when using user passthrough columns.
