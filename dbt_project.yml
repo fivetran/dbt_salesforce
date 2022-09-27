@@ -35,14 +35,6 @@ vars:
     user_role_pass_through_columns: []
     user_pass_through_columns: []
     
-    # Variable for whether you are using the user_role table (default is set to True)
-    salesforce__user_role_enabled: true
-    salesforce__lead_enabled: true
-    salesforce__event_enabled: true
-    salesforce__task_enabled: true
-    salesforce__opportunity_line_item_enabled: true
-    salesforce__order_enabled: true
-    salesforce__product_2_enabled: true
     
 clean-targets:
 - target

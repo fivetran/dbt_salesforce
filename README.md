@@ -43,8 +43,6 @@ You will need to ensure you have the following before leveraging the dbt package
   - If you are using Databricks you'll need to add the below to your `dbt_project.yml`. 
 
 ```yml
-# dbt_project.yml
-
 dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
@@ -63,30 +61,25 @@ packages:
 By default, this package will run using your target database and the `salesforce` schema. If this is not where your Salesforce data is, add the following configuration to your root `dbt_project.yml` file:
 
 ```yml
-# dbt_project.yml
-
-...
-config-version: 2
-
 vars:
     salesforce_database: your_database_name    
     salesforce_schema: your_schema_name
 ```
 
 ### Disabling Models
-Your connector may not be syncing all tabes that this package references. This might be because you are excluding those tables. If you are not using those tables, you can disable the corresponding functionality in the package by specifying the variable in your `dbt_project.yml`. The metrics from the disabled tables will not populate in downstream models. By default, all packages are assumed to be true. You only have to add variables for tables you want to disable, like so:
+It is possible that your Salesforce connector does not sync every table that this package expects. If your syncs exclude certain tables, it is because you either don't use that functionality in Salesforce or actively excluded some tables from your syncs. 
 
-The `salesforce__user_role_enabled` variable below refers to the `user_role` table. 
+To disable the corresponding functionality in this package, you must add the corresponding variable(s) to your `dbt_project.yml`, which are listed below. By default, that is if none of these variables are added, all variables are assumed to be true. Add variables only for the tables you would like to disable:
 
 ```yml
-# dbt_project.yml
-
-...
-config-version: 2
-
 vars:
   salesforce__user_role_enabled: false # Disable if you do not have the user_role table
-
+  salesforce__lead_enabled: false # Disable if you do not have the lead table
+  salesforce__event_enabled: false # Disable if you do not have the event table
+  salesforce__task_enabled: false # Disable if you do not have the task table
+  salesforce__opportunity_line_item_enabled: false # Disable if you do not have the opportunity_line_item table
+  salesforce__order_enabled: false # Disable if you do not have the order table
+  salesforce__product_2_enabled: false # Disable if you do not have the product_2 table
 ```
 The corresponding metrics from the disabled tables will not populate in the downstream models.
 
@@ -96,18 +89,12 @@ Source tables are referenced using default names. If an individual source table 
 > IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_salesforce_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
 
 ```yml
-# dbt_project.yml
-...
-config-version: 2
 vars:
     <package_name>__<default_source_table_name>_identifier: your_table_name
 ```
 ### Salesforce History Mode
-If you have Salesforce [History Mode](https://fivetran.com/docs/getting-started/feature/history-mode) enabled for your connector, you will want to add and set the desired `using_[table]_history_mode_active_records` variable(s) as `true` to filter for only active records as the package is designed for non-historical data. These variables are disabled by default. 
+If you have Salesforce [History Mode](https://fivetran.com/docs/getting-started/feature/history-mode) enabled for your connector, in your `dbt_project.yml`, you will want to add and set the desired `using_[table]_history_mode_active_records` variable(s) as `true` to filter for only active records as the package is designed for non-historical data. These variables are disabled by default. 
 ```yml
-# dbt_project.yml
-
-...
 vars:
   using_account_history_mode_active_records: true      # false by default. Only use if you have history mode enabled.
   using_opportunity_history_mode_active_records: true  # false by default. Only use if you have history mode enabled.
@@ -130,14 +117,11 @@ models:
       +schema: my_new_schema_name # leave blank for just the target_schema
 ```
 ### Adding Passthrough Columns
-This package allows users to add additional columns to the `opportunity enhanced` model and `contact enhanced` model. For the `opportunity enhanced` model, columns passed through in `opportunity_enhanced_pass_through_columns` must also be present in the upstream source `opportunity`, `account`, `user`, or `user_role` table. If you want to include a column from the `user` table, you must specify if you want it to be a field related to the opportunity_manager or opportunity_owner.
+This package allows users to add additional columns to the `opportunity enhanced` model and `contact enhanced` model by using the below variables in you `dbt_project.yml` file. For the `opportunity enhanced` model, columns passed through in `opportunity_enhanced_pass_through_columns` must also be present in the upstream source `opportunity`, `account`, `user`, or `user_role` table. If you want to include a column from the `user` table, you must specify if you want it to be a field related to the opportunity_manager or opportunity_owner. 
 
 Additionally, you may add additional columns to the staging models. For example, for passing columns to `stg_salesforce__product_2` you would need to configure `product_2_pass_through_columns`.
 
 ```yml
-# dbt_project.yml
-
-...
 vars:
   opportunity_enhanced_pass_through_columns: [account_custom_field_1, my_opp_custom_field, user_role_custom_field_1, opportunity_manager.user_custom_column_1]
   account_pass_through_columns: [account_custom_field_1, account_custom_field_2]
