@@ -46,7 +46,7 @@ with spine as (
     {{ dbt_utils.date_spine(
         datepart="day",
         start_date=first_date_adjust,
-        end_date=dbt_utils.dateadd("day", 1, last_date_adjust)
+        end_date=dbt.dateadd("day", 1, last_date_adjust)
         )
     }}
 )
