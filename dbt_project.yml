@@ -1,7 +1,7 @@
 config-version: 2
 name: 'salesforce'
-version: '0.7.1'
-require-dbt-version: [">=1.0.0", "<2.0.0"]
+version: '0.8.0'
+require-dbt-version: [">=1.2.0", "<2.0.0"]
 models:
   salesforce:
     materialized: table
@@ -20,8 +20,6 @@ vars:
     product_2: "{{ ref('stg_salesforce__product_2') }}"
     order: "{{ ref('stg_salesforce__order') }}"
     opportunity_line_item: "{{ ref('stg_salesforce__opportunity_line_item') }}"
-
-    # Salesforce pass through column variables
     opportunity_enhanced_pass_through_columns: []
     account_pass_through_columns: []
     contact_pass_through_columns: []
@@ -34,8 +32,6 @@ vars:
     task_pass_through_columns: []
     user_role_pass_through_columns: []
     user_pass_through_columns: []
-    
-    
 clean-targets:
 - target
 - dbt_modules
