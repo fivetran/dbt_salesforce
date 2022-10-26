@@ -3,7 +3,7 @@
         href="https://github.com/fivetran/dbt_salesforce/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
     <a alt="dbt-core">
-        <img src="https://img.shields.io/badge/dbt_core™-version_>=1.0.0_<2.0.0-orange.svg" /></a>
+        <img src="https://img.shields.io/badge/dbt_core™-version_>=1.3.0_<2.0.0-orange.svg" /></a>
     <a alt="Maintained?">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
     <a alt="PRs">
@@ -47,14 +47,13 @@ dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
 ```
-- **dbt Version**: This dbt package requires you have a functional dbt project that utilizes a dbt version within the respective range `>=1.0.0, <2.0.0`.
 ## Step 2: Installing the Package
 Include the following salesforce package version in your `packages.yml`
 > Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: [">=0.7.0", "<0.8.0"]
+    version: [">=0.8.0", "<0.9.0"]
 ```
 ## Step 3: Configure Your Variables
 ### Database and Schema Variables
@@ -146,7 +145,7 @@ Include the following within your `packages.yml` file:
 packages:
 
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.6.0", "<0.7.0"]
+    version: [">=0.7.0", "<0.8.0"]
 ```
 
 Include the following within your `dbt_project.yml` file:
@@ -167,11 +166,11 @@ This dbt package is dependent on the following dbt packages. For more informatio
 ```yml
 packages:
     - package: fivetran/salesforce_source
-      version: [">=0.5.0", "<0.6.0"]
+      version: [">=0.6.0", "<0.7.0"]
     - package: fivetran/fivetran_utils
-      version: [">=0.3.0", "<0.4.0"]
+      version: [">=0.4.0", "<0.5.0"]
     - package: dbt-labs/dbt_utils
-      version: [">=0.8.0", "<0.9.0"]
+      version: [">=1.0.0", "<2.0.0"]
 ```
 # 🙌 How is this package maintained and can I contribute?
 ## Package Maintenance

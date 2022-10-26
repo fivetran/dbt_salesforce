@@ -17,7 +17,5 @@ dbt deps
 dbt seed --target "$db" --full-refresh
 dbt run --target "$db" --full-refresh
 dbt test --target "$db"
-## UPDATE FOR VARS HERE, IF NO VARS, PLEASE REMOVE
-dbt run --vars '{apple_search_ads__using_search_terms: True}' --target "$db" --full-refresh
+dbt run --vars '{using_account_history_mode_active_records: true, using_opportunity_history_mode_active_records: true, using_user_role_history_mode_active_records: true, using_user_history_mode_active_records: true, salesforce__user_role_enabled: false}' --target "$db" --full-refresh
 dbt test --target "$db"
-### END VARS CHUNK, REMOVE IF NOT USING
