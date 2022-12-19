@@ -145,7 +145,7 @@ Include the following within your `packages.yml` file:
 packages:
 
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.7.0", "<0.8.0"]
+    version: [">=0.8.0", "<0.9.0"]
 ```
 
 Include the following within your `dbt_project.yml` file:
@@ -171,6 +171,8 @@ packages:
       version: [">=0.4.0", "<0.5.0"]
     - package: dbt-labs/dbt_utils
       version: [">=1.0.0", "<2.0.0"]
+    - package: dbt-labs/spark_utils
+      version: [">=0.3.0", "<0.4.0"]
 ```
 # 🙌 How is this package maintained and can I contribute?
 ## Package Maintenance
