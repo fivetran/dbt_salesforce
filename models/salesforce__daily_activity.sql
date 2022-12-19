@@ -1,7 +1,7 @@
 with date_spine as (
     
     select 
-        {{ dbt_utils.date_trunc('day', 'date_day') }} as date_day
+        {{ dbt.date_trunc('day', 'date_day') }} as date_day
     from {{ ref('int_salesforce__date_spine') }}
 ),
 
@@ -9,7 +9,7 @@ with date_spine as (
 task as (
     
     select 
-        {{ dbt_utils.date_trunc('day', 'activity_date') }} as activity_date,
+        {{ dbt.date_trunc('day', 'activity_date') }} as activity_date,
         count(task_id) as tasks_completed
     from {{ var('task') }}
     group by 1
@@ -20,7 +20,7 @@ task as (
 salesforce_event as (
 
     select 
-        coalesce({{ dbt_utils.date_trunc('day', 'activity_date') }}, {{ dbt_utils.date_trunc('day', 'activity_date_time') }}) as activity_date,
+        coalesce({{ dbt.date_trunc('day', 'activity_date') }}, {{ dbt.date_trunc('day', 'activity_date_time') }}) as activity_date,
         count(event_id) as events_completed
     from {{ var('event') }}  
     group by 1
@@ -31,7 +31,7 @@ salesforce_event as (
 salesforce_lead as (
 
     select 
-        {{ dbt_utils.date_trunc('day', 'created_date') }} as created_date,
+        {{ dbt.date_trunc('day', 'created_date') }} as created_date,
         count(lead_id) as leads_created
     from {{ var('lead') }}
     group by 1
@@ -40,7 +40,7 @@ salesforce_lead as (
 salesforce_converted_lead as (
 
     select 
-        {{ dbt_utils.date_trunc('day', 'converted_date') }} as converted_date,
+        {{ dbt.date_trunc('day', 'converted_date') }} as converted_date,
         count(lead_id) as leads_converted
     from {{ var('lead') }}
     where is_converted
@@ -52,9 +52,9 @@ opportunity as (
 
     select 
         opportunity_id,
-        {{ dbt_utils.date_trunc('day', 'created_date') }} as created_date,
+        {{ dbt.date_trunc('day', 'created_date') }} as created_date,
         account_id,
-        {{ dbt_utils.date_trunc('day', 'close_date') }} as close_date,
+        {{ dbt.date_trunc('day', 'close_date') }} as close_date,
         is_closed,
         is_deleted,
         is_won,
