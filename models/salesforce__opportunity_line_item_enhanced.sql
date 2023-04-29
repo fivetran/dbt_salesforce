@@ -57,15 +57,8 @@ final as (
         {% endif %}
 
         --The below script allows for pass through columns.
-        {% if var('opportunity_line_item_pass_through_columns',[]) != [] %}
-        , oli.{{ var('opportunity_line_item_pass_through_columns') | join (", oli.")}}
-
-        {% endif %}
-
-        {% if var('product_2_pass_through_columns',[]) != [] %}
-        , product_2.{{ var('product_2_pass_through_columns') | join (", product_2.")}}
-
-        {% endif %}
+        
+        {{ fivetran_utils.fill_pass_through_columns('salesforce__opportunity_line_item_pass_through_columns','salesforce__product_2_pass_through_columns') }}
 
     from opportunity_line_item as oli
 

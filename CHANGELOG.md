@@ -1,3 +1,8 @@
+# dbt_salesforce v0.9.0
+
+## 🚨 Breaking Changes 🚨:
+[PR # ]() updates the old passthrough column methodology to allow for aliasing of any field names brought in. This is useful, for example, if you wish to bring in fields across different Salesforce objects that may have the same names and wish to alias them to avoid confusion, particularly if any of the objects are joined together.
+
 # dbt_salesforce v0.8.0
 
 ## 🚨 Breaking Changes 🚨:
