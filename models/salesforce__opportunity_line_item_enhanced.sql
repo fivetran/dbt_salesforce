@@ -58,7 +58,8 @@ final as (
 
         --The below script allows for pass through columns.
         
-        {{ fivetran_utils.fill_pass_through_columns('salesforce__opportunity_line_item_pass_through_columns','salesforce__product_2_pass_through_columns') }}
+        {{ fivetran_utils.fill_pass_through_columns('salesforce__opportunity_line_item_pass_through_columns') }}
+        {{ fivetran_utils.fill_pass_through_columns('salesforce__product_2_pass_through_columns') }}
 
     from opportunity_line_item as oli
 

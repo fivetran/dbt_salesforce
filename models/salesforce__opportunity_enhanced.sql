@@ -70,7 +70,10 @@ add_fields as (
 
         --The below script allows for pass through columns.
 
-        {{ fivetran_utils.fill_pass_through_columns('salesforce__opportunity_pass_through_columns','salesforce__account_pass_through_columns','salesforce__user_pass_through_columns','salesforce__user_role_pass_through_columns') }}
+        {{ fivetran_utils.fill_pass_through_columns('salesforce__opportunity_pass_through_columns') }}
+        {{ fivetran_utils.fill_pass_through_columns('salesforce__account_pass_through_columns') }}
+        {{ fivetran_utils.fill_pass_through_columns('salesforce__user_pass_through_columns') }}
+        {{ fivetran_utils.fill_pass_through_columns('salesforce__user_role_pass_through_columns') }}
 
     from opportunity
     left join account 

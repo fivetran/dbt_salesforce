@@ -55,7 +55,10 @@ select
 
         --The below scripts allows for pass through columns.
         
-    {{ fivetran_utils.fill_pass_through_columns('salesforce__contact_pass_through_columns','salesforce__account_pass_through_columns','salesforce__user_pass_through_columns') }}
+    {{ fivetran_utils.fill_pass_through_columns('salesforce__contact_pass_through_columns') }}
+    {{ fivetran_utils.fill_pass_through_columns('salesforce__account_pass_through_columns') }}
+    {{ fivetran_utils.fill_pass_through_columns('salesforce__user_pass_through_columns') }}
+
     
     
 from contact
