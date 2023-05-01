@@ -23,7 +23,7 @@ vars:
     salesforce_product_2_identifier: "sf_product_2_data"
     salesforce_order_identifier: "sf_order_data"
     salesforce_opportunity_line_item_identifier: "sf_opportunity_line_item_data"
-    salesforce_schema: salesforce_integrations_tests
+    salesforce_schema: salesforce_integrations_tests_1
 
 seeds:
   salesforce_integration_tests:
