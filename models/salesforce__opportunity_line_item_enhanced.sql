@@ -58,7 +58,10 @@ final as (
 
         --The below script allows for pass through columns.
         {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__opportunity_line_item_pass_through_columns', identifier='opportunity_line_item') }}
+
+        {% if var('salesforce__product_2_enabled', True) %}
         {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__product_2_pass_through_columns', identifier='product_2') }}
+        {% endif %}
 
     from opportunity_line_item as oli
 

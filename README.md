@@ -121,7 +121,9 @@ models:
       +schema: my_new_schema_name # leave blank for just the target_schema
 ```
 ### Adding Passthrough Columns
-This package allows users to add additional columns to the `opportunity enhanced` model and `contact enhanced` model by using the below variables in you `dbt_project.yml` file. For the `opportunity enhanced` model, columns passed through in `opportunity_enhanced_pass_through_columns` must also be present in the upstream source `opportunity`, `account`, `user`, or `user_role` table. If you want to include a column from the `user` table, you must specify if you want it to be a field related to the opportunity_manager or opportunity_owner. 
+This package allows users to add additional columns to the `opportunity enhanced`, `opportunity_line_item_enhanced`, and `contact enhanced` model by using the below variables in your `dbt_project.yml` file. 
+
+For the `opportunity enhanced` model, columns passed through in `opportunity_enhanced_pass_through_columns` must also be present in the upstream source `opportunity`, `account`, `user`, or `user_role` table. If you want to include a column from the `user` table, you must specify if you want it to be a field related to the opportunity_manager or opportunity_owner. 
 
 Additionally, you may add additional columns to the staging models. For example, for passing columns to `stg_salesforce__product_2` you would need to configure `product_2_pass_through_columns`.
 
