@@ -54,12 +54,9 @@ select
     account.type as account_type
 
         --The below scripts allows for pass through columns.
-        
-    {{ fivetran_utils.fill_pass_through_columns('salesforce__contact_pass_through_columns') }}
-    {{ fivetran_utils.fill_pass_through_columns('salesforce__account_pass_through_columns') }}
-    {{ fivetran_utils.fill_pass_through_columns('salesforce__user_pass_through_columns') }}
-
-    
+    {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__contact_pass_through_columns', identifier='contact') }}
+    {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__account_pass_through_columns', identifier='account') }}
+    {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__user_pass_through_columns', identifier='salesforce_user') }}
     
 from contact
 left join account 
