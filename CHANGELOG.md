@@ -1,7 +1,9 @@
 # dbt_salesforce v0.9.0
 
 ## 🚨 Breaking Changes 🚨:
-[PR # ]() updates the old passthrough column methodology to allow for aliasing of any field names brought in. This is useful, for example, if you wish to bring in fields across different Salesforce objects that may have the same names and wish to alias them to avoid confusion, particularly if any of the objects are joined together.
+[PR #38](https://github.com/fivetran/dbt_salesforce/pull/38) updates the old passthrough column methodology to allow for aliasing of any field names brought in. This is useful, for example, if you wish to bring in fields across different Salesforce objects that may have the same names and wish to alias them to avoid confusion, particularly if any of the objects are joined together.
+
+Additionally, the `salesforce__opportunity_enhanced` model has been updated regarding how custom fields passed through from the `user` table are dealt with. Since the `user` model is joined in two times, once as information about an opportunity owner and the other about an opportunity manager, to avoid ambiguity, custom fields passed through from the user table will be suffixed based on whether it belongs to a user who is an `_owner` or a `_manager`. 
 
 # dbt_salesforce v0.8.0
 
