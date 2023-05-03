@@ -58,7 +58,7 @@ Include the following salesforce package version in your `packages.yml`
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: [">=0.8.0", "<0.9.0"]
+    version: [">=0.9.0", "<0.10.0"]
 ```
 ## Step 3: Configure Your Variables
 ### Database and Schema Variables
