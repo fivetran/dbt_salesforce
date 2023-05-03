@@ -75,14 +75,14 @@ add_fields as (
         case when is_closed_this_quarter then 1 else 0 end as closed_count_this_quarter
 
         --The below script allows for pass through columns.
-        {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__opportunity_pass_through_columns', identifier='opportunity') }}
-        {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__account_pass_through_columns', identifier='account') }}
-        {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__user_pass_through_columns', identifier='opportunity_owner') }}
-        {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__user_pass_through_columns', identifier='opportunity_manager') }}
+        {{ custom_persist_pass_through_columns(pass_through_variable='salesforce__opportunity_pass_through_columns', identifier='opportunity') }}
+        {{ custom_persist_pass_through_columns(pass_through_variable='salesforce__account_pass_through_columns', identifier='account') }}
+        {{ custom_persist_pass_through_columns(pass_through_variable='salesforce__user_pass_through_columns', identifier='opportunity_owner', append_string= '_owner') }}
+        {{ custom_persist_pass_through_columns(pass_through_variable='salesforce__user_pass_through_columns', identifier='opportunity_manager', append_string= '_manager') }}
 
         -- If using user_role table, the following will be included, otherwise it will not.
         {% if var('salesforce__user_role_enabled', True) %}
-        {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__user_role_pass_through_columns', identifier='user_role') }}
+        {{ custom_persist_pass_through_columns(pass_through_variable='salesforce__user_role_pass_through_columns', identifier='user_role') }}
         {% endif %}
 
     from opportunity
