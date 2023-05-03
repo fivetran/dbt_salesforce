@@ -121,11 +121,11 @@ models:
       +schema: my_new_schema_name # leave blank for just the target_schema
 ```
 ### Adding Passthrough Columns
-This package allows users to add additional columns to the `opportunity enhanced`, `opportunity_line_item_enhanced`, and `contact enhanced` model by using the below variables in your `dbt_project.yml` file. 
+This package allows users to add additional columns to the `salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`, and `salesforce__contact_enhanced` model by using the below variables in your `dbt_project.yml` file.
 
-For the `opportunity enhanced` model, it joins in the `user` model two times, once as information about an opportunity owner and the other about an opportunity manager. Therefore to avoid ambiguous columns from joining in the same model twice, custom fields passed through from the user table will be suffixed based on whether it belongs to a user who is an `_owner` or a `_manager`. 
+For the `salesforce__opportunity_enhanced` model, it joins in the `user` model two times, since an opportunity has both an owner and manager. The first time the `user` model is joined is to add information about an opportunity owner. The second time is to add information about an opportunity manager. Therefore to avoid ambiguous columns from joining in the same model twice, custom fields passed through from the user table will be suffixed based on whether it belongs to a user who is an `_owner` or a `_manager`. 
 
-Additionally, you may add additional columns to the staging models. For example, for passing columns to `stg_salesforce__product_2` you would need to configure `product_2_pass_through_columns`.
+Additionally, you may add additional columns to the staging models. For example, for passing columns to `stg_salesforce__product_2` you would need to configure `salesforce__product_2_pass_through_columns`.
 
 ```yml
 vars:
@@ -183,7 +183,9 @@ Include the following within your `dbt_project.yml` file:
   opportunity: "{{ ref('my_opportunity_formula_table') }}"
 
 # In addition, add the desired field names as pass through columns
-  opportunity_pass_through_columns: ['formula_field_1','formula_field_2']
+  salesforce__opportunity_pass_through_columns:
+    - name: "salesforce__opportunity_field"
+      alias: "opportunity_field_x"
 ```
 
 ## (Optional) Step 6: Orchestrate your models with Fivetran Transformations for dbt Core™

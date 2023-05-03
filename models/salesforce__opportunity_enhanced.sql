@@ -2,15 +2,9 @@ with opportunity as (
     
     select *
     from {{ var('opportunity') }}
-), 
+),
 
-opportunity_owner as (
-
-    select *
-    from {{ var('user') }}  
-), 
-
-opportunity_manager as (
+salesforce_user as (
 
     select *
     from {{ var('user') }}  
@@ -88,9 +82,9 @@ add_fields as (
     from opportunity
     left join account 
         on opportunity.account_id = account.account_id
-    left join opportunity_owner 
+    left join salesforce_user as opportunity_owner 
         on opportunity.owner_id = opportunity_owner.user_id
-    left join opportunity_manager 
+    left join salesforce_user as opportunity_manager 
         on opportunity_owner.manager_id = opportunity_manager.user_id
 
     -- If using user_role table, the following will be included, otherwise it will not.
