@@ -57,9 +57,12 @@ Include the following salesforce package version in your `packages.yml`
 > Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 ```yaml
 packages:
-  - package: fivetran/salesforce
-    version: [">=0.9.0", "<0.10.0"]
+  - package: fivetran/salesforce 
+    version: [">=0.9.0", "<0.10.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
+
+Do NOT include the `salesforce_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
+
 ## Step 3: Configure Your Variables
 ### Database and Schema Variables
 By default, this package will run using your target database and the `salesforce` schema. If this is not where your Salesforce data is, add the following configuration to your root `dbt_project.yml` file:
