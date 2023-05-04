@@ -135,11 +135,13 @@ vars:
   salesforce__account_pass_through_columns: 
     - name: "salesforce__account_field"
       alias: "salesforce__account_field"
+      transform_sql: "cast(other_field as string)"
   salesforce__contact_pass_through_columns: 
     - name: "salesforce__contact_field"
       alias: "contact_field_x"
   salesforce__event_pass_through_columns: 
     - name: "salesforce__event_field"
+      transform_sql: "cast(this_other_field as int64)"
   salesforce__lead_pass_through_columns: 
     - name: "salesforce__lead_field"
   salesforce__opportunity_pass_through_columns: 
