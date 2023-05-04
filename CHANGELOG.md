@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # dbt_salesforce v0.9.0
 
 ## 🚨 Breaking Changes 🚨:
@@ -24,6 +25,14 @@
 | user_pass_through_columns | salesforce__user_pass_through_columns
 
 
+=======
+# dbt_salesforce v0.UPDATE.UPDATE
+
+ ## Under the Hood:
+
+- Incorporated the new `fivetran_utils.drop_schemas_automation` macro into the end of each Buildkite integration test job.
+- Updated the pull request [templates](/.github).
+>>>>>>> remotes/origin/MagicBot/integation-test-webhooks-14
 # dbt_salesforce v0.8.0
 
 ## 🚨 Breaking Changes 🚨:
