@@ -58,7 +58,7 @@ Include the following salesforce package version in your `packages.yml`
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: [">=0.8.0", "<0.9.0"]
+    version: [">=0.9.0", "<0.10.0"]
 ```
 ## Step 3: Configure Your Variables
 ### Database and Schema Variables
@@ -121,24 +121,48 @@ models:
       +schema: my_new_schema_name # leave blank for just the target_schema
 ```
 ### Adding Passthrough Columns
-This package allows users to add additional columns to the `opportunity enhanced` model and `contact enhanced` model by using the below variables in you `dbt_project.yml` file. For the `opportunity enhanced` model, columns passed through in `opportunity_enhanced_pass_through_columns` must also be present in the upstream source `opportunity`, `account`, `user`, or `user_role` table. If you want to include a column from the `user` table, you must specify if you want it to be a field related to the opportunity_manager or opportunity_owner. 
+This package allows users to add additional columns to the `salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`, and `salesforce__contact_enhanced` model by using the below variables in your `dbt_project.yml` file.
 
-Additionally, you may add additional columns to the staging models. For example, for passing columns to `stg_salesforce__product_2` you would need to configure `product_2_pass_through_columns`.
+For the `salesforce__opportunity_enhanced` model, it joins in the `user` model two times, since an opportunity has both an owner and manager. The first time the `user` model is joined is to add information about an opportunity owner. The second time is to add information about an opportunity manager. Therefore to avoid ambiguous columns from joining in the same model twice, custom fields passed through from the user table will be suffixed based on whether it belongs to a user who is an `_owner` or a `_manager`. 
+
+Additionally, you may add additional columns to the staging models. For example, for passing columns to `stg_salesforce__product_2` you would need to configure `salesforce__product_2_pass_through_columns`.
 
 ```yml
 vars:
-  opportunity_enhanced_pass_through_columns: [account_custom_field_1, my_opp_custom_field, user_role_custom_field_1, opportunity_manager.user_custom_column_1]
-  account_pass_through_columns: [account_custom_field_1, account_custom_field_2]
-  user_pass_through_columns: [user_custom_column_1,user_custom_column_2]
-  contact_pass_through_columns: [contact_custom_field_1, contact_custom_field_2]
-  opportunity_pass_through_columns: [my_opp_custom_field]
-  lead_pass_through_columns: [lead_custom_field_1, lead_custom_field_2]
-  task_pass_through_columns: [task_custom_field_1, task_custom_field_2]
-  event_pass_through_columns: [event_custom_field_1, event_custom_field_2]
-  product_2_pass_through_columns: [product_2_custom_field_1, product_2_custom_field_2]
-  order_pass_through_columns: [order_custom_field_1, order_custom_field_2]
-  opportunity_line_item_pass_through_columns: [opportunity_line_item_custom_field_1, opportunity_line_item_custom_field_2]
-  user_role_pass_through_columns: [user_role_custom_field_1, user_role_custom_field_2]
+  salesforce__account_pass_through_columns: 
+    - name: "salesforce__account_field"
+      alias: "salesforce__account_field"
+  salesforce__contact_pass_through_columns: 
+    - name: "salesforce__contact_field"
+      alias: "contact_field_x"
+  salesforce__event_pass_through_columns: 
+    - name: "salesforce__event_field"
+  salesforce__lead_pass_through_columns: 
+    - name: "salesforce__lead_field"
+  salesforce__opportunity_pass_through_columns: 
+    - name: "salesforce__opportunity_field"
+      alias: "opportunity_field_x"
+  salesforce__opportunity_line_item_pass_through_columns: 
+    - name: "salesforce__opportunity_line_item_field"
+      alias: "opportunity_line_item_field_x"
+    - name: "field_name_2"
+  salesforce__order_pass_through_columns: 
+    - name: "salesforce__order_field"
+      alias: "order_field_x"
+    - name: "another_field"
+      alias: "field_abc"
+  salesforce__product_2_pass_through_columns: 
+    - name: "salesforce__product_2_field"
+      alias: "product_2_field_x"
+  salesforce__task_pass_through_columns: 
+    - name: "salesforce__task_field"
+      alias: "task_field_x"
+  salesforce__user_role_pass_through_columns: 
+    - name: "salesforce__user_role_field"
+      alias: "user_role_field_x"
+  salesforce__user_pass_through_columns: 
+    - name: "salesforce__user_field"
+
 ```
 
 ## (Optional) Step 5: Adding Formula Fields as Pass Through Columns
@@ -159,7 +183,9 @@ Include the following within your `dbt_project.yml` file:
   opportunity: "{{ ref('my_opportunity_formula_table') }}"
 
 # In addition, add the desired field names as pass through columns
-  opportunity_pass_through_columns: ['formula_field_1','formula_field_2']
+  salesforce__opportunity_pass_through_columns:
+    - name: "salesforce__opportunity_field"
+      alias: "opportunity_field_x"
 ```
 
 ## (Optional) Step 6: Orchestrate your models with Fivetran Transformations for dbt Core™
@@ -171,7 +197,7 @@ This dbt package is dependent on the following dbt packages. For more informatio
 ```yml
 packages:
     - package: fivetran/salesforce_source
-      version: [">=0.6.0", "<0.7.0"]
+      version: [">=0.7.0", "<0.8.0"]
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]
     - package: dbt-labs/dbt_utils

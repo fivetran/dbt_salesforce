@@ -1,3 +1,38 @@
+<<<<<<< HEAD
+# dbt_salesforce v0.9.0
+
+## 🚨 Breaking Changes 🚨:
+[PR #38](https://github.com/fivetran/dbt_salesforce/pull/38) includes the following breaking changes:
+
+- Updates the old passthrough column methodology to allow for aliasing of any field names brought in. This is useful, for example, if you wish to bring in fields across different Salesforce objects that may have the same names and wish to alias them to avoid confusion, particularly if any of the objects are joined together.
+
+- Additionally, in the `salesforce__opportunity_enhanced` model, the old `opportunity_enhanced_pass_through_columns` variable has been replaced with the existing variables from the staging models (see below). This is because we updated the `salesforce__opportunity_enhanced` model with regards to how custom fields passed through from the `user` table are dealt with. Since the `user` model is joined in two times, once as information about an opportunity owner and the other about an opportunity manager, to avoid ambiguity, custom fields passed through from the user table will be suffixed based on whether it belongs to a user who is an `_owner` or a `_manager`. 
+
+- Finally, we have added the `salesforce__` prefix to all the passthrough variables:
+
+|**Old**|**New**
+-----|-----
+| account_pass_through_columns | salesforce__account_pass_through_columns
+| contact_pass_through_columns | salesforce__contact_pass_through_columns
+| event_pass_through_columns | salesforce__event_pass_through_columns
+| lead_pass_through_columns | salesforce__lead_pass_through_columns
+| opportunity_pass_through_columns | salesforce__opportunity_pass_through_columns
+| opportunity_line_item_pass_through_columns   | salesforce__opportunity_line_item_pass_through_columns
+| order_pass_through_columns | salesforce__order_pass_through_columns
+| product_2_pass_through_columns | salesforce__product_2_pass_through_columns
+| task_pass_through_columns | salesforce__task_pass_through_columns
+| user_role_pass_through_columns | salesforce__user_role_pass_through_columns
+| user_pass_through_columns | salesforce__user_pass_through_columns
+
+
+=======
+# dbt_salesforce v0.UPDATE.UPDATE
+
+ ## Under the Hood:
+
+- Incorporated the new `fivetran_utils.drop_schemas_automation` macro into the end of each Buildkite integration test job.
+- Updated the pull request [templates](/.github).
+>>>>>>> remotes/origin/MagicBot/integation-test-webhooks-14
 # dbt_salesforce v0.8.0
 
 ## 🚨 Breaking Changes 🚨:
