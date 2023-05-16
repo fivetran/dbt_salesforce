@@ -1,5 +1,6 @@
 # dbt_salesforce v0.9.1
 ## Bug Fixes
+[PR #40](https://github.com/fivetran/dbt_salesforce/pull/40) includes the following bug fixes.
 - The `salesforce__opportunity_pass_through_columns` passthrough variable config has been removed from the `salesforce__opportunity_enhanced` to ensure duplicate columns are not introduced when leveraging the opportunity passthrough functionality.
   - When using the `salesforce__opportunity_pass_through_columns` variable, you will still see the results populated in the `salesforce__opportunity_enhanced`. The fields are already introduced view the `opportunity.*` in the select statement. The config was removed as the passthrough fields were erroneously being added twice in the previous release of the package.
 
