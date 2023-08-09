@@ -1,3 +1,8 @@
+# 🚨 Notice for Quickstart Data Model Users 🚨
+Please note that this data model will now create a new transformation for **all** your Salesforce objects which contain formula fields. Upon upgrading this data model you will see an increase in Fvetran Transformations, these are all transformations which replicate formula fields for the base objects in a new view. If you wish to disable any of these new transformations you may remove the transformation within the UI.
+
+If you are not already a Quickstart Data Model user, you can find out more information [here](https://fivetran.com/docs/transformations/quickstart)!
+
 # dbt_salesforce v0.9.1
 ## Bug Fixes
 [PR #40](https://github.com/fivetran/dbt_salesforce/pull/40) includes the following bug fixes.
