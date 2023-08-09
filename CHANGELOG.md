@@ -1,5 +1,5 @@
 # 🚨 Notice for Quickstart Data Model Users 🚨
-Please note that this data model will now create a new transformation for **all** your Salesforce objects which contain formula fields. Upon upgrading this data model you will see an increase in Fvetran Transformations, these are all transformations which replicate formula fields for the base objects in a new view. If you wish to disable any of these new transformations you may remove the transformation within the UI.
+Please note that this data model will now create a new transformation for **all** your Salesforce objects which contain formula fields. Upon upgrading this data model you will see an increase in Fivetran Transformations, these new transformations replicate formula fields for the base Salesforce objects in a new materialized view. If you wish to disable any of these new transformations you may remove them within the UI.
 
 If you are not already a Quickstart Data Model user, you can find out more information [here](https://fivetran.com/docs/transformations/quickstart)!
 
