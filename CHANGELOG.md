@@ -1,5 +1,5 @@
 # 🚨 Notice for Quickstart Data Model Users Only 🚨
-Please note that this data model will now create a new transformation for **all** your Salesforce objects (tables) to replicate and include the relevant Salesforce formula fields. With the addition of formula fields, your transformation schema will change to <connector_schema> + `salesforce_quickstart`, rather than inheriting the schema from your connector. Please make sure you adjust downstream queries accordingly. If you wish to disable any of these new transformations you may remove them within the UI.
+Please note that this data model will now create a new transformation for **all** your Salesforce objects (tables) to replicate and include the relevant Salesforce formula fields. With the addition of formula fields, your transformation schema will change to <connector_schema> + `_quickstart`, rather than inheriting the schema from your connector. Please make sure you adjust downstream queries accordingly. If you wish to disable any of these new transformations you may remove them within the UI.
 
 If you are not already a Quickstart Data Model user, you can find out more information [here](https://fivetran.com/docs/transformations/quickstart)!
 
