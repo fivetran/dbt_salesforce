@@ -38,6 +38,8 @@ You can also refer to the table below for a detailed view of all models material
 | [salesforce__contact_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_enhanced)  |Each record represents a contact with additional account and owner information.
 | [salesforce__daily_activity](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__daily_activity)  |Each record represents a daily summary of the number of sales activities, for example tasks and opportunities closed.
 | [salesforce__opportunity_line_item_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_line_item_enhanced)  |Each record represents a line item belonging to a certain opportunity, with additional product details.
+
+**Note**: For Quickstart Data Model users only, in addition to the above output models you will also receive models in your transformation list which replicate **all** of your Salesforce objects with the inclusion of the relevant formula fields in the generated output models.
 <!--section-end-->
 
 # 🎯 How do I use the dbt package?
