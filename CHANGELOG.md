@@ -3,6 +3,10 @@ Please note that this data model will now create a new transformation for **all*
 
 If you are not already a Quickstart Data Model user, you can find out more information [here](https://fivetran.com/docs/transformations/quickstart)!
 
+# dbt_salesforce v0.9.2
+## Documentation and Notice Updates
+- Notices were added to both the top of the CHANGELOG and within the README to alert users of the Quickstart Data Model that Salesforce formulas will be replicated in the Fivetran transformation. For non Quickstart Data Model users there will be no change following this update.
+
 # dbt_salesforce v0.9.1
 ## Bug Fixes
 [PR #40](https://github.com/fivetran/dbt_salesforce/pull/40) includes the following bug fixes.
