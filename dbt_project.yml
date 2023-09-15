@@ -7,6 +7,8 @@ models:
     materialized: table
     intermediate:
       materialized: ephemeral
+      int_salesforce__account_history_spine:
+        +materialized: table
 vars:
   salesforce:
     account: "{{ ref('stg_salesforce__account') }}"
@@ -20,6 +22,15 @@ vars:
     product_2: "{{ ref('stg_salesforce__product_2') }}"
     order: "{{ ref('stg_salesforce__order') }}"
     opportunity_line_item: "{{ ref('stg_salesforce__opportunity_line_item') }}"
+
+    account_history: "{{ ref('stg_salesforce__account_history') }}"
+    contact_history: "{{ ref('stg_salesforce__contact_history') }}"
+    event_history: "{{ ref('stg_salesforce__event_history') }}"
+    lead_history: "{{ ref('stg_salesforce__lead_history') }}"
+    opportunity_history: "{{ ref('stg_salesforce__opportunity_history') }}"
+    task_history: "{{ ref('stg_salesforce__task_history') }}"
+    user_history: "{{ ref('stg_salesforce__user_history') }}"
+    user_role_history: "{{ ref('stg_salesforce__user_role_history') }}"
 
     salesforce__account_pass_through_columns: []
     salesforce__contact_pass_through_columns: []
