@@ -57,11 +57,11 @@ opportunity_dates as (
 opportunity_spine as (
 
     select 
-        cast{{ dbt.date_trunc('day', spine.date_day)}} as date_day,
+        cast({{ dbt.date_trunc('day', 'spine.date_day')}} as date) as date_day,
         opportunity_dates.account_id
     from spine
     join opportunity_dates on
-        opportunity_dates._fivetran_start <= spine.date_day
+        cast( {{ dbt.date_trunc('day', 'opportunity_dates._fivetran_start') }} as date) <= spine.date_day
 ),
 
 surrogate_key as (

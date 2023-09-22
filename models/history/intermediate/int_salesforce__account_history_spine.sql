@@ -51,11 +51,12 @@ account_dates as (
 account_spine as (
 
     select 
-        cast{{ dbt.date_trunc('day', spine.date_day)}} as date_day,
+        cast({{ dbt.date_trunc('day', 'spine.date_day')}} as date) as date_day,
         account_dates.account_id
     from spine
     join account_dates on
-        account_dates._fivetran_start <= spine.date_day
+        cast( {{ dbt.date_trunc('day', 'account_dates._fivetran_start') }} as date) <= spine.date_day
+        and cast( {{ dbt.date_trunc('day', dbt.current_timestamp_in_utc_backcompat()) }} as date) >= spine.date_day
 ),
 
 surrogate_key as (
