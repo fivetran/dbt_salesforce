@@ -39,6 +39,15 @@ You can also refer to the table below for a detailed view of all models material
 | [salesforce__daily_activity](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__daily_activity)  |Each record represents a daily summary of the number of sales activities, for example tasks and opportunities closed.
 | [salesforce__opportunity_line_item_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_line_item_enhanced)  |Each record represents a line item belonging to a certain opportunity, with additional product details.
 
+## Optional: History Mode models
+If a customer is actively using Salesforce history mode, they will also have access to these models as well.
+
+
+|**model**|**description**
+-----|-----
+
+| [salesforce__manager_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__manager_performance)     |
+
 **Note**: For Quickstart Data Model users only, in addition to the above output models you will also receive models in your transformation list which replicate **all** of your Salesforce objects with the inclusion of the relevant formula fields in the generated output models.
 <!--section-end-->
 
@@ -60,7 +69,7 @@ Include the following salesforce package version in your `packages.yml`
 ```yaml
 packages:
   - package: fivetran/salesforce 
-    version: [">=0.9.0", "<0.10.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.10.0", "<0.11.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 Do NOT include the `salesforce_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -126,7 +135,7 @@ models:
       +schema: my_new_schema_name # leave blank for just the target_schema
 ```
 ### Adding Passthrough Columns
-This package allows users to add additional columns to the `salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`, and `salesforce__contact_enhanced` model by using the below variables in your `dbt_project.yml` file. These variables allow these additional columns to be aliased (`alias`) and casted (`transform_sql`) if desired, but not required. Datatype casting is configured via a sql snippet within the `transform_sql` key. You may add the desired sql while omitting the `as field_name` at the end and your custom pass-though fields will be casted accordingly. Use the below format for declaring the respective pass-through variables.
+This package allows users to add additional columns to the `salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`,`salesforce__contact_enhanced`, and any of the `daily_history` models if you have Salesforce history mode enabled. You can do this by using the below variables in your `dbt_project.yml` file. These variables allow these additional columns to be aliased (`alias`) and casted (`transform_sql`) if desired, but not required. Datatype casting is configured via a sql snippet within the `transform_sql` key. You may add the desired sql while omitting the `as field_name` at the end and your custom pass-though fields will be casted accordingly. Use the below format for declaring the respective pass-through variables.
 
 For the `salesforce__opportunity_enhanced` model, it joins in the `user` model two times, since an opportunity has both an owner and manager. The first time the `user` model is joined is to add information about an opportunity owner. The second time is to add information about an opportunity manager. Therefore to avoid ambiguous columns from joining in the same model twice, custom fields passed through from the user table will be suffixed based on whether it belongs to a user who is an `_owner` or a `_manager`. 
 
@@ -173,6 +182,32 @@ vars:
   salesforce__user_pass_through_columns: 
     - name: "salesforce__user_field"
 
+  ##history mode passthrough columns
+  salesforce__account_history_pass_through_columns:
+    - name: "salesforce__account_history_field"
+      alias: "account_history_field_x"
+  salesforce__contact__history_pass_through_columns:
+    - name: "salesforce__contact_history_field"
+      alias: "contact_history_field_x"
+  salesforce__event__history_pass_through_columns:
+    - name: "salesforce__event_history_field"
+      alias: "event_history_field_x"
+  salesforce__lead__history_pass_through_columns:
+    - name: "salesforce__lead_history_field"
+      alias: "lead_history_field_x"
+  salesforce__opportunity_history_pass_through_columns:
+    - name: "salesforce__opportunity_history_field"
+      alias: "opportunity_history_field_x"  
+  salesforce__task_history_pass_through_columns:
+    - name: "salesforce__task_history_field"
+      alias: "task_history_field_x"
+  salesforce__user_history_pass_through_columns:
+    - name: "salesforce__user_history_field"
+      alias: "user_history_field_x"
+  salesforce__user_role_history_pass_through_columns:
+    - name: "salesforce__user_role_history_field"
+      alias: "user_role_history_field_x"
+
 ```
 
 ## (Optional) Step 5: Adding Formula Fields as Pass Through Columns
@@ -207,7 +242,7 @@ This dbt package is dependent on the following dbt packages. For more informatio
 ```yml
 packages:
     - package: fivetran/salesforce_source
-      version: [">=0.7.0", "<0.8.0"]
+      version: [">=0.8.0", "<0.9.0"]
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]
     - package: dbt-labs/dbt_utils

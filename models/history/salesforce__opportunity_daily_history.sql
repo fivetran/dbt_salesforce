@@ -1,11 +1,11 @@
-{{ config(enabled=var('account_history_enabled', False)) }}
+{{ config(enabled=var('opportunity_history_enabled', False)) }}
 
 {{
     config(
         materialized='incremental',
         partition_by = {'field': 'date_day', 'data_type': 'date'}
             if target.type not in ['spark', 'databricks'] else ['date_day'],
-        unique_key='account_day_id',
+        unique_key='opportunity_day_id',
         incremental_strategy = 'merge' if target.type not in ('snowflake', 'postgres', 'redshift') else 'delete+insert',
         file_format = 'delta'
     )
@@ -19,7 +19,7 @@ with spine as (
         select 
             min( _fivetran_start ) as min_date,
             {{ dbt.date_trunc('day', dbt.current_timestamp_backcompat()) }} as max_date
-        from {{ source('salesforce_history', 'account') }}
+        from {{ source('salesforce_history', 'opportunity') }}
         {% endset %}
 
         {% set calc_first_date = run_query(date_query).columns[0][0]|string %}
@@ -44,17 +44,18 @@ with spine as (
     }}
 
     {% if is_incremental() %}
-    where cast(date_day as date) >= (select max(date_day) from {{ this }} )
+    where date_day >= (select max(date_day) from {{ this }} )
     {% endif %}
 ),
 
-account_history as (
+opportunity_history as (
 
     select *,
-        cast( {{ dbt.date_trunc('day', '_fivetran_start') }} as date) as start_day   
-             
-    from {{ var('account_history') }}
+        cast( {{ dbt.date_trunc('day', '_fivetran_start') }} as date) as start_day  
 
+    from {{ var('opportunity_history') }}
+
+   
 ),
 
 order_daily_values as (
@@ -62,10 +63,11 @@ order_daily_values as (
     select 
         *,
         row_number() over (
-            partition by start_day, account_id
-            order by _fivetran_start desc) as row_num    
- 
-    from account_history  
+            partition by start_day, opportunity_id
+            order by _fivetran_start desc) as row_num
+         
+    from opportunity_history  
+
 ),
 
 get_latest_daily_value as (
@@ -80,7 +82,7 @@ daily_history as (
     select 
         cast(spine.date_day as date) as date_day,
         get_latest_daily_value.*,
-        {{ dbt_utils.generate_surrogate_key(['spine.date_day','get_latest_daily_value.account_id']) }} as account_day_id
+        {{ dbt_utils.generate_surrogate_key(['spine.date_day','get_latest_daily_value.opportunity_id']) }} as opportunity_day_id
     from get_latest_daily_value
     join spine on get_latest_daily_value._fivetran_start <= cast(spine.date_day as {{ dbt.type_timestamp() }})
         and get_latest_daily_value._fivetran_end >= cast(spine.date_day as {{ dbt.type_timestamp() }})
