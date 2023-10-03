@@ -3,6 +3,12 @@ Please note that this data model will now create a new transformation for **all*
 
 If you are not already a Quickstart Data Model user, you can find out more information [here](https://fivetran.com/docs/transformations/quickstart)!
 
+# dbt_salesforce v0.9.3
+## 🪲 Bug Fix ⚒️
+[PR #44](https://github.com/fivetran/dbt_salesforce/pull/44) introduces the following update:
+
+- Updated the `first_date_query` logic in `int_salesforce__date_spine` to select first date from the minimum `created_date` on the `opportunity` source when the `lead` source is not available.
+
 # dbt_salesforce v0.9.2
 ## Documentation and Notice Updates
 [PR #42](https://github.com/fivetran/dbt_salesforce/pull/42) includes the following update:

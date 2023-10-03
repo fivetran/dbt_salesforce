@@ -3,7 +3,13 @@ with spine as (
 
     {% if execute %}
     {% set first_date_query %}
-        select  min( created_date ) as min_date from {{ source('salesforce', 'lead') }}
+        {% if var('salesforce__lead_enabled', True) %}
+            select  min( created_date ) as min_date from {{ source('salesforce', 'lead') }}
+
+        {% else %}
+            select  min( created_date ) as min_date from {{ source('salesforce', 'opportunity') }}
+        {% endif %}   
+
     {% endset %}
     {% set first_date = run_query(first_date_query).columns[0][0]|string %}
     
