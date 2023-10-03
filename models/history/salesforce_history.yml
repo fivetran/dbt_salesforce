@@ -1,5 +1,7 @@
 version: 2
 
+models:
+
   - name: salesforce__account_daily_history
     description: Each record is a daily record in an account, starting with its first active date and updating up toward the current date or its last active date.
     columns:
@@ -13,7 +15,7 @@ version: 2
     description: Each record is a daily record in an opportunity, starting with its first active date and updating up toward the current date or its last active date.
     columns:
       - name: opportunity_day_id
-        description: Surrogate key hashed on `date_day` and `account_id`
+        description: Surrogate key hashed on `date_day` and `opportunity_id`
         tests:
           - unique
           - not_null
