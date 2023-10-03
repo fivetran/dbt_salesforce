@@ -12,6 +12,9 @@ models:
 
 vars:
   salesforce_source:
+    salesforce_schema: salesforce_integrations_tests_1 
+    salesforce_history_schema: salesforce_integrations_tests_1 
+
     salesforce_account_identifier: "sf_account_data"
     salesforce_opportunity_identifier: "sf_opportunity_data"
     salesforce_user_identifier: "sf_user_data"
@@ -34,7 +37,6 @@ vars:
     salesforce_user_history_identifier: "sf_user_history_data"
     salesforce_user_role_history_identifier: "sf_user_role_history_data"
 
-    salesforce_schema: salesforce_integrations_tests_1
 
 seeds:
   salesforce_integration_tests:
