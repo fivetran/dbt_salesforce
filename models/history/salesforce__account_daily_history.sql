@@ -51,8 +51,7 @@ with spine as (
 account_history as (
 
     select *,
-        cast( {{ dbt.date_trunc('day', '_fivetran_start') }} as date) as start_day   
-             
+        cast( {{ dbt.date_trunc('day', '_fivetran_start') }} as date) as start_day       
     from {{ var('account_history') }}
 
 ),

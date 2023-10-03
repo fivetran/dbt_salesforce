@@ -65,7 +65,6 @@ order_daily_values as (
         row_number() over (
             partition by start_day, opportunity_id
             order by _fivetran_start desc) as row_num
-         
     from opportunity_history  
 
 ),

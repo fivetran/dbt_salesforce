@@ -21,4 +21,6 @@ dbt run --target "$db" --full-refresh
 dbt test --target "$db"
 dbt run --vars '{using_account_history_mode_active_records: true, using_opportunity_history_mode_active_records: true, using_user_role_history_mode_active_records: true, using_user_history_mode_active_records: true, salesforce__user_role_enabled: false}' --target "$db" --full-refresh
 dbt test --target "$db"
+dbt run --vars '{account_history_enabled: true, opportunity_history_enabled: true}' --target "$db" --full-refresh
+dbt test --target "$db"
 dbt run-operation fivetran_utils.drop_schemas_automation --target "$db"
