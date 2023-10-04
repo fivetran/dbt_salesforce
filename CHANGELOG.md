@@ -5,6 +5,31 @@ If you are not already a Quickstart Data Model user, you can find out more infor
 
 # dbt_salesforce v0.10.0 
 ## 🚨 Breaking Changes 🚨:
+- We have added daily history mode models in the [`models/history`](https://github.com/fivetran/dbt_salesforce_source/tree/main/models/history) folder [based off of Fivetran's history mode feature](https://fivetran.com/docs/core-concepts/sync-modes/history-mode), pulling from source models in `dbt_salesforce_source`. This will allow customers to utilize the Fivetran history mode feature, which records every version of each record in the source table from the moment this mode is activated in the equivalent tables.
+
+- Here are the new models that were added:
+
+|**Model added**|**Description** 
+-----|----- 
+| [salesforce__account_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__account_daily_history) | Each record is a daily record in an account, starting with its first active date and updating up toward either the current date (if still active) or its last active date.  
+| [salesforce__contact_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_daily_history) |  Each record is a daily record in an contact, starting with its first active date and updating up toward either the current date (if still active) or its last active date.
+| [salesforce__opportunity_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_daily_history) | Each record is a daily record in an opportunity, starting with its first active date and updating up toward either the current date (if still active) or its last active date. 
+
+- These models are disabled by default, so you will have to enable the equivalent models below in your `dbt_project.yml` to utilize them. There's a longer list of models you can enable if you want to utilize the staging history models as well--[see the README](https://github.com/fivetran/dbt_salesforce#salesforce-history-mode) for more details. 
+
+```yml
+# dbt_project.yml
+
+...
+vars:
+  salesforce__account_history_enabled: true      # False by default. Only use if you have history mode enabled and wish to leverage the account history table.
+  salesforce__contact_history_enabled: true  # False by default. Only use if you have history mode enabled and wish to leverage the contact history table.  
+  salesforce__opportunity_history_enabled: true      # False by default. Only use if you have history mode enabled and wish to leverage the opportunity history table. 
+```
+
+## Under The Hood
+- We've added variable configuration that will allow you to filter the history start and end dates in case you only want to access a subset of historical records in each model. See the `Setting the date range for the Salesforce Daily History models` [section in the README](https://github.com/fivetran/dbt_salesforce#optional-step-4-additional-configurations) for more details.
+
 # dbt_salesforce v0.9.2
 ## Documentation and Notice Updates
 [PR #42](https://github.com/fivetran/dbt_salesforce/pull/42) includes the following update:

@@ -16,7 +16,8 @@
 # Salesforce Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_salesforce/))
 
 # 📣 What does this dbt package do?
-- Produces modeled tables that leverage Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema) and builds off the output of our [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source).
+- Produces modeled tables that leverage Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema) and builds off the output of our [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source). 
+- This package also provides you with the option to leverage the history mode to gather historical records of your essential tables.
 
 - This package enables users to:
   - Understand the performance of your opportunities
@@ -24,31 +25,27 @@
   - Have a daily summary of sales activities 
   - Leverage an enhanced contact list
   - View more details about opportunity line items
+  - Gather daily historical records of your accounts, contacts and opportunities
 
 <!--section="salesforce_transformation_model"-->
 This package also generates a comprehensive data dictionary of your source and modeled Salesforce data via the [dbt docs site](https://fivetran.github.io/dbt_salesforce/)
 You can also refer to the table below for a detailed view of all models materialized by default within this package.
 
-|**model**|**description**
------|-----
-| [salesforce__manager_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__manager_performance)     |Each record represents a manager, enriched with data about their team's pipeline, bookings, losses, and win percentages.
-| [salesforce__owner_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__owner_performance)         |Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, losses, and win percentages.
-| [salesforce__sales_snapshot](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__sales_snapshot)               |A single row snapshot that provides various metrics about your sales funnel.
-| [salesforce__opportunity_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_enhanced)  |Each record represents an opportunity, enriched with related data about the account and opportunity owner.
-| [salesforce__contact_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_enhanced)  |Each record represents a contact with additional account and owner information.
-| [salesforce__daily_activity](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__daily_activity)  |Each record represents a daily summary of the number of sales activities, for example tasks and opportunities closed.
-| [salesforce__opportunity_line_item_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_line_item_enhanced)  |Each record represents a line item belonging to a certain opportunity, with additional product details.
-
-## Optional: History Mode models
-If a customer is actively using Salesforce history mode, they will also have access to these models as well.
-
-
-|**model**|**description**
------|-----
-
-| [salesforce__manager_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__manager_performance)     |
-
-**Note**: For Quickstart Data Model users only, in addition to the above output models you will also receive models in your transformation list which replicate **all** of your Salesforce objects with the inclusion of the relevant formula fields in the generated output models.
+|**model**|**description**|**Quickstart compatible**
+-----|-----|-----
+| [salesforce__manager_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__manager_performance)     |Each record represents a manager, enriched with data about their team's pipeline, bookings, losses, and win percentages. | Yes
+| [salesforce__owner_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__owner_performance)         |Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, losses, and win percentages. | Yes
+| [salesforce__sales_snapshot](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__sales_snapshot)               |A single row snapshot that provides various metrics about your sales funnel. | Yes
+| [salesforce__opportunity_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_enhanced)  |Each record represents an opportunity, enriched with related data about the account and opportunity owner. | Yes
+| [salesforce__contact_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_enhanced)  |Each record represents a contact with additional account and owner information. | Yes
+| [salesforce__daily_activity](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__daily_activity)  |Each record represents a daily summary of the number of sales activities, for example tasks and opportunities closed. | Yes
+| [salesforce__opportunity_line_item_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_line_item_enhanced)  |Each record represents a line item belonging to a certain opportunity, with additional product details. | Yes
+| [salesforce__account_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__account_daily_history) | Each record is a daily record in an account, starting with its first active date and updating up toward either the current date (if still active) or its last active date. | No
+| [salesforce__contact_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_daily_history) |  Each record is a daily record in an contact, starting with its first active date and updating up toward either the current date (if still active) or its last active date.
+ | No
+| [salesforce__opportunity_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_daily_history) | Each record is a daily record in an opportunity, starting with its first active date and updating up toward either the current date (if still active) or its last active date. | No
+ 
+**Note**: For Quickstart Data Model users only, in addition to the above output models that are Quickstart compatible, you will also receive models in your transformation list which replicate **all** of your Salesforce objects with the inclusion of the relevant formula fields in the generated output models.
 <!--section-end-->
 
 # 🎯 How do I use the dbt package?
@@ -83,6 +80,17 @@ vars:
     salesforce_database: your_database_name    
     salesforce_schema: your_schema_name
 ```
+ 
+If you are utilizing Salesforce History Mode and your target database and schema differ as well, you will need to add an additional configuration for the history schema and database to your `dbt_project.yml`
+
+```yml
+vars:
+    salesforce_database: your_database_name    
+    salesforce_schema: your_schema_name
+
+    salesforce_history_database: your_history_database_name
+    salesforce_history_schema: your_history_schema_name
+```
 
 ### Disabling Models
 It is possible that your Salesforce connector does not sync every table that this package expects. If your syncs exclude certain tables, it is because you either don't use that functionality in Salesforce or actively excluded some tables from your syncs. 
@@ -110,8 +118,27 @@ Source tables are referenced using default names. If an individual source table 
 vars:
     <package_name>__<default_source_table_name>_identifier: your_table_name
 ```
-### Salesforce History Mode
-If you have Salesforce [History Mode](https://fivetran.com/docs/getting-started/feature/history-mode) enabled for your connector, in your `dbt_project.yml`, you will want to add and set the desired `using_[table]_history_mode_active_records` variable(s) as `true` to filter for only active records as the package is designed for non-historical data. These variables are disabled by default. 
+### Salesforce History Mode Daily Models
+If you have Salesforce [History Mode](https://fivetran.com/docs/getting-started/feature/history-mode) enabled for your connector, in your `dbt_project.yml`, you will want to add the following variables as `true` to enable these models. These variables are disabled by default. In particular, `salesforce__account_history_enabled`, `salesforce__contact_history_enabled` and `salesforce__opportunity_history_enabled` need to be set to true to utilize the equivalent daily history models. 
+
+```yml
+# dbt_project.yml
+
+...
+vars:
+  salesforce__account_history_enabled: true      # False by default. Only use if you have history mode enabled and wish to leverage the account history table.
+  salesforce__contact_history_enabled: true  # False by default. Only use if you have history mode enabled and wish to leverage the contact history table.
+  salesforce__event_history_enabled: true    # False by default. Only use if you have history mode enabled and wish to leverage the event history table.
+  salesforce__lead_history_enabled: true         # False by default. Only use if you have history mode enabled and wish to leverage the lead history table.
+  salesforce__opportunity_history_enabled: true      # False by default. Only use if you have history mode enabled and wish to leverage the opportunity history table.
+  salesforce__task_history_enabled: true         # False by default. Only use if you have history mode enabled and wish to leverage the task history table.
+  salesforce__user_history_enabled: true         # False by default. Only use if you have history mode enabled and wish to leverage the user history table.
+  salesforce__user_role_history_enabled: true        # False by default. Only use if you have history mode enabled and wish to leverage the user role history table.
+```
+
+### Salesforce History Mode Active Records
+If you have Salesforce [History Mode](https://fivetran.com/docs/getting-started/feature/history-mode) enabled for your connector, in your `dbt_project.yml`, you will want to add and set the desired `using_[table]_history_mode_active_records` variable(s) as `true` to filter for only active records as the standard salesforce models are designed for non-historical data. These variables are disabled by default. 
+
 ```yml
 vars:
   using_account_history_mode_active_records: true      # false by default. Only use if you have history mode enabled.
@@ -126,6 +153,24 @@ vars:
   using_order_history_mode_active_records: true        # false by default. Only use if you have history mode enabled.
   using_opportunity_line_item_history_mode_active_records: true       # false by default. Only use if you have history mode enabled.
 ```
+
+### Setting the date range for the Salesforce Daily History models
+By default, the Salesforce daily history models will aggregate data for the entire date range of your data set based on the minimum `_fivetran_start` value available, extending to the current date in the `account_history`, `contact_history` and `opportunity_history` models.  However, these daily history models are likely to be quite extensive, so you might not want to lead every historical record in each model's history.
+
+So you may want to limit this date range if desired by defining the following variables for each respective historical model. You can do this with the history `first_date` and `last_date` variables to set the range of date records for account, contact, and/or opportunity. add the following configuration to your root `dbt_project.yml` file:
+
+```yml
+vars:
+    account_history_first_date: "yyyy-mm-dd"
+    account_history_last_date: "yyyy-mm-dd"
+
+    contact_history_first_date: "yyyy-mm-dd"
+    contact_history_last_date: "yyyy-mm-dd"
+
+    opportunity_history_first_date: "yyyy-mm-dd"
+    opportunity_history_last_date: "yyyy-mm-dd"
+```
+
 ### Change the Build Schema
 By default, this package builds the GitHub staging models within a schema titled (<target_schema> + `_stg_salesforce`) in your target database. If this is not where you would like your GitHub staging data to be written to, add the following configuration to your root `dbt_project.yml` file:
 
@@ -181,34 +226,9 @@ vars:
       alias: "user_role_field_x"
   salesforce__user_pass_through_columns: 
     - name: "salesforce__user_field"
-
-  ##history mode passthrough columns
-  salesforce__account_history_pass_through_columns:
-    - name: "salesforce__account_history_field"
-      alias: "account_history_field_x"
-  salesforce__contact__history_pass_through_columns:
-    - name: "salesforce__contact_history_field"
-      alias: "contact_history_field_x"
-  salesforce__event__history_pass_through_columns:
-    - name: "salesforce__event_history_field"
-      alias: "event_history_field_x"
-  salesforce__lead__history_pass_through_columns:
-    - name: "salesforce__lead_history_field"
-      alias: "lead_history_field_x"
-  salesforce__opportunity_history_pass_through_columns:
-    - name: "salesforce__opportunity_history_field"
-      alias: "opportunity_history_field_x"  
-  salesforce__task_history_pass_through_columns:
-    - name: "salesforce__task_history_field"
-      alias: "task_history_field_x"
-  salesforce__user_history_pass_through_columns:
-    - name: "salesforce__user_history_field"
-      alias: "user_history_field_x"
-  salesforce__user_role_history_pass_through_columns:
-    - name: "salesforce__user_role_history_field"
-      alias: "user_role_history_field_x"
-
 ```
+
+**For History Mode users**: If you are leveraging the daily history models, if you wish to bring in passthrough columns, you will not need to add passthrough columns here, but instead in the `dbt_project.yml` in the `dbt_salesforce_source` package. See instructions in the [Adding Passthrough Columns section in the `dbt_salesforce_source` README](https://github.com/fivetran/dbt_salesforce_source/blob/main/README.md#adding-passthrough-columns).
 
 ## (Optional) Step 5: Adding Formula Fields as Pass Through Columns
 ### Adding Formula Fields as Pass Through Columns

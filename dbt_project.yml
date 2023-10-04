@@ -7,7 +7,7 @@ models:
     materialized: table
     intermediate:
       materialized: ephemeral
-      
+
 vars:
   salesforce:
     account: "{{ ref('stg_salesforce__account') }}"
@@ -42,17 +42,6 @@ vars:
     salesforce__task_pass_through_columns: []
     salesforce__user_role_pass_through_columns: []
     salesforce__user_pass_through_columns: []
-
-# If using history mode passthrough columns
-    salesforce__account_history_pass_through_columns: []
-    salesforce__contact_history_pass_through_columns: []
-    salesforce__event_history_pass_through_columns: []
-    salesforce__lead_history_pass_through_columns: []
-    salesforce__opportunity_history_pass_through_columns: []
-    salesforce__task_history_pass_through_columns: []
-    salesforce__user_history_pass_through_columns: []
-    salesforce__user_role_history_pass_through_columns: []
-
 
 clean-targets:
 - target

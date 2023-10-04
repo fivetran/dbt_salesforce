@@ -1,4 +1,4 @@
-{{ config(enabled=var('opportunity_history_enabled', False)) }}
+{{ config(enabled=var('salesforce__opportunity_history_enabled', False)) }}
 
 {{
     config(
@@ -14,7 +14,7 @@
 with spine as (
 
     {% if execute %}
-    {% if not var('salesforce_history_fivetran_start', None) or not var('salesforce_history_fivetran_end', None) %}
+    {% if not var('opportunity_history_first_date', None) or not var('opportunity_history_last_date', None) %}
         {% set date_query %}
         select 
             min( _fivetran_start ) as min_date,
@@ -33,8 +33,8 @@ with spine as (
     {% endif %}
 
     {# Prioritizes variables over calculated dates #}
-    {% set first_date = var('salesforce_history_fivetran_start', calc_first_date)|string %}
-    {% set last_date = var('salesforce_history_fivetran_end', calc_last_date)|string %}
+    {% set first_date = var('opportunity_history_first_date', calc_first_date)|string %}
+    {% set last_date = var('opportunity_history_last_date', calc_last_date)|string %}
 
     {{ dbt_utils.date_spine(
         datepart="day",
@@ -52,10 +52,7 @@ opportunity_history as (
 
     select *,
         cast( {{ dbt.date_trunc('day', '_fivetran_start') }} as date) as start_day  
-
     from {{ var('opportunity_history') }}
-
-   
 ),
 
 order_daily_values as (
@@ -65,8 +62,7 @@ order_daily_values as (
         row_number() over (
             partition by start_day, opportunity_id
             order by _fivetran_start desc) as row_num
-    from opportunity_history  
-
+    from opportunity_history
 ),
 
 get_latest_daily_value as (
