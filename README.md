@@ -226,9 +226,34 @@ vars:
       alias: "user_role_field_x"
   salesforce__user_pass_through_columns: 
     - name: "salesforce__user_field"
-```
 
-**For History Mode users**: If you are leveraging the daily history models, if you wish to bring in passthrough columns, you will not need to add passthrough columns here, but instead in the `dbt_project.yml` in the `dbt_salesforce_source` package. See instructions in the [Adding Passthrough Columns section in the `dbt_salesforce_source` README](https://github.com/fivetran/dbt_salesforce_source/blob/main/README.md#adding-passthrough-columns).
+  ## History mode passthrough columns 
+  salesforce__account_history_pass_through_columns:
+    - name: "salesforce__account_history_field"
+      alias: "account_history_field_x"
+  salesforce__contact__history_pass_through_columns:
+    - name: "salesforce__contact_history_field"
+      alias: "contact_history_field_x"
+  salesforce__event__history_pass_through_columns:
+    - name: "salesforce__event_history_field"
+      alias: "event_history_field_x"
+  salesforce__lead__history_pass_through_columns:
+    - name: "salesforce__lead_history_field"
+      alias: "lead_history_field_x"
+  salesforce__opportunity_history_pass_through_columns:
+    - name: "salesforce__opportunity_history_field"
+      alias: "opportunity_history_field_x"  
+  salesforce__task_history_pass_through_columns:
+    - name: "salesforce__task_history_field"
+      alias: "task_history_field_x"
+  salesforce__user_history_pass_through_columns:
+    - name: "salesforce__user_history_field"
+      alias: "user_history_field_x"
+  salesforce__user_role_history_pass_through_columns:
+    - name: "salesforce__user_role_history_field"
+      alias: "user_role_history_field_x"
+```
+ 
 
 ## (Optional) Step 5: Adding Formula Fields as Pass Through Columns
 ### Adding Formula Fields as Pass Through Columns
