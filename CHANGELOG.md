@@ -29,6 +29,11 @@ vars:
 
 ## Under The Hood
 - We've added variable configuration that will allow you to filter the history start and end dates in case you only want to access a subset of historical records in each model. See the `Setting the date range for the Salesforce Daily History models` [section in the README](https://github.com/fivetran/dbt_salesforce#optional-step-4-additional-configurations) for more details.
+# dbt_salesforce v0.9.3
+## 🪲 Bug Fix ⚒️
+[PR #44](https://github.com/fivetran/dbt_salesforce/pull/44) introduces the following update:
+
+- Updated the `first_date_query` logic in `int_salesforce__date_spine` to select first date from the minimum `created_date` on the `opportunity` source when the `lead` source is not available.
 
 # dbt_salesforce v0.9.2
 ## Documentation and Notice Updates
