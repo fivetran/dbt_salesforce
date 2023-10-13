@@ -1,20 +1,54 @@
 with contact as (
 
     select *
+    {% if var('not_using_salesforce_history_mode', True) %}
     from {{ var('contact') }}
+    {% else %}
+    from {{ var('contact_history') }}
+    where _fivetran_active = true
+    {% endif %}
 ), 
 
 account as (
 
     select *
+    {% if var('not_using_salesforce_history_mode', True) %}
     from {{ var('account') }}
+    {% else %}
+    from {{ var('account_history') }}
+    where _fivetran_active = true
+    {% endif %}
 ),
 
 salesforce_user as (
 
     select *
+    {% if var('not_using_salesforce_history_mode', True) %}
     from {{ var('user') }}
+    {% else %}
+    from {{ var('user_history') }}
+    where _fivetran_active = true
+    {% endif %}
+),
+
+contact_seed as (
+
+    select *
+    from {{ var('contact') }}
+),
+
+account_seed as (
+
+    select *
+    from {{ var('account') }}
+),
+
+user_seed as (
+
+    select *
+    from {{ var('account') }}
 )
+
 
 select 
     contact.contact_id,
@@ -54,10 +88,18 @@ select
     account.type as account_type
 
         --The below scripts allows for pass through columns.
+    {% if var('not_using_salesforce_history_mode', True) %}
     {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__contact_pass_through_columns', identifier='contact') }}
     {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__account_pass_through_columns', identifier='account') }}
     {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__user_pass_through_columns', identifier='salesforce_user') }}
+   
+    {% else %}
+    {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__contact_history_pass_through_columns', identifier='contact') }}
+    {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__account_history_pass_through_columns', identifier='account') }}
+    {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__user_history_pass_through_columns', identifier='salesforce_user') }}
     
+    {% endif %}
+
 from contact
 left join account 
     on contact.account_id = account.account_id

@@ -27,9 +27,24 @@ vars:
     event_history: "{{ ref('stg_salesforce__event_history') }}"
     lead_history: "{{ ref('stg_salesforce__lead_history') }}"
     opportunity_history: "{{ ref('stg_salesforce__opportunity_history') }}"
+    opportunity_line_item_history: "{{ ref('stg_salesforce__opportunity_line_item_history') }}"
+    product_2_history: "{{ ref('stg_salesforce__product_2_history') }}"
     task_history: "{{ ref('stg_salesforce__task_history') }}"
     user_history: "{{ ref('stg_salesforce__user_history') }}"
     user_role_history: "{{ ref('stg_salesforce__user_role_history') }}"
+
+    # not_using_salesforce_history_mode: false
+
+    # salesforce__account_history_enabled: true      # False by default. Only use if you have history mode enabled and wish to leverage the account history table.
+    # salesforce__contact_history_enabled: true  # False by default. Only use if you have history mode enabled and wish to leverage the contact history table.
+    # salesforce__event_history_enabled: true    # False by default. Only use if you have history mode enabled and wish to leverage the event history table.
+    # salesforce__lead_history_enabled: true         # False by default. Only use if you have history mode enabled and wish to leverage the lead history table.
+    # salesforce__opportunity_history_enabled: true      # False by default. Only use if you have history mode enabled and wish to leverage the opportunity history table.
+    # salesforce__task_history_enabled: true         # False by default. Only use if you have history mode enabled and wish to leverage the task history table.
+    # salesforce__user_history_enabled: true         # False by default. Only use if you have history mode enabled and wish to leverage the user history table.
+    # salesforce__user_role_history_enabled: true        # False by default. Only use if you have history mode enabled and wish to leverage the user role history table.
+    # salesforce__opportunity_line_item_history_enabled: true   
+    # salesforce__product_2_history_enabled: true   
 
     salesforce__account_pass_through_columns: []
     salesforce__contact_pass_through_columns: []
@@ -42,6 +57,30 @@ vars:
     salesforce__task_pass_through_columns: []
     salesforce__user_role_pass_through_columns: []
     salesforce__user_pass_through_columns: []
+
+# If using history mode passthrough columns
+    salesforce__account_history_pass_through_columns: []
+    salesforce__contact_history_pass_through_columns: []
+    salesforce__event_history_pass_through_columns: []
+    salesforce__lead_history_pass_through_columns: []
+    salesforce__opportunity_history_pass_through_columns: []
+    salesforce__opportunity_line_item_history_pass_through_columns: []
+    salesforce__product_2_history_pass_through_columns: []
+    salesforce__task_history_pass_through_columns: []
+    salesforce__user_history_pass_through_columns: []
+    salesforce__user_role_history_pass_through_columns: [] 
+    salesforce__contact_pass_through_columns: []
+    salesforce__event_pass_through_columns: []
+    salesforce__lead_pass_through_columns: []
+    salesforce__opportunity_pass_through_columns: []
+    salesforce__opportunity_line_item_pass_through_columns: []
+    salesforce__order_pass_through_columns: []
+    salesforce__product_2_pass_through_columns: []
+    salesforce__task_pass_through_columns: []
+    salesforce__user_role_pass_through_columns: []
+    salesforce__user_pass_through_columns: []
+
+
 
 clean-targets:
 - target

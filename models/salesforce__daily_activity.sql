@@ -5,35 +5,73 @@ with date_spine as (
     from {{ ref('int_salesforce__date_spine') }}
 ),
 
-{% if var('salesforce__task_enabled', True) %}
+task_seed as (
+    select *
+    from {{ var('task') }}
+),
+
+
+event_seed as (
+    select *
+    from {{ var('event') }}
+),
+
+lead_seed as (
+    select *
+    from {{ var('lead') }}
+),
+
+opportunity_seed as (
+    select *
+    from {{ var('opportunity') }}
+),
+
+
+
+{% if var('salesforce__task_enabled', True) or var('salesforce__task_history_enabled', True) %}
 task as (
     
     select 
         {{ dbt.date_trunc('day', 'activity_date') }} as activity_date,
         count(task_id) as tasks_completed
+    {% if var('not_using_salesforce_history_mode', True) %}
     from {{ var('task') }}
+    {% else %}
+    from {{ var('task_history') }}
+    where _fivetran_active = true
+    {% endif %}
     group by 1
 ), 
 {% endif %}
 
-{% if var('salesforce__event_enabled', True) %}
+{% if var('salesforce__event_enabled', True) or var('salesforce__event_history_enabled', True) %}
 salesforce_event as (
 
     select 
         coalesce({{ dbt.date_trunc('day', 'activity_date') }}, {{ dbt.date_trunc('day', 'activity_date_time') }}) as activity_date,
         count(event_id) as events_completed
-    from {{ var('event') }}  
+    {% if var('not_using_salesforce_history_mode', True) %}
+    from {{ var('event') }}
+    {% else %}
+    from {{ var('event_history') }}
+    where _fivetran_active = true
+    {% endif %}
     group by 1
 ), 
 {% endif %}
 
-{% if var('salesforce__lead_enabled', True) %}
+{% if var('salesforce__lead_enabled', True) or var('salesforce__lead_history_enabled', True) %}
 salesforce_lead as (
 
     select 
         {{ dbt.date_trunc('day', 'created_date') }} as created_date,
         count(lead_id) as leads_created
+    {% if var('not_using_salesforce_history_mode', True) %}
     from {{ var('lead') }}
+    {% else %}
+    from {{ var('lead_history') }}
+    where _fivetran_active = true
+    {% endif %}
     group by 1
 ), 
 
@@ -42,8 +80,14 @@ salesforce_converted_lead as (
     select 
         {{ dbt.date_trunc('day', 'converted_date') }} as converted_date,
         count(lead_id) as leads_converted
+    {% if var('not_using_salesforce_history_mode', True) %}
     from {{ var('lead') }}
     where is_converted
+    {% else %}
+    from {{ var('lead_history') }}
+    where is_converted
+    and _fivetran_active = true
+    {% endif %}
     group by 1
 ), 
 {% endif %}
@@ -68,7 +112,12 @@ opportunity as (
             when not is_closed and lower(forecast_category) in ('pipeline','forecast','bestcase') then 'Pipeline'
             else 'Other'
         end as status
+    {% if var('not_using_salesforce_history_mode', True) %}
     from {{ var('opportunity') }}
+    {% else %}
+    from {{ var('opportunity_history') }}
+    where _fivetran_active = true
+    {% endif %}
 ),
 
 opportunities_created as (
@@ -97,16 +146,16 @@ opportunities_closed as (
 select
     date_spine.date_day,
 
-    {% if var('salesforce__lead_enabled', True) %}
+    {% if var('salesforce__lead_enabled', True) or var('salesforce__lead_history_enabled', True) %}
     salesforce_lead.leads_created,
     salesforce_converted_lead.leads_converted,
     {% endif %}
     
-    {% if var('salesforce__task_enabled', True) %}
+    {% if var('salesforce__task_enabled', True) or var('salesforce__task_history_enabled', True) %}
     task.tasks_completed,
     {% endif %}
 
-    {% if var('salesforce__event_enabled', True) %}
+    {% if var('salesforce__event_enabled', True) or var('salesforce__event_history_enabled', True) %}
     salesforce_event.events_completed,
     {% endif %}
 
@@ -119,19 +168,19 @@ select
     opportunities_closed.pipeline_amount
 from date_spine
 
-{% if var('salesforce__lead_enabled', True) %}
+{% if var('salesforce__lead_enabled', True) or var('salesforce__lead_history_enabled', True) %}
 left join salesforce_lead
     on date_spine.date_day = salesforce_lead.created_date
 left join salesforce_converted_lead
     on date_spine.date_day = salesforce_converted_lead.converted_date
 {% endif %}
 
-{% if var('salesforce__task_enabled', True) %}
+{% if var('salesforce__task_enabled', True) or var('salesforce__task_history_enabled', True) %}
 left join task
     on date_spine.date_day = task.activity_date
 {% endif %}
 
-{% if var('salesforce__event_enabled', True) %}
+{% if var('salesforce__event_enabled', True) or var('salesforce__event_history_enabled', True) %}
 left join salesforce_event
     on date_spine.date_day = salesforce_event.activity_date
 {% endif %}

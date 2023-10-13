@@ -1,7 +1,6 @@
 version: 2
 
 models:
-
   - name: salesforce__account_daily_history
     description: Each record is a daily record in an account, starting with its first active date and updating up toward either the current date (if still active) or its last active date.
     columns:
@@ -80,6 +79,88 @@ models:
         description: Type of account, for example, Customer, Competitor, or Partner.
       - name: website
         description: The website of this account.
+
+  - name: salesforce__contact_daily_history
+    description: Each record is a daily record in a contact, starting with its first active date and updating up toward either the current date (if still active) or its last active date.
+    columns:
+      - name: contact_day_id
+        description: Surrogate key hashed on `date_day` and `contact_id`
+        tests:
+          - unique
+          - not_null
+      - name: date_day
+        description: Date on which the opportunity had these field values.
+      - name: contact_id
+        description: The unique, system-generated ID assigned during creation.
+      - name: _fivetran_active 
+        description: true if it is the currently active record. false if it is a historical version of the record. Only one version of the record can be true.
+      - name: _fivetran_start
+        description: The time when the record was first created or modified in the source, based on a timestamp value in the source table that monotonically increases over time with data change or update.
+      - name: _fivetran_end
+        description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
+      - name: _fivetran_synced
+        description: The time at which fivetran last synced this record.
+      - name: account_id
+        description: ID of the account that’s the parent of this contact.
+      - name: contact_description
+        description: A description of the contact. Label is Contact Description up to 32 KB.
+      - name: email
+        description: The contact’s email address.
+      - name: first_name
+        description:  The contact’s first name up to 40 characters.
+      - name: home_phone
+        description: The contact’s home telephone number.
+      - name: individual_id
+        description: ID of the data privacy record associated with this contact. This field is available if Data Protection and Privacy is enabled. This is a relationship field.
+      - name: is_deleted
+        description: Indicates whether the object has been moved to the Recycle Bin (true) or not (false). Label is Deleted.
+      - name: last_activity_date
+        description:  > 
+          Value is the most recent of either:
+          Due date of the most recent event logged against the record.
+          Due date of the most recently closed task associated with the record.
+      - name: last_modified_by_id
+        description: Last Modified By ID
+      - name: last_modified_date
+        description: Last Modified Date 
+      - name: last_name
+        description: Required. Last name of the contact up to 80 characters. 
+      - name: last_referenced_date
+        description: The timestamp when the current user last accessed this record, a record related to this record, or a list view. 
+      - name: last_viewed_date
+        description: The timestamp when the current user last viewed this record or list view. If this value is null, the user might have only accessed this record or list view (LastReferencedDate) but not viewed it.
+      - name: lead_source
+        description: The lead’s source.
+      - name: mailing_city
+        description: City mailing address details. 
+      - name: mailing_country
+        description: Country mailing address details. 
+      - name: mailing_postal_code
+        description: Postal code mailing address details.
+      - name: mailing_state
+        description: State mailing address details.
+      - name: mailing_street
+        description: Street mailing address details.
+      - name: master_record_id
+        description: >
+          If this record was deleted as the result of a merge, this field contains the ID of the record that remains. If this record was deleted for any other reason, or has not been deleted, the value is null.
+          This is a relationship field.
+      - name: mobile_phone
+        description: Contact’s mobile phone number.
+      - name: contact_name
+        description: Concatenation of FirstName, MiddleName, LastName, and Suffix up to 203 characters, including whitespaces.
+      - name: owner_id
+        description: >
+          The ID of the owner of the account associated with this contact.
+          This is a relationship field.
+      - name: phone
+        description: Telephone number for the contact. Label is Business Phone.
+      - name: reports_to_id
+        description: > 
+          This field doesn’t appear if IsPersonAccount is true.
+          This is a relationship field.
+      - name: title
+        description: Title
 
   - name: salesforce__opportunity_daily_history
     description: Each record is a daily record in an opportunity, starting with its first active date and updating up toward either the current date (if still active) or its last active date.

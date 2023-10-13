@@ -33,6 +33,8 @@ vars:
     salesforce_event_history_identifier: "sf_event_history_data"
     salesforce_lead_history_identifier: "sf_lead_history_data"
     salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
+    salesforce_opportunity_line_item_history_identifier: "sf_opportunity_history_data"
+    salesforce_product_2_history_identifier: "sf_product_2_history_data"
     salesforce_task_history_identifier: "sf_task_history_data"
     salesforce_user_history_identifier: "sf_user_history_data"
     salesforce_user_role_history_identifier: "sf_user_role_history_data"
@@ -202,6 +204,23 @@ seeds:
         last_viewed_date: timestamp
         amount: float
         expected_revenue: float
+        is_deleted: boolean
+    sf_opportunity_line_item_history_data:
+      +column_types:
+        created_date: timestamp
+        last_modified_date: timestamp
+        last_referenced_date: timestamp
+        last_viewed_date: timestamp
+        service_date: timestamp
+        system_modstamp: timestamp
+        is_deleted: boolean
+    sf_product_2_history_data:
+      +column_types:
+        created_date: timestamp
+        last_modified_date: timestamp
+        last_referenced_date: timestamp
+        last_viewed_date: timestamp
+        system_modstamp: timestamp
         is_deleted: boolean
     sf_task_history_data:
       +column_types:

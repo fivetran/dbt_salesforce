@@ -1,20 +1,40 @@
 --This model will only run if you have the underlying opportunity line item table.
-{{ config(enabled=var('salesforce__opportunity_line_item_enabled', True)) }}
-
+{{ config(enabled=var('salesforce__opportunity_line_item_enabled', False) or var('salesforce__opportunity_line_item_history_enabled', False))}}
 with opportunity_line_item as (
     
     select *
-    from {{ var('opportunity_line_item') }}
-), 
+    {% if var('not_using_salesforce_history_mode', True) %}
+    from {{ var('opportunity_line_item') }} 
+    {% else %}
+    from {{ var('opportunity_line_item_history') }}
+    where _fivetran_active = true
+    {% endif %}
+),
 
 -- If using product_2 table, the following will be included, otherwise it will not.
-{% if var('salesforce__product_2_enabled', True) %}
+{% if var('salesforce__product_2_enabled', True) or var('salesforce__product_2_history_enabled', True) %}
 product_2 as (
 
-select *
-from {{ var('product_2') }}
+    select *
+    {% if var('not_using_salesforce_history_mode', True) %}
+    from {{ var('product_2') }}
+    {% else %}
+    from {{ var('product_2_history') }}
+    where _fivetran_active = true
+    {% endif %}
 ),
 {% endif %}
+
+opportunity_line_item_seed as (
+    select *
+    from {{ var('opportunity_line_item') }}
+),
+
+product_2_seed as (
+    select *
+    from {{ var('product_2') }}
+),
+
 
 final as (
 
@@ -37,7 +57,7 @@ final as (
         oli.has_quantity_schedule,
         oli.has_revenue_schedule
 
-        {% if var('salesforce__product_2_enabled', True) %}
+        {% if var('salesforce__product_2_enabled', True) or var('salesforce__product_2_history_enabled', True) %}
         ,
         product_2.product_2_name,
         product_2.product_code,
@@ -56,6 +76,7 @@ final as (
         product_2.revenue_schedule_type as product_revenue_schedule_type
         {% endif %}
 
+        {% if var('not_using_salesforce_history_mode', True) %}
         --The below script allows for pass through columns.
         {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__opportunity_line_item_pass_through_columns', identifier='oli') }}
 
@@ -63,9 +84,18 @@ final as (
         {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__product_2_pass_through_columns', identifier='product_2') }}
         {% endif %}
 
+        {% else %}
+        {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__opportunity_line_history_item_pass_through_columns', identifier='oli') }}
+
+        {% if var('salesforce__product_2_history_enabled', True) %}
+        {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__product_2_history_pass_through_columns', identifier='product_2') }}
+        {% endif %}
+                
+        {% endif %}
+
     from opportunity_line_item as oli
 
-    {% if var('salesforce__product_2_enabled', True) %}
+    {% if var('salesforce__product_2_enabled', True) or var('salesforce__product_2_history_enabled', True) %}
     left join product_2
         on oli.product_2_id = product_2.product_2_id
     {% endif %}

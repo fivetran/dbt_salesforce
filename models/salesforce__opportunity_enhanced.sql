@@ -1,29 +1,56 @@
 with opportunity as (
     
+    {% if var('not_using_salesforce_history_mode', True) %}
     select *
     from {{ var('opportunity') }}
+    {% else %}
+    select *,
+        created_date >= {{ dbt.date_trunc('month', dbt.current_timestamp_backcompat()) }} as is_created_this_month,
+        created_date >= {{ dbt.date_trunc('quarter', dbt.current_timestamp_backcompat()) }} as is_created_this_quarter,
+        {{ dbt.datediff(dbt.current_timestamp_backcompat(), 'created_date', 'day') }} as days_since_created,
+        {{ dbt.datediff('close_date', 'created_date', 'day') }} as days_to_close,
+        {{ dbt.date_trunc('month', 'close_date') }} = {{ dbt.date_trunc('month', dbt.current_timestamp_backcompat()) }} as is_closed_this_month,
+        {{ dbt.date_trunc('quarter', 'close_date') }} = {{ dbt.date_trunc('quarter', dbt.current_timestamp_backcompat()) }} as is_closed_this_quarter
+    from {{ var('opportunity_history') }}
+    where _fivetran_active = true
+    {% endif %}
 ),
 
 salesforce_user as (
 
     select *
-    from {{ var('user') }}  
+    {% if var('not_using_salesforce_history_mode', True) %}
+    from {{ var('user') }}
+    {% else %}
+    from {{ var('user_history') }}
+    where _fivetran_active = true
+    {% endif %}
 ), 
 
 -- If using user_role table, the following will be included, otherwise it will not.
-{% if var('salesforce__user_role_enabled', True) %}
+{% if var('salesforce__user_role_enabled', True) or var('salesforce__user_role_history_enabled', True) %}
 user_role as (
 
     select *
-    from {{ var('user_role') }}  
+    {% if var('not_using_salesforce_history_mode', True) %}
+    from {{ var('user_role') }}
+    {% else %}
+    from {{ var('user_role_history') }}
+    where _fivetran_active = true
+    {% endif %}
 ), 
 {% endif %}
 
 account as (
 
     select *
+    {% if var('not_using_salesforce_history_mode', True) %}
     from {{ var('account') }}
-), 
+    {% else %}
+    from {{ var('account_history') }}
+    where _fivetran_active = true
+    {% endif %} 
+),  
 
 add_fields as (
 
@@ -68,6 +95,7 @@ add_fields as (
         case when is_closed_this_month then 1 else 0 end as closed_count_this_month,
         case when is_closed_this_quarter then 1 else 0 end as closed_count_this_quarter
 
+        {% if var('not_using_salesforce_history_mode', True) %}
         --The below script allows for pass through columns.
         {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__account_pass_through_columns', identifier='account') }}
         {{ custom_persist_pass_through_columns(pass_through_variable='salesforce__user_pass_through_columns', identifier='opportunity_owner', append_string= '_owner') }}
@@ -76,6 +104,17 @@ add_fields as (
         -- If using user_role table, the following will be included, otherwise it will not.
         {% if var('salesforce__user_role_enabled', True) %}
         {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__user_role_pass_through_columns', identifier='user_role') }}
+        {% endif %}
+
+        {% else %}
+        {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__account_history_pass_through_columns', identifier='account') }}
+        {{ custom_persist_pass_through_columns(pass_through_variable='salesforce__user_history_pass_through_columns', identifier='opportunity_owner', append_string= '_owner') }}
+        {{ custom_persist_pass_through_columns(pass_through_variable='salesforce__user_history_pass_through_columns', identifier='opportunity_manager', append_string= '_manager') }}
+
+        {% if var('salesforce__user_role_history_enabled', True) %}
+        {{ fivetran_utils.persist_pass_through_columns(pass_through_variable='salesforce__user_role_history_pass_through_columns', identifier='user_role_history') }}
+        {% endif %}
+
         {% endif %}
 
     from opportunity
@@ -87,10 +126,9 @@ add_fields as (
         on opportunity_owner.manager_id = opportunity_manager.user_id
 
     -- If using user_role table, the following will be included, otherwise it will not.
-    {% if var('salesforce__user_role_enabled', True) %}
+    {% if var('salesforce__user_role_enabled', True) or var('salesforce__user_role_history_enabled', True) %}
     left join user_role 
         on opportunity_owner.user_role_id = user_role.user_role_id
-
     {% endif %}
     )
 
