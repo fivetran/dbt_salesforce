@@ -21,6 +21,6 @@ dbt run --target "$db" --full-refresh
 dbt test --target "$db"
 dbt run --vars '{using_account_history_mode_active_records: true, using_opportunity_history_mode_active_records: true, using_user_role_history_mode_active_records: true, using_user_history_mode_active_records: true, salesforce__user_role_enabled: false}' --target "$db" --full-refresh
 dbt test --target "$db"
-dbt run --vars '{salesforce__account_history_enabled: true, salesforce__contact_history_enabled: true, salesforce__event_history_enabled: true, salesforce__lead_history_enabled: true, salesforce__opportunity_history_enabled: true, salesforce__task_history_enabled: true, salesforce__user_history_enabled: true, salesforce__user_role_history_enabled: true}' --target "$db" --full-refresh
+dbt run --vars '{salesforce__account_history_enabled: true, salesforce__contact_history_enabled: true, salesforce__event_history_enabled: true, salesforce__lead_history_enabled: true, salesforce__opportunity_history_enabled: true, salesforce__opportunity_line_item_history_enabled: true, salesforce__product_2_history_enabled: true, salesforce__task_history_enabled: true, salesforce__user_history_enabled: true, salesforce__user_role_history_enabled: true}' --target "$db" --full-refresh
 dbt test --target "$db"
 dbt run-operation fivetran_utils.drop_schemas_automation --target "$db"
