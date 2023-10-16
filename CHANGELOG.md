@@ -15,20 +15,14 @@ If you are not already a Quickstart Data Model user, you can find out more infor
 | [salesforce__contact_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_daily_history) |  Each record is a daily record in an contact, starting with its first active date and updating up toward either the current date (if still active) or its last active date.
 | [salesforce__opportunity_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_daily_history) | Each record is a daily record in an opportunity, starting with its first active date and updating up toward either the current date (if still active) or its last active date. 
 
-- These models are disabled by default, so you will have to enable the equivalent models below in your `dbt_project.yml` to utilize them. There's a longer list of models you can enable if you want to utilize the staging history models as well--[see the README](https://github.com/fivetran/dbt_salesforce#salesforce-history-mode) for more details. 
+- Customers now can configure their Salesforce package to pull from their Salesforce History Mode source tables (as opposed to the default Salesforce source tables) and populate their existing models in the packages. More instructions can be found in the README. 
 
-```yml
-# dbt_project.yml
-
-...
-vars:
-  salesforce__account_history_enabled: true      # False by default. Only use if you have history mode enabled and wish to leverage the account history table.
-  salesforce__contact_history_enabled: true  # False by default. Only use if you have history mode enabled and wish to leverage the contact history table.  
-  salesforce__opportunity_history_enabled: true      # False by default. Only use if you have history mode enabled and wish to leverage the opportunity history table. 
-```
+- These models are disabled by default, so you will have to enable the equivalent models below in your `dbt_project.yml` to utilize them.  
 
 ## Under The Hood
 - We've added variable configuration that will allow you to filter the history start and end dates in case you only want to access a subset of historical records in each model. See the `Setting the date range for the Salesforce Daily History models` [section in the README](https://github.com/fivetran/dbt_salesforce#optional-step-4-additional-configurations) for more details.
+
+
 # dbt_salesforce v0.9.3
 ## 🪲 Bug Fix ⚒️
 [PR #44](https://github.com/fivetran/dbt_salesforce/pull/44) introduces the following update:

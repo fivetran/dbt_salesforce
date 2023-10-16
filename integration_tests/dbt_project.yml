@@ -11,6 +11,10 @@ models:
       materialized: table
 
 vars:
+  salesforce__contact_history_enabled: True
+  salesforce__account_history_enabled: True
+  salesforce__opportunity_history_enabled: True
+
   salesforce_source:
     salesforce_schema: salesforce_integrations_tests_1
     salesforce_history_schema: salesforce_integrations_tests_1
@@ -38,6 +42,8 @@ vars:
     salesforce_task_history_identifier: "sf_task_history_data"
     salesforce_user_history_identifier: "sf_user_history_data"
     salesforce_user_role_history_identifier: "sf_user_role_history_data"
+
+
 
 
 seeds:

@@ -80,6 +80,7 @@ vars:
     salesforce_database: your_database_name    
     salesforce_schema: your_schema_name
 ```
+### Optional: Configuring Salesforce History Mode in tandem with Salesforce
  
 If you are utilizing Salesforce History Mode and your target database and schema differ as well, you will need to add an additional configuration for the history schema and database to your `dbt_project.yml`
 
@@ -91,6 +92,17 @@ vars:
     salesforce_history_database: your_history_database_name
     salesforce_history_schema: your_history_schema_name
 ```
+
+If you wish to switch to utilizing ONLY Salesforce History Mode source tables, you should change the default config set up in your source yml files within your `dbt_project.yml`.
+
+```yml
+sources:
+  salesforce_source: 
+    salesforce:
+      +enabled: false # True by default. Disable if you wish to not utilize the default Salesforce source tables.
+    salesforce_history:
+      +enabled: true # False by default. Enable if you wish to utilize the default Salesforce source tables.
+``` 
 
 ### Disabling Models
 It is possible that your Salesforce connector does not sync every table that this package expects. If your syncs exclude certain tables, it is because you either don't use that functionality in Salesforce or actively excluded some tables from your syncs. 
