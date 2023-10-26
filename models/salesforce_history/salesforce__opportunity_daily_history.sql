@@ -1,20 +1,22 @@
-{{ config(enabled=var('salesforce__opportunity_history_enabled', False)) }}
-
 {{
     config(
-        materialized='incremental',
-        partition_by = {'field': 'date_day', 'data_type': 'date'}
-            if target.type not in ['spark', 'databricks'] else ['date_day'],
-        unique_key='opportunity_day_id',
-        incremental_strategy = 'merge' if target.type not in ('snowflake', 'postgres', 'redshift') else 'delete+insert',
-        file_format = 'delta'
+        enabled = var('salesforce__opportunity_history_enabled', False),
+        materialized = 'incremental',
+        partition_by = {
+            'field': 'date_day', 
+            'data_type': 'date'
+        } if target.type not in ['spark', 'databricks'] else ['date_day'],
+        unique_key = 'opportunity_day_id',
+        incremental_strategy = 'insert_overwrite' if target.type in ('bigquery', 'spark', 'databricks') else 'delete+insert',
+        file_format = 'parquet',
+        on_schema_change = 'fail'
     )
 }}
 
 with spine as (
 
     {% if execute %}
-    {% if not var('opportunity_history_first_date', None) or not var('opportunity_history_last_date', None) %}
+    {% if not var('opportunity_history_start_date', None) or not var('opportunity_history_end_date', None) %}
         {% set date_query %}
         select 
             min( _fivetran_start ) as min_date,
@@ -33,8 +35,8 @@ with spine as (
     {% endif %}
 
     {# Prioritizes variables over calculated dates #}
-    {% set first_date = var('opportunity_history_first_date', calc_first_date)|string %}
-    {% set last_date = var('opportunity_history_last_date', calc_last_date)|string %}
+    {% set first_date = var('opportunity_history_start_date', calc_first_date)|string %}
+    {% set last_date = var('opportunity_history_end_date', calc_last_date)|string %}
 
     {{ dbt_utils.date_spine(
         datepart="day",
@@ -53,6 +55,18 @@ opportunity_history as (
     select *,
         cast( {{ dbt.date_trunc('day', '_fivetran_start') }} as date) as start_day  
     from {{ var('opportunity_history') }}
+    {% if is_incremental() %}
+    where _fivetran_start >=  (select max(cast((_fivetran_start) as {{ dbt.type_timestamp() }})) from {{ this }} )
+    {% else %}
+    {% if var('global_history_start_date',[]) or var('opportunity_history_start_date',[]) %}
+    where _fivetran_start >= 
+        {% if var('opportunity_history_start_date', []) %}
+            "{{ var('opportunity_history_start_date') }}"
+        {% else %}
+            "{{ var('global_history_start_date') }}"
+        {% endif %}
+    {% endif %}
+    {% endif %} 
 ),
 
 order_daily_values as (
@@ -60,7 +74,7 @@ order_daily_values as (
     select 
         *,
         row_number() over (
-            partition by start_day, opportunity_id
+            partition by _fivetran_date, opportunity_id
             order by _fivetran_start desc) as row_num
     from opportunity_history
 ),

@@ -21,6 +21,8 @@ models:
         description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
       - name: _fivetran_synced
         description: The time at which fivetran last synced this record.
+      - name: history_unique_key
+        description: Surrogate key hashed on `_fivetran_start` and `account_id`.
       - name: account_number
         description: Account number assigned to this account (not the unique, system-generated ID assigned during creation).
       - name: account_source
@@ -100,6 +102,8 @@ models:
         description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
       - name: _fivetran_synced
         description: The time at which fivetran last synced this record.
+      - name: history_unique_key
+        description: Surrogate key hashed on `_fivetran_start` and `contact_id`.
       - name: account_id
         description: ID of the account that’s the parent of this contact.
       - name: contact_description
@@ -182,6 +186,8 @@ models:
         description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
       - name: _fivetran_synced
         description: The time at which fivetran last synced this record.
+      - name: history_unique_key
+        description: Surrogate key hashed on `_fivetran_start` and `opportunity_id`.
       - name: account_id
         description: ID of the account associated with this opportunity.
       - name: amount

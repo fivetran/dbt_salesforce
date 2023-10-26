@@ -6,18 +6,7 @@ with opportunity_aggregation_by_owner as (
 
 salesforce_user as (
 
-    select *
-    {% if var('not_using_salesforce_history_mode', True) %}
-    from {{ var('user') }}
-    {% else %}
-    from {{ var('user_history') }}
-    where _fivetran_active = true
-    {% endif %}
-),
-
-user_seed as (
-
-    select *
+    select * 
     from {{ var('user') }}
 )
 

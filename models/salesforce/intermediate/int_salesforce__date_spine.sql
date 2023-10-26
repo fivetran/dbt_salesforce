@@ -3,14 +3,10 @@ with spine as (
 
     {% if execute %}
     {% set first_date_query %}
-        {% if var('not_using_salesforce_history_mode', True) and var('salesforce__lead_enabled', True) %}
+        {% if var('salesforce__lead_enabled', True) %}
             select  min( created_date ) as min_date from {{ source('salesforce', 'lead') }}
-        {% elif var('not_using_salesforce_history_mode', True) and var('salesforce__lead_enabled', False) %}
-            select  min( created_date ) as min_date from {{ source('salesforce', 'opportunity') }}
-        {% elif var('not_using_salesforce_history_mode', False) and var('salesforce__lead_history_enabled', True) %}
-            select  min( created_date ) as min_date from {{ source('salesforce_history', 'lead') }}
         {% else %}
-            select  min( created_date ) as min_date from {{ source('salesforce_history', 'opportunity') }}
+            select  min( created_date ) as min_date from {{ source('salesforce', 'opportunity') }}
         {% endif %}   
 
     {% endset %}
@@ -18,8 +14,10 @@ with spine as (
     
         {% if target.type == 'postgres' %}
             {% set first_date_adjust = "cast('" ~ first_date[0:10] ~ "' as date)" %}
+
         {% else %}
             {% set first_date_adjust = "'" ~ first_date[0:10] ~ "'" %}
+
         {% endif %}
 
     {% else %} {% set first_date_adjust = "'2015-01-01'" %}
@@ -27,11 +25,7 @@ with spine as (
 
     {% if execute %}
     {% set last_date_query %}
-        {% if var('not_using_salesforce_history_mode', True) %}
         select  max( created_date ) as max_date from {{ source('salesforce', 'opportunity') }}
-        {% else %}
-        select  max( created_date ) as max_date from {{ source('salesforce_history', 'opportunity') }}
-        {% endif %}
     {% endset %}
 
     {% set current_date_query %}

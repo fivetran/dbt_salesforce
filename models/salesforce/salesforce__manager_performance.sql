@@ -5,28 +5,18 @@ with opportunity_aggregation_by_owner as (
 ), 
 
 -- If using user_role table, the following will be included, otherwise it will not.
-{% if var('salesforce__user_role_enabled', True) or var('salesforce__user_role_history_enabled', True) %}
+{% if var('salesforce__user_role_enabled', True) %}
 user_role as (
 
-    select *
-    {% if var('not_using_salesforce_history_mode', True) %}
+    select * 
     from {{ var('user_role') }}
-    {% else %}
-    from {{ var('user_role_history') }}
-    where _fivetran_active = true
-    {% endif %}
 ),
 {% endif %}
 
 salesforce_user as (
 
-    select *
-    {% if var('not_using_salesforce_history_mode', True) %}
+    select * 
     from {{ var('user') }}
-    {% else %}
-    from {{ var('user_history') }}
-    where _fivetran_active = true
-    {% endif %}
 )
 
 select 
@@ -36,7 +26,7 @@ select
     manager.state as manager_state,
 
     -- If using user_role table, the following will be included, otherwise it will not.
-    {% if var('salesforce__user_role_enabled', True) or var('salesforce__user_role_history_enabled', True) %}
+    {% if var('salesforce__user_role_enabled', True) %}
     user_role.user_role_name as manager_position,
     {% endif %}
 
@@ -85,7 +75,7 @@ left join salesforce_user as manager
     on manager.user_id = opportunity_aggregation_by_owner.manager_id
 
 -- If using user_role table, the following will be included, otherwise it will not.
-{% if var('salesforce__user_role_enabled', True) or var('salesforce__user_role_history_enabled', True) %}
+{% if var('salesforce__user_role_enabled', True) %}
 left join user_role
     on manager.user_role_id = user_role.user_role_id
 

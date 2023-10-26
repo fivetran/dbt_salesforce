@@ -1,5 +1,5 @@
 name: 'salesforce_integration_tests'
-version: '0.10.0'
+version: '1.0.0'
 config-version: 2
 
 profile: 'integration_tests'
@@ -42,9 +42,6 @@ vars:
     salesforce_task_history_identifier: "sf_task_history_data"
     salesforce_user_history_identifier: "sf_user_history_data"
     salesforce_user_role_history_identifier: "sf_user_role_history_data"
-
-
-
 
 seeds:
   salesforce_integration_tests:

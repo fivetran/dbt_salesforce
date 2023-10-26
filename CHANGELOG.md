@@ -3,11 +3,14 @@ Please note that this data model will now create a new transformation for **all*
 
 If you are not already a Quickstart Data Model user, you can find out more information [here](https://fivetran.com/docs/transformations/quickstart)!
 
-# dbt_salesforce v0.10.0 
-## 🚨 Breaking Changes 🚨:
-- We have added daily history mode models in the [`models/history`](https://github.com/fivetran/dbt_salesforce_source/tree/main/models/history) folder [based off of Fivetran's history mode feature](https://fivetran.com/docs/core-concepts/sync-modes/history-mode), pulling from source models in `dbt_salesforce_source`. This will allow customers to utilize the Fivetran history mode feature, which records every version of each record in the source table from the moment this mode is activated in the equivalent tables.
+# dbt_salesforce v1.0.0 
 
-- Here are the new models that were added:
+**📣 MAJOR RELEASE! 📣** More details below. 
+
+## 🚨 Breaking Changes 🚨:
+- We have added daily history mode models in the [`models/salesforce_history`](https://github.com/fivetran/dbt_salesforce_source/tree/main/models/history) folder [based off of Fivetran's history mode feature](https://fivetran.com/docs/core-concepts/sync-modes/history-mode), pulling from source models in `dbt_salesforce_source`. This will allow customers to utilize the Fivetran history mode feature, which records every version of each record in the source table from the moment this mode is activated in the equivalent tables.
+
+- Below are the new models included in this update:
 
 |**Model added**|**Description** 
 -----|----- 
@@ -18,6 +21,11 @@ If you are not already a Quickstart Data Model user, you can find out more infor
 - Customers now can configure their Salesforce package to pull from their Salesforce History Mode source tables (as opposed to the default Salesforce source tables) and populate their existing models in the packages. More instructions can be found in the README. 
 
 - These models are disabled by default, so you will have to enable the equivalent models below in your `dbt_project.yml` to utilize them.  
+
+```yml 
+vars:
+  salesforce__[history_model]_enabled: true ##Ex: salesforce__account_history_enabled: true          
+```
 
 ## Under The Hood
 - We've added variable configuration that will allow you to filter the history start and end dates in case you only want to access a subset of historical records in each model. See the `Setting the date range for the Salesforce Daily History models` [section in the README](https://github.com/fivetran/dbt_salesforce#optional-step-4-additional-configurations) for more details.

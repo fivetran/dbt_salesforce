@@ -6,13 +6,8 @@ with salesforce_opportunity_enhanced as (
 
 salesforce_user as (
 
-    select *
-    {% if var('not_using_salesforce_history_mode', True) %}
+    select * 
     from {{ var('user') }}
-    {% else %}
-    from {{ var('user_history') }}
-    where _fivetran_active = true
-    {% endif %}
 ), 
 
 booking_by_owner as (
