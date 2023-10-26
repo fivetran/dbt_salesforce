@@ -8,14 +8,14 @@ with opportunity_aggregation_by_owner as (
 {% if var('salesforce__user_role_enabled', True) %}
 user_role as (
 
-    select * 
+    select *
     from {{ var('user_role') }}
 ),
 {% endif %}
 
 salesforce_user as (
 
-    select * 
+    select *
     from {{ var('user') }}
 )
 

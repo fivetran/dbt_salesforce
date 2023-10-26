@@ -10,7 +10,7 @@ task as (
     
     select 
         {{ dbt.date_trunc('day', 'activity_date') }} as activity_date,
-        count(task_id) as tasks_completed 
+        count(task_id) as tasks_completed
     from {{ var('task') }}
     group by 1
 ), 
@@ -22,12 +22,12 @@ salesforce_event as (
     select 
         coalesce({{ dbt.date_trunc('day', 'activity_date') }}, {{ dbt.date_trunc('day', 'activity_date_time') }}) as activity_date,
         count(event_id) as events_completed
-    from {{ var('event') }} 
+    from {{ var('event') }}
     group by 1
 ), 
 {% endif %}
 
-{% if var('salesforce__lead_enabled', True) or var('salesforce__lead_history_enabled', True) %}
+{% if var('salesforce__lead_enabled', True) %}
 salesforce_lead as (
 
     select 

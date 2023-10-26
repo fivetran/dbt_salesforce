@@ -1,5 +1,5 @@
 --This model will only run if you have the underlying opportunity line item table.
-{{ config(enabled=var('salesforce__opportunity_line_item_enabled', False))}}
+{{ config(enabled=var('salesforce__opportunity_line_item_enabled', True))}}
 with opportunity_line_item as (
     
     select *
