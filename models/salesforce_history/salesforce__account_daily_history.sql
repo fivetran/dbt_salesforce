@@ -66,15 +66,6 @@ account_history as (
     select *        
     from {{ var('account_history') }}
     {% if is_incremental() %}
-    {% if var('global_history_end_date',[]) or var('account_history_end_date',[]) %}
-    where _fivetran_start <= 
-        {% if var('account_history_end_date', []) %}
-            "{{ var('account_history_end_date') }}"
-        {% else %}
-            "{{ var('global_history_end_date') }}"
-        {% endif %}
-    {% endif %}
-    {% else %}
         where _fivetran_start >= (select max(cast((_fivetran_start) as {{ dbt.type_timestamp() }})) from {{ this }} )
     {% endif %} 
 ),

@@ -66,16 +66,7 @@ contact_history as (
     select *    
     from {{ var('contact_history') }}
     {% if is_incremental() %}
-    where _fivetran_start >=  (select max(cast((_fivetran_start) as {{ dbt.type_timestamp() }})) from {{ this }} )
-    {% else %}
-    {% if var('global_history_start_date',[]) or var('contact_history_start_date',[]) %}
-    where _fivetran_start >= 
-        {% if var('contact_history_start_date', []) %}
-            "{{ var('contact_history_start_date') }}"
-        {% else %}
-            "{{ var('global_history_start_date') }}"
-        {% endif %}
-    {% endif %}
+        where _fivetran_start >=  (select max(cast((_fivetran_start) as {{ dbt.type_timestamp() }})) from {{ this }} )
     {% endif %} 
 ),
 
