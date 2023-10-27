@@ -24,15 +24,8 @@ vars:
 
     account_history: "{{ ref('stg_salesforce__account_history') }}"
     contact_history: "{{ ref('stg_salesforce__contact_history') }}"
-    event_history: "{{ ref('stg_salesforce__event_history') }}"
-    lead_history: "{{ ref('stg_salesforce__lead_history') }}"
     opportunity_history: "{{ ref('stg_salesforce__opportunity_history') }}"
-    opportunity_line_item_history: "{{ ref('stg_salesforce__opportunity_line_item_history') }}"
-    product_2_history: "{{ ref('stg_salesforce__product_2_history') }}"
-    task_history: "{{ ref('stg_salesforce__task_history') }}"
-    user_history: "{{ ref('stg_salesforce__user_history') }}"
-    user_role_history: "{{ ref('stg_salesforce__user_role_history') }}"
-
+    
     salesforce__account_pass_through_columns: []
     salesforce__contact_pass_through_columns: []
     salesforce__event_pass_through_columns: []

@@ -16,12 +16,18 @@
 with spine as (
 
     {% if execute %}
-    {% if not var('account_history_start_date', None) or not var('account_history_end_date', None) %}
-        {% set date_query %}
+    {% if not var('account_history_start_date', None) or not var('account_history_end_date', None) 
+       or not var('global_history_start_date', None) or not var('global_history_end_date', None) %}
+        {% set date_query %} 
         select 
-            min( _fivetran_start ) as min_date,
-            {{ dbt.date_trunc('day', dbt.current_timestamp_backcompat()) }} as max_date
-        from {{ source('salesforce_history', 'account') }}
+            greatest(min_date, '2016-01-01') as min_date,
+            max_date
+        from (
+            select 
+                min( _fivetran_start ) as min_date,
+                {{ dbt.date_trunc('day', dbt.current_timestamp_backcompat()) }} as max_date
+            from {{ source('salesforce_history', 'account') }}
+            )
         {% endset %}
 
         {% set calc_first_date = run_query(date_query).columns[0][0]|string %}
@@ -35,8 +41,13 @@ with spine as (
     {% endif %}
 
     {# Prioritizes variables over calculated dates #}
-    {% set first_date = var('account_history_start_date', calc_first_date)|string %}
-    {% set last_date = var('account_history_end_date', calc_last_date)|string %}
+    {% if var('account_history_start_date', []) or var('account_history_end_date', []) %}
+        {% set first_date = var('account_history_start_date', calc_first_date)|string %}
+        {% set last_date = var('account_history_end_date', calc_last_date)|string %}
+    {% elif var('global_history_start_date', []) or var('global_history_end_date', []) %}
+        {% set first_date = var('global_history_start_date', calc_first_date)|string %}
+        {% set last_date = var('global_history_end_date', calc_last_date)|string %}
+    {% endif %}
 
     {{ dbt_utils.date_spine(
         datepart="day",
@@ -46,7 +57,7 @@ with spine as (
     }}
 
     {% if is_incremental() %}
-    where cast(date_day as date) >= (select max(date_day) from {{ this }} )
+        where cast(date_day as date) >= (select max(date_day) from {{ this }})
     {% endif %}
 ),
 
@@ -55,16 +66,16 @@ account_history as (
     select *        
     from {{ var('account_history') }}
     {% if is_incremental() %}
-    where _fivetran_start >= (select max(cast((_fivetran_start) as {{ dbt.type_timestamp() }})) from {{ this }} )
-    {% else %}
-    {% if var('global_history_start_date',[]) or var('account_history_start_date',[]) %}
-    where _fivetran_start >= 
-        {% if var('account_history_start_date', []) %}
-            "{{ var('account_history_start_date') }}"
+    {% if var('global_history_end_date',[]) or var('account_history_end_date',[]) %}
+    where _fivetran_start <= 
+        {% if var('account_history_end_date', []) %}
+            "{{ var('account_history_end_date') }}"
         {% else %}
-            "{{ var('global_history_start_date') }}"
+            "{{ var('global_history_end_date') }}"
         {% endif %}
     {% endif %}
+    {% else %}
+        where _fivetran_start >= (select max(cast((_fivetran_start) as {{ dbt.type_timestamp() }})) from {{ this }} )
     {% endif %} 
 ),
 

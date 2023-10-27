@@ -62,7 +62,7 @@ dispatch:
 ```
 
 ### Database Incremental Strategies 
-Some of the end models in this package are materialized incrementally. We have chosen `insert_overwrite` as the default strategy for **BigQuery** and **Databricks** databases, as it is only available for these dbt adapters. For **Snowflake**, **Redshift**, and **Postgres** databases, we have chosen `delete+insert` as the default strategy.
+The history end models in this package are materialized incrementally. We have chosen `insert_overwrite` as the default strategy for **BigQuery** and **Databricks** databases, as it is only available for these dbt adapters. For **Snowflake**, **Redshift**, and **Postgres** databases, we have chosen `delete+insert` as the default strategy.
 
 `insert_overwrite` is our preferred incremental strategy because it will be able to properly handle updates to records that exist outside the immediate incremental window. That is, because it leverages partitions, `insert_overwrite` will appropriately update existing rows that have been changed upstream instead of inserting duplicates of them--all without requiring a full table scan.
 
@@ -107,7 +107,7 @@ vars:
 ```
 The corresponding metrics from the disabled tables will not populate in the downstream models.
 
-## Optional: Utilizing Salesforce History Mode records
+## (Optional) Step 4: Utilizing Salesforce History Mode records
 If you have Salesforce [History Mode](https://fivetran.com/docs/getting-started/feature/history-mode) enabled for your connector, we now include support for the `account`, `contact`, and `opportunity` tables directly. These staging models from our `dbt_salesforce_source` package flow into our daily history models. This will allow you access to your historical data for these tables while taking advantage of incremental loads to help with compute.
 
 ### IMPORTANT: How To Update Your History Models
@@ -185,7 +185,7 @@ vars:
     opportunity_history_end_date: 'YYYY-MM-DD' # The first date in opportunity history you wish to pull records from, filtering on `_fivetran_end`.
 ```
 
-## (Optional) Step 4: Additional Configurations
+## (Optional) Step 5: Additional Configurations
 ### Change the Source Table References
 Source tables are referenced using default names. If an individual source table has a different name than expected, provide the name of the table as it appears in your warehouse to the respective variable: 
 > IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_salesforce_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
@@ -252,7 +252,7 @@ vars:
     - name: "salesforce__user_field"
 ```
 
-## (Optional) Step 5: Adding Formula Fields as Pass Through Columns
+## (Optional) Step 6: Adding Formula Fields as Pass Through Columns
 ### Adding Formula Fields as Pass Through Columns
 The source tables Fivetran syncs do not include formula fields. If your company uses them, you can generate them by referring to the [Salesforce Formula Utils](https://github.com/fivetran/dbt_salesforce_formula_utils) package. To pass through the fields, add the following configuration. We recommend confirming your formula field models successfully populate before integrating with the Salesforce package. 
 
@@ -275,7 +275,7 @@ Include the following within your `dbt_project.yml` file:
       alias: "opportunity_field_x"
 ```
 
-## (Optional) Step 6: Orchestrate your models with Fivetran Transformations for dbt Core™
+## (Optional) Step 7: Orchestrate your models with Fivetran Transformations for dbt Core™
 Fivetran offers the ability for you to orchestrate your dbt project through the [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt) product. Refer to the linked docs for more information on how to setup your project for orchestration through Fivetran. 
 
 # 🔍 Does this package have dependencies?

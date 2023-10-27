@@ -34,14 +34,7 @@ vars:
     ##history mode identifiers
     salesforce_account_history_identifier: "sf_account_history_data"
     salesforce_contact_history_identifier: "sf_contact_history_data"
-    salesforce_event_history_identifier: "sf_event_history_data"
-    salesforce_lead_history_identifier: "sf_lead_history_data"
     salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
-    salesforce_opportunity_line_item_history_identifier: "sf_opportunity_history_data"
-    salesforce_product_2_history_identifier: "sf_product_2_history_data"
-    salesforce_task_history_identifier: "sf_task_history_data"
-    salesforce_user_history_identifier: "sf_user_history_data"
-    salesforce_user_role_history_identifier: "sf_user_role_history_data"
 
 seeds:
   salesforce_integration_tests:
@@ -178,26 +171,6 @@ seeds:
         last_modified_date: timestamp 
         last_viewed_date: timestamp
         is_deleted: boolean
-    sf_event_history_data:
-      +column_types:
-        activity_date: timestamp
-        activity_date_time: timestamp
-        created_date: timestamp
-        end_date: timestamp
-        end_date_time: timestamp
-        last_modified_date: timestamp
-        start_date_time: timestamp 
-        is_deleted: boolean
-    sf_lead_history_data:
-      +column_types:
-        converted_date: timestamp
-        created_date: timestamp
-        email_bounced_date: timestamp
-        last_activity_date: timestamp
-        last_modified_date: timestamp
-        last_referenced_date: timestamp
-        last_viewed_date: timestamp
-        is_deleted: boolean
     sf_opportunity_history_data:
       +column_types:
         close_date: timestamp
@@ -208,35 +181,6 @@ seeds:
         amount: float
         expected_revenue: float
         is_deleted: boolean
-    sf_opportunity_line_item_history_data:
-      +column_types:
-        created_date: timestamp
-        last_modified_date: timestamp
-        last_referenced_date: timestamp
-        last_viewed_date: timestamp
-        service_date: timestamp
-        system_modstamp: timestamp
-        is_deleted: boolean
-    sf_product_2_history_data:
-      +column_types:
-        created_date: timestamp
-        last_modified_date: timestamp
-        last_referenced_date: timestamp
-        last_viewed_date: timestamp
-        system_modstamp: timestamp
-        is_deleted: boolean
-    sf_task_history_data:
-      +column_types:
-        activity_date: timestamp
-        completed_date_time: timestamp
-        created_date: timestamp
-        last_modified_date: timestamp
-        is_deleted: boolean
-    sf_user_history_data:
-      +column_types:
-        last_login_date: timestamp
-        last_referenced_date: timestamp
-        last_viewed_date: timestamp
 
 dispatch:
   - macro_namespace: dbt_utils
