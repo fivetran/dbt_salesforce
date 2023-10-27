@@ -13,31 +13,41 @@
     )
 }}
 
-
 with spine as (
 
     {% if execute %}
-    {% if not var('contact_history_start_date', None) or not var('contact_history_end_date', None) %}
-        {% set date_query %}
+    {% if not var('contact_history_start_date', None) or not var('contact_history_end_date', None) 
+       or not var('global_history_start_date', None) or not var('global_history_end_date', None) %}
+        {% set date_query %} 
         select 
-            min( _fivetran_start ) as min_date,
-            {{ dbt.date_trunc('day', dbt.current_timestamp_backcompat()) }} as max_date
-        from {{ source('salesforce_history', 'contact') }}
+            greatest(min_date, '2016-01-01') as min_date,
+            max_date
+        from (
+            select 
+                min( _fivetran_start ) as min_date,
+                {{ dbt.date_trunc('day', dbt.current_timestamp_backcompat()) }} as max_date
+            from {{ source('salesforce_history', 'contact') }}
+            ) contact_min_max
         {% endset %}
 
-        {% set calc_first_date = run_query(date_query).columns[0][0]|string %}
-        {% set calc_last_date = run_query(date_query).columns[1][0]|string %}
+        {% set first_date = run_query(date_query).columns[0][0]|string %}
+        {% set last_date = run_query(date_query).columns[1][0]|string %}
     {% endif %}
 
     {# If only compiling, creates range going back 1 year #}
     {% else %} 
-        {% set calc_first_date = dbt.dateadd("year", "-1", "current_date") %}
-        {% set calc_last_date = dbt.current_timestamp_backcompat() %}
+        {% set first_date = dbt.dateadd("year", "-1", "current_date") %}
+        {% set last_date = dbt.current_timestamp_backcompat() %}
     {% endif %}
 
     {# Prioritizes variables over calculated dates #}
-    {% set first_date = var('contact_history_start_date', calc_first_date)|string %}
-    {% set last_date = var('contact_history_end_date', calc_last_date)|string %}
+    {% if var('contact_history_start_date', []) or var('contact_history_end_date', []) %}
+        {% set first_date = var('contact_history_start_date', calc_first_date)|string %}
+        {% set last_date = var('contact_history_end_date', calc_last_date)|string %}
+    {% elif var('global_history_start_date', []) or var('global_history_end_date', []) %}
+        {% set first_date = var('global_history_start_date', calc_first_date)|string %}
+        {% set last_date = var('global_history_end_date', calc_last_date)|string %}
+    {% endif %}
 
     {{ dbt_utils.date_spine(
         datepart="day",
@@ -47,7 +57,7 @@ with spine as (
     }}
 
     {% if is_incremental() %}
-    where cast(date_day as date) >= (select max(date_day) from {{ this }} )
+        where cast(date_day as date) >= (select max(date_day) from {{ this }})
     {% endif %}
 ),
 

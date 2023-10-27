@@ -27,17 +27,17 @@ with spine as (
                 min( _fivetran_start ) as min_date,
                 {{ dbt.date_trunc('day', dbt.current_timestamp_backcompat()) }} as max_date
             from {{ source('salesforce_history', 'account') }}
-            )
+            ) account_min_max
         {% endset %}
 
-        {% set calc_first_date = run_query(date_query).columns[0][0]|string %}
-        {% set calc_last_date = run_query(date_query).columns[1][0]|string %}
+        {% set first_date = run_query(date_query).columns[0][0]|string %}
+        {% set last_date = run_query(date_query).columns[1][0]|string %}
     {% endif %}
 
     {# If only compiling, creates range going back 1 year #}
     {% else %} 
-        {% set calc_first_date = dbt.dateadd("year", "-1", "current_date") %}
-        {% set calc_last_date = dbt.current_timestamp_backcompat() %}
+        {% set first_date = dbt.dateadd("year", "-1", "current_date") %}
+        {% set last_date = dbt.current_timestamp_backcompat() %}
     {% endif %}
 
     {# Prioritizes variables over calculated dates #}
