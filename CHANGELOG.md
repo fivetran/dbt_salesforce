@@ -6,6 +6,10 @@ If you are not already a Quickstart Data Model user, you can find out more infor
 # dbt_salesforce v1.0.0 
 
 **📣 THIS IS A MAJOR PACKAGE RELEASE! 📣** More details below. 
+
+## 🚨 Breaking Change 🚨
+- We have removed all `tmp` models in the dependent `dbt_salesforce_source` package, and will use the `fivetran_utils.fill_staging_column` macro to compare directly to our source models in your schemas.
+
 ## 🚀 Feature Updates 🚀 
 - We have added daily history mode models in the [`models/salesforce_history`](https://github.com/fivetran/dbt_salesforce/tree/main/models/salesforce_history) folder [based off of Fivetran's history mode feature](https://fivetran.com/docs/core-concepts/sync-modes/history-mode), pulling from source models in `dbt_salesforce_source`. This will allow customers to utilize the Fivetran history mode feature, which records every version of each record in the source table from the moment this mode is activated in the equivalent tables.
 
@@ -31,9 +35,6 @@ vars:
 ```
 
 - We've added variable configuration that will allow you to filter the history start and end dates to filter down the data you ingest in each model. See the `Setting the date range for the Salesforce Daily History models` [section in the README](https://github.com/fivetran/dbt_salesforce/blob/main/README.md#filter-your-salesforce-history-mode-models-with-field-variable-conditionals) for more details. 
-
-## 🚨 Breaking Change 🚨
-- We have removed all `tmp` models in the dependent `dbt_salesforce_source` package, and will use the `fivetran_utils.fill_staging_column` macro to compare directly to our source models in your schemas.
 
 ## 🔎 Under The Hood 🔎
 - We have deprecated the `using_[source]_history_mode_active_records` variables. The introduction of the new history mode capabilities in this package made these variables redundant.  
