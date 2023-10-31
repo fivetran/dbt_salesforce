@@ -11,13 +11,13 @@ models:
       materialized: table
 
 vars:
-  salesforce__contact_history_enabled: True
-  salesforce__account_history_enabled: True
-  salesforce__opportunity_history_enabled: True
+  salesforce__contact_history_enabled: true
+  salesforce__account_history_enabled: true
+  salesforce__opportunity_history_enabled: true
 
   salesforce_source:
-    salesforce_schema: salesforce_integrations_tests_2
-    salesforce_history_schema: salesforce_integrations_tests_2
+    salesforce_schema: salesforce_integrations_tests_3
+    salesforce_history_schema: salesforce_integrations_tests_3
 
     salesforce_account_identifier: "sf_account_data"
     salesforce_opportunity_identifier: "sf_opportunity_data"
