@@ -3,6 +3,44 @@ Please note that this data model will now create a new transformation for **all*
 
 If you are not already a Quickstart Data Model user, you can find out more information [here](https://fivetran.com/docs/transformations/quickstart)!
 
+# dbt_salesforce v1.0.0 
+
+**📣 THIS IS A MAJOR PACKAGE RELEASE! 📣** More details below. 
+
+[PR #45](https://github.com/fivetran/dbt_salesforce/pull/45) includes the following updates:
+
+## 🚨 Breaking Change 🚨
+- We have removed all `tmp` models in the dependent `dbt_salesforce_source` package, and will use the `fivetran_utils.fill_staging_column` macro to compare directly to our source models in your schemas.
+
+## 🚀 Feature Updates 🚀 
+- We have added daily history mode models in the [`models/salesforce_history`](https://github.com/fivetran/dbt_salesforce/tree/main/models/salesforce_history) folder [based off of Fivetran's history mode feature](https://fivetran.com/docs/core-concepts/sync-modes/history-mode), pulling from source models in `dbt_salesforce_source`. This will allow customers to utilize the Fivetran history mode feature, which records every version of each record in the source table from the moment this mode is activated in the equivalent tables.
+
+- **IMPORTANT: All fields in your Salesforce history mode connector that are being synced are being included in the end models**. To change which fields are brought in via end models, you will need to update the fields you are bringing in via your history mode connector in Fivetran and then run a `dbt run --full-refresh`. [See the DECISIONLOG for more details](https://github.com/fivetran/dbt_salesforce_source/blob/main/DECISIONLOG.md).
+
+- Below are the new models included in this update:
+
+|**Model added**|**Description** 
+-----|----- 
+| [salesforce__account_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__account_daily_history) | Each record is a daily record in an account, starting with its first active date and updating up toward either the current date (if still active) or its last active date.  
+| [salesforce__contact_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_daily_history) |  Each record is a daily record in an contact, starting with its first active date and updating up toward either the current date (if still active) or its last active date.
+| [salesforce__opportunity_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_daily_history) | Each record is a daily record in an opportunity, starting with its first active date and updating up toward either the current date (if still active) or its last active date. 
+
+- All history models are incremental due to the volume of data being ingested. 
+
+- We support the option to pull from both your standard Salesforce and History Mode connectors simultaneously from their specific database/schemas.  We also support pulling from just your History Mode connector on its own and bypassing the standard connector on its own. [See more detailed instructions for configuring your history mode database and schema variables in the README](https://github.com/fivetran/dbt_salesforce/blob/main/README.md#configuring-your-salesforce-history-mode-database-and-schema-variables).
+
+- These models are disabled by default due to their size, so you will need to set the below variable configurations for each of the individual models you want to utilize in your `dbt_project.yml`. [More details are available in the README](https://github.com/fivetran/dbt_salesforce/blob/main/README.md#enabling-salesforce-history-mode-models).
+
+```yml 
+vars:
+  salesforce__[history_model]_enabled: true ##Ex: salesforce__account_history_enabled: true          
+```
+
+- We've added variable configuration that will allow you to filter the history start and end dates to filter down the data you ingest in each model. See the `Setting the date range for the Salesforce Daily History models` [section in the README](https://github.com/fivetran/dbt_salesforce/blob/main/README.md#filter-your-salesforce-history-mode-models-with-field-variable-conditionals) for more details. 
+
+## 🔎 Under The Hood 🔎
+- We have deprecated the `using_[source]_history_mode_active_records` variables. The introduction of the new history mode capabilities in this package made these variables redundant.  
+
 # dbt_salesforce v0.9.3
 ## 🪲 Bug Fix ⚒️
 [PR #44](https://github.com/fivetran/dbt_salesforce/pull/44) introduces the following update:

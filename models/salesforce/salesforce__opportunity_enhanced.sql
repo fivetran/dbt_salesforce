@@ -1,5 +1,5 @@
 with opportunity as (
-    
+
     select *
     from {{ var('opportunity') }}
 ),
@@ -7,7 +7,7 @@ with opportunity as (
 salesforce_user as (
 
     select *
-    from {{ var('user') }}  
+    from {{ var('user') }}
 ), 
 
 -- If using user_role table, the following will be included, otherwise it will not.
@@ -15,7 +15,7 @@ salesforce_user as (
 user_role as (
 
     select *
-    from {{ var('user_role') }}  
+    from {{ var('user_role') }}
 ), 
 {% endif %}
 
@@ -23,7 +23,7 @@ account as (
 
     select *
     from {{ var('account') }}
-), 
+),  
 
 add_fields as (
 
@@ -90,9 +90,8 @@ add_fields as (
     {% if var('salesforce__user_role_enabled', True) %}
     left join user_role 
         on opportunity_owner.user_role_id = user_role.user_role_id
-
     {% endif %}
-    )
+)
 
 select *
 from add_fields

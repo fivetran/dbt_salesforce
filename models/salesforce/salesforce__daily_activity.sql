@@ -22,7 +22,7 @@ salesforce_event as (
     select 
         coalesce({{ dbt.date_trunc('day', 'activity_date') }}, {{ dbt.date_trunc('day', 'activity_date_time') }}) as activity_date,
         count(event_id) as events_completed
-    from {{ var('event') }}  
+    from {{ var('event') }}
     group by 1
 ), 
 {% endif %}
@@ -32,7 +32,7 @@ salesforce_lead as (
 
     select 
         {{ dbt.date_trunc('day', 'created_date') }} as created_date,
-        count(lead_id) as leads_created
+        count(lead_id) as leads_created 
     from {{ var('lead') }}
     group by 1
 ), 

@@ -17,7 +17,6 @@ salesforce_user as (
 
     select *
     from {{ var('user') }}
-
 )
 
 select 

@@ -5,7 +5,6 @@ with spine as (
     {% set first_date_query %}
         {% if var('salesforce__lead_enabled', True) %}
             select  min( created_date ) as min_date from {{ source('salesforce', 'lead') }}
-
         {% else %}
             select  min( created_date ) as min_date from {{ source('salesforce', 'opportunity') }}
         {% endif %}   

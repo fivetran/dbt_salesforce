@@ -6,7 +6,7 @@ with salesforce_opportunity_enhanced as (
 
 salesforce_user as (
 
-    select *
+    select * 
     from {{ var('user') }}
 ), 
 

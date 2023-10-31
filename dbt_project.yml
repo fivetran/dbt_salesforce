@@ -1,12 +1,13 @@
 config-version: 2
 name: 'salesforce'
-version: '0.9.3'
+version: '1.0.0'
 require-dbt-version: [">=1.3.0", "<2.0.0"]
 models:
   salesforce:
     materialized: table
     intermediate:
       materialized: ephemeral
+
 vars:
   salesforce:
     account: "{{ ref('stg_salesforce__account') }}"
@@ -21,6 +22,10 @@ vars:
     order: "{{ ref('stg_salesforce__order') }}"
     opportunity_line_item: "{{ ref('stg_salesforce__opportunity_line_item') }}"
 
+    account_history: "{{ ref('stg_salesforce__account_history') }}"
+    contact_history: "{{ ref('stg_salesforce__contact_history') }}"
+    opportunity_history: "{{ ref('stg_salesforce__opportunity_history') }}"
+    
     salesforce__account_pass_through_columns: []
     salesforce__contact_pass_through_columns: []
     salesforce__event_pass_through_columns: []
@@ -37,4 +42,3 @@ clean-targets:
 - target
 - dbt_modules
 - dbt_packages
- 

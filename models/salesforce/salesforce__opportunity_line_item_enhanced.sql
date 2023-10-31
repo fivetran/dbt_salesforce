@@ -1,20 +1,20 @@
 --This model will only run if you have the underlying opportunity line item table.
-{{ config(enabled=var('salesforce__opportunity_line_item_enabled', True)) }}
-
+{{ config(enabled=var('salesforce__opportunity_line_item_enabled', True))}}
 with opportunity_line_item as (
     
     select *
     from {{ var('opportunity_line_item') }}
-), 
+),
 
 -- If using product_2 table, the following will be included, otherwise it will not.
 {% if var('salesforce__product_2_enabled', True) %}
 product_2 as (
 
-select *
-from {{ var('product_2') }}
+    select * 
+    from {{ var('product_2') }}
 ),
 {% endif %}
+
 
 final as (
 
