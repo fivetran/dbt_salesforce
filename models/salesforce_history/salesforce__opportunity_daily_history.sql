@@ -30,7 +30,7 @@
 
 with spine as (
     {# Prioritizes variables over calculated dates #}
-    {% set first_date = var('opportunity_history_start_date', var('global_history_start_date', '2016-01-01'))|string %}
+    {% set first_date = var('opportunity_history_start_date', var('global_history_start_date', '2020-01-01'))|string %}
     {% set last_date = last_date|string %}
 
     {{ dbt_utils.date_spine(
@@ -70,9 +70,9 @@ get_latest_daily_value as (
 daily_history as (
 
     select 
+        {{ dbt_utils.generate_surrogate_key(['spine.date_day','get_latest_daily_value.opportunity_id']) }} as opportunity_day_id,
         cast(spine.date_day as date) as date_day,
-        get_latest_daily_value.*,
-        {{ dbt_utils.generate_surrogate_key(['spine.date_day','get_latest_daily_value.opportunity_id']) }} as opportunity_day_id
+        get_latest_daily_value.*
     from get_latest_daily_value
     join spine on get_latest_daily_value._fivetran_start <= cast(spine.date_day as {{ dbt.type_timestamp() }})
         and get_latest_daily_value._fivetran_end >= cast(spine.date_day as {{ dbt.type_timestamp() }})

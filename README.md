@@ -163,7 +163,7 @@ vars:
 ```
 
 ### Filter your Salesforce History Mode models with field variable conditionals
-By default, these models are set to bring in all your data from Salesforce History, but you may be interested in bringing in only a smaller sample of historical records, given the relative size of the Salesforce History source tables. By default, the package will use `2016-01-01` as the minimum date for the historical end models. This date was chosen to ensure there was a limit to the amount of historical data processed on first run. This default may be overwritten to your liking by leveraging the below variables.
+By default, these models are set to bring in all your data from Salesforce History, but you may be interested in bringing in only a smaller sample of historical records, given the relative size of the Salesforce History source tables. By default, the package will use `2020-01-01` as the minimum date for the historical end models. This date was chosen to ensure there was a limit to the amount of historical data processed on first run. This default may be overwritten to your liking by leveraging the below variables.
 
 We have set up where conditions in our staging models to allow you to bring in only the data you need to run in. You can set a global history filter that would apply to all of our staging history models in your `dbt_project.yml`:
 
