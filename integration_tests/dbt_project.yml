@@ -7,8 +7,6 @@ profile: 'integration_tests'
 models:
   salesforce:
     materialized: table
-    intermediate:
-      materialized: table
 
 vars:
   salesforce__contact_history_enabled: false
