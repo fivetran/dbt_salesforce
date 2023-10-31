@@ -1,7 +1,3 @@
 packages:
-  # - package: fivetran/salesforce_source
-  #   version: [">=1.0.0", "<1.1.0"]
-
-  - git: https://github.com/fivetran/dbt_salesforce_source.git
-    revision: release/add-history-mode
-    warn-unpinned: false
+  - package: fivetran/salesforce_source
+    version: [">=1.0.0", "<1.1.0"]
