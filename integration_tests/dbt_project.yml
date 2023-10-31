@@ -11,9 +11,9 @@ models:
       materialized: table
 
 vars:
-  salesforce__contact_history_enabled: true
-  salesforce__account_history_enabled: true
-  salesforce__opportunity_history_enabled: true
+  salesforce__contact_history_enabled: false
+  salesforce__account_history_enabled: false
+  salesforce__opportunity_history_enabled: false
 
   salesforce_source:
     salesforce_schema: salesforce_integrations_tests_3

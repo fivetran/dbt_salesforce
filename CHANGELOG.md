@@ -7,6 +7,8 @@ If you are not already a Quickstart Data Model user, you can find out more infor
 
 **📣 THIS IS A MAJOR PACKAGE RELEASE! 📣** More details below. 
 
+[PR #45](https://github.com/fivetran/dbt_salesforce/pull/45) includes the following updates:
+
 ## 🚨 Breaking Change 🚨
 - We have removed all `tmp` models in the dependent `dbt_salesforce_source` package, and will use the `fivetran_utils.fill_staging_column` macro to compare directly to our source models in your schemas.
 
