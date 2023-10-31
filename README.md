@@ -258,13 +258,13 @@ Include the following within your `packages.yml` file:
 packages:
 
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.8.0", "<0.9.0"]
+    version: [">=0.9.0", "<0.10.0"]
 ```
 
 Include the following within your `dbt_project.yml` file:
 ```yml
 # Using the opportunity source table as example, update the opportunity variable to reference your newly created model that contains the formula fields:
-  opportunity: "{{ ref('my_opportunity_formula_table') }}"
+  salesforce_account_identifier: "'my_new_opportunity_formula_table'"
 
 # In addition, add the desired field names as pass through columns
   salesforce__opportunity_pass_through_columns:
