@@ -25,7 +25,12 @@ with spine as (
 
     {% if execute %}
     {% set last_date_query %}
+        {% if var('salesforce__lead_enabled', True) %}
+            select  max( created_date ) as max_date from {{ source('salesforce', 'lead') }}
+        {% else %}
         select  max( created_date ) as max_date from {{ source('salesforce', 'opportunity') }}
+        {% endif %}
+
     {% endset %}
 
     {% set current_date_query %}
