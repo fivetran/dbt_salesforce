@@ -37,7 +37,7 @@ with spine as (
         select current_date
     {% endset %}
 
-    {% if run_query(current_date_query).columns[0][0]|string < run_query(last_date_query).columns[0][0]|string %}
+    {% if run_query(current_date_query).columns[0][0]|string < run_query(last_date_query).columns[0][0]|string or run_query(last_date_query).columns[0][0]|string is None %}
 
     {% set last_date = run_query(last_date_query).columns[0][0]|string %}
 
