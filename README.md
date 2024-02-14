@@ -112,7 +112,7 @@ If you do not have the `OPPORTUNITY` table, there is no variable to turn off opp
 
 However, you may still find value in this package without opportunity data, specifically in the `salesforce__contact_enhanced`, `salesforce__daily_activity`, `salesforce__account_daily_history` and `salesforce__contact_daily_history` (if using History Mode) end models.
 
-For this use case, to ensure the package runs successfully, we recommend leveraging this [Fivetran Feature](https://fivetran.com/docs/using-fivetran/features#syncingemptytablesandcolumns) to create an empty `opportunity` table. To do so: 
+For this use case, to ensure the package runs successfully, we recommend leveraging this [Fivetran Feature](https://fivetran.com/docs/using-fivetran/features#syncingemptytablesandcolumns) to create an empty `opportunity` table. To do so, follow these steps:
 1. Navigate to your Salesforce connector in the "Connectors" tab within the Fivetran UI.
 2. Click on the "Schema" tab. 
 3. Scroll down to `Opportunity` and click on its checkbox to add it into your schema.

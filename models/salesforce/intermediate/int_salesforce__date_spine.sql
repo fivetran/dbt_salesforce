@@ -6,7 +6,7 @@ with spine as (
         {% if var('salesforce__lead_enabled', True) %}
             select  min( created_date ) as min_date from {{ source('salesforce', 'lead') }}
         {% else %}
-            select  min( created_date ) as min_date from {{ source('salesforce', 'opportunity') }}
+            select  coalesce(min( created_date ), '2015-01-01') as min_date from {{ source('salesforce', 'opportunity') }}
         {% endif %}   
 
     {% endset %}
@@ -28,7 +28,7 @@ with spine as (
         {% if var('salesforce__lead_enabled', True) %}
             select  max( created_date ) as max_date from {{ source('salesforce', 'lead') }}
         {% else %}
-        select  max( created_date ) as max_date from {{ source('salesforce', 'opportunity') }}
+        select  coalesce(max( created_date ), '2024-01-01') as max_date from {{ source('salesforce', 'opportunity') }}
         {% endif %}
 
     {% endset %}
@@ -37,7 +37,7 @@ with spine as (
         select current_date
     {% endset %}
 
-    {% if run_query(current_date_query).columns[0][0]|string < run_query(last_date_query).columns[0][0]|string or run_query(last_date_query).columns[0][0]|string is None %}
+    {% if run_query(current_date_query).columns[0][0]|string < run_query(last_date_query).columns[0][0]|string %}
 
     {% set last_date = run_query(last_date_query).columns[0][0]|string %}
 

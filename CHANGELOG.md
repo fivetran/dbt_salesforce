@@ -3,6 +3,7 @@
 
 ## Bug Fix
 - Aligns the `last_date_query` logic in the `int_salesforce__date_spine` model with the `first_date_query` logic. This ensures that users with empty `opportunity` tables will have a valid end-date (based on `lead` instead of `opportunity`) for the `salesforce__daily_activity` end model.
+  - Also adds coalesce-logic to `int_salesforce__date_spine` to ensure a succesful run without `lead` data.
 
 ## Documentation
 - Documents how users without an `opportunity` table can still have the package run successfully for them. See [README](https://github.com/fivetran/dbt_salesforce?tab=readme-ov-file#working-without-an-opportunity-table) for details.
