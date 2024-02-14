@@ -1,5 +1,5 @@
 # dbt_salesforce v1.0.1
-[PR #something](https://github.com/fivetran/dbt_salesforce/pull/46) includes the following updates:
+[PR #48](https://github.com/fivetran/dbt_salesforce/pull/48) includes the following updates:
 
 ## Bug Fix
 - Aligns the `last_date_query` logic in the `int_salesforce__date_spine` model with the `first_date_query` logic. This ensures that users with empty `opportunity` tables will have a valid end-date (based on `lead` instead of `opportunity`) for the `salesforce__daily_activity` end model.
