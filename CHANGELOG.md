@@ -1,3 +1,16 @@
+# dbt_salesforce v1.0.1
+[PR #48](https://github.com/fivetran/dbt_salesforce/pull/48) includes the following updates:
+
+## Bug Fix
+- Aligns the `last_date_query` logic in the `int_salesforce__date_spine` model with the `first_date_query` logic. This ensures that users with empty `opportunity` tables will have a valid end-date (based on `lead` instead of `opportunity`) for the `salesforce__daily_activity` end model.
+  - Also adds coalesce-logic to `int_salesforce__date_spine` to ensure a succesful run without `lead` data.
+
+## Documentation
+- Documents how users without an `opportunity` table can still have the package run successfully for them. See [README](https://github.com/fivetran/dbt_salesforce?tab=readme-ov-file#working-without-an-opportunity-table) for details.
+
+## Under the Hood
+- Included auto-releaser GitHub Actions workflow to automate future releases.
+
 # 🚨 Notice for Quickstart Data Model Users Only 🚨
 Please note that this data model will now create a new transformation for **all** your Salesforce objects (tables) to replicate and include the relevant Salesforce formula fields. With the addition of formula fields, your transformation schema will change to <connector_schema> + `_quickstart`, rather than inheriting the schema from your connector. Please make sure you adjust downstream queries accordingly. If you wish to disable any of these new transformations you may remove them within the UI.
 

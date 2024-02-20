@@ -107,6 +107,20 @@ vars:
 ```
 The corresponding metrics from the disabled tables will not populate in the downstream models.
 
+### Working without an `OPPORTUNITY` Table
+If you do not have the `OPPORTUNITY` table, there is no variable to turn off opportunity-related transformations, as this table is largely the backbone of the Salesforce package. 
+
+However, you may still find value in this package without opportunity data, specifically in the `salesforce__contact_enhanced`, `salesforce__daily_activity`, `salesforce__account_daily_history` and `salesforce__contact_daily_history` (if using History Mode) end models.
+
+For this use case, to ensure the package runs successfully, we recommend leveraging this [Fivetran Feature](https://fivetran.com/docs/using-fivetran/features#syncingemptytablesandcolumns) to create an empty `opportunity` table. To do so, follow these steps:
+1. Navigate to your Salesforce connector in the "Connectors" tab within the Fivetran UI.
+2. Click on the "Schema" tab. 
+3. Scroll down to `Opportunity` and click on its checkbox to add it into your schema.
+4. Click "Save Changes" in the upper righthand corner of the screen.
+5. Either click "Resync" for the `Opportunity` table specifically or wait for your next connector-level sync.
+
+> Note that all other end models (`salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`, `salesforce__manager_performance`, `salesforce__owner_performance`, `salesforce__sales_snapshot`, and `salesforce__opportunity_daily_history`) will still materialize after a blanket `dbt run` but will be largely empty/null.
+
 ## (Optional) Step 4: Utilizing Salesforce History Mode records
 If you have Salesforce [History Mode](https://fivetran.com/docs/getting-started/feature/history-mode) enabled for your connector, we now include support for the `account`, `contact`, and `opportunity` tables directly. These staging models from our `dbt_salesforce_source` package flow into our daily history models. This will allow you access to your historical data for these tables while taking advantage of incremental loads to help with compute.
 

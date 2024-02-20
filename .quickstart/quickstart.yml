@@ -1,0 +1,26 @@
+database_key: salesforce_database
+schema_key: salesforce_schema
+
+dbt_versions: ">=1.3.0 <2.0.0"
+
+table_variables:
+  salesforce__user_role_enabled:
+    - user_role
+  salesforce__lead_enabled:
+    - lead
+  salesforce__event_enabled:
+    - event
+  salesforce__task_enabled:
+    - task
+  salesforce__opportunity_line_item_enabled:
+    - opportunity_line_item
+  salesforce__order_enabled:
+    - order
+  salesforce__product_2_enabled:
+    - product_2
+
+destination_configurations:
+  databricks:
+    dispatch:
+      - macro_namespace: dbt_utils
+        search_order: [ 'spark_utils', 'dbt_utils' ]
