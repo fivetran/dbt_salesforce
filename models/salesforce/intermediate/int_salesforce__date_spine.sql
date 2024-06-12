@@ -1,68 +1,51 @@
-
 with spine as (
 
     {% if execute %}
-    {% set first_date_query %}
+
+    {%- set first_date_query %}
+        select 
+            coalesce(
+                min(cast(created_date as date)), 
+                cast({{ dbt.dateadd("month", -1, "current_date") }} as date)
+                ) as min_date
         {% if var('salesforce__lead_enabled', True) %}
-            select  min( created_date ) as min_date from {{ source('salesforce', 'lead') }}
+            from {{ source('salesforce', 'lead') }}
         {% else %}
-            select  coalesce(min( created_date ), '2015-01-01') as min_date from {{ source('salesforce', 'opportunity') }}
-        {% endif %}   
+            from {{ source('salesforce', 'opportunity') }}
+        {% endif %}  
+    {% endset -%}
 
-    {% endset %}
-    {% set first_date = run_query(first_date_query).columns[0][0]|string %}
-    
-        {% if target.type == 'postgres' %}
-            {% set first_date_adjust = "cast('" ~ first_date[0:10] ~ "' as date)" %}
+    {%- set first_date = dbt_utils.get_single_value(first_date_query) %}
 
-        {% else %}
-            {% set first_date_adjust = "'" ~ first_date[0:10] ~ "'" %}
-
-        {% endif %}
-
-    {% else %} {% set first_date_adjust = "'2015-01-01'" %}
-    {% endif %}
-
-    {% if execute %}
     {% set last_date_query %}
+        select 
+            coalesce(
+                greatest(max(cast(created_date as date)), cast(current_date as date)),
+                cast(current_date as date)
+                ) as max_date
         {% if var('salesforce__lead_enabled', True) %}
-            select  max( created_date ) as max_date from {{ source('salesforce', 'lead') }}
+            from {{ source('salesforce', 'lead') }}
         {% else %}
-        select  coalesce(max( created_date ), '2024-01-01') as max_date from {{ source('salesforce', 'opportunity') }}
-        {% endif %}
+            from {{ source('salesforce', 'opportunity') }}
+        {% endif %}  
+    {% endset -%}
 
-    {% endset %}
-
-    {% set current_date_query %}
-        select current_date
-    {% endset %}
-
-    {% if run_query(current_date_query).columns[0][0]|string < run_query(last_date_query).columns[0][0]|string %}
-
-    {% set last_date = run_query(last_date_query).columns[0][0]|string %}
-
-    {% else %} {% set last_date = run_query(current_date_query).columns[0][0]|string %}
-    {% endif %}
-        
-    {% if target.type == 'postgres' %}
-        {% set last_date_adjust = "cast('" ~ last_date[0:10] ~ "' as date)" %}
+    {%- set last_date = dbt_utils.get_single_value(last_date_query) %}
 
     {% else %}
-        {% set last_date_adjust = "'" ~ last_date[0:10] ~ "'" %}
 
-    {% endif %}
+    {% set first_date = 'dbt.dateadd("month", -1, "current_date")' %}
+    {% set last_date = 'dbt.current_timestamp_backcompat()' %}
+
     {% endif %}
 
     {{ dbt_utils.date_spine(
         datepart="day",
-        start_date=first_date_adjust,
-        end_date=dbt.dateadd("day", 1, last_date_adjust)
+        start_date="cast('" ~ first_date ~ "' as date)",
+        end_date=dbt.dateadd("day", 1, "cast('" ~ last_date  ~ "' as date)")
         )
     }}
 )
 
-select 
-
-distinct(date_day)
-
+select * 
 from spine
