@@ -2,7 +2,7 @@
 [PR #52](https://github.com/fivetran/dbt_salesforce/pull/52) includes the following updates:
 
 ## Bug fixes
-- Updated model `int_salesforce__date_spine` to accommodate when model `salesforce__lead` exists but has no records. In this case, the model now defaults to a range of one-month from the current date.
+- Updated model `int_salesforce__date_spine` to accommodate when the Salesforce `lead` object exists but has no records. In this case, the model now defaults to a range of one-month from the current date.
 
 ## Under the hood
 - Updated structure of model `int_salesforce__date_spine` for improved performance and maintainability.
