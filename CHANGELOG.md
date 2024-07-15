@@ -8,6 +8,9 @@
   - Renamed columns are now explicitly cast to prevent conflicts during the COALESCE. 
   - ❗This change is considered breaking since the resulting column types may differ from prior versions of this package.
 
+## Under the hood
+- Added validation test to ensure the final column names generated before and after this update remain the same.
+
 # dbt_salesforce v1.0.2
 [PR #52](https://github.com/fivetran/dbt_salesforce/pull/52) includes the following updates:
 
