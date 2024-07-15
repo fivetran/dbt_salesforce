@@ -1,13 +1,12 @@
 name: 'salesforce_integration_tests'
-version: '1.0.2'
+version: '1.1.0'
 config-version: 2
 
 profile: 'integration_tests'
 
 models:
-  salesforce:
-    materialized: table
-    +schema: "salesforce_{{ var('directed_schema','dev') }}"
+  +materialized: table
+  +schema: "salesforce_{{ var('directed_schema','dev') }}"
 
 vars:
   # enable history models when generating docs!
