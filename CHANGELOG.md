@@ -1,3 +1,9 @@
+# dbt_salesforce v1.1.1
+[PR #56](https://github.com/fivetran/dbt_salesforce/pull/56) includes the following updates:
+## Bugfix
+- Updated the logic for model `int_salesforce__date_spine` to reference the `stg_*` staging models instead of the source tables.
+  - This was necessary since the staging models account for multiple spellings of column names while the source tables do not.
+
 # dbt_salesforce v1.1.0
 [PR #55](https://github.com/fivetran/dbt_salesforce/pull/55) includes the following updates:
 
