@@ -4,6 +4,10 @@
 - Updated the logic for model `int_salesforce__date_spine` to reference the `stg_*` staging models instead of the source tables.
   - This was necessary since the staging models account for multiple spellings of column names while the source tables do not.
 
+## Under the hood
+- Added `--depends_on:` comments to `int_salesforce__date_spine` to prevent errors during `dbt run`.
+- Added `flags.WHICH in ('run', 'build')` as a condition in `int_salesforce__date_spine` to prevent call statements from querying the staging models during a `dbt compile`.
+
 # dbt_salesforce v1.1.0
 [PR #55](https://github.com/fivetran/dbt_salesforce/pull/55) includes the following updates:
 
