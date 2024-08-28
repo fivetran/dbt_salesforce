@@ -29,9 +29,9 @@
 
 <!--section="salesforce_transformation_model"-->
 This package also generates a comprehensive data dictionary of your source and modeled Salesforce data via the [dbt docs site](https://fivetran.github.io/dbt_salesforce/)
-You can also refer to the table below for a detailed view of all models materialized by default within this package.
+You can also refer to the table below for a detailed view of all tables materialized by default within this package.
 
-|**model**|**description**|**available in Quickstart?**
+|**Table**|**Description**|**Available in Quickstart?**
 -----|-----|-----
 | [salesforce__manager_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__manager_performance)     |Each record represents a manager, enriched with data about their team's pipeline, bookings, losses, and win percentages. | Yes
 | [salesforce__owner_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__owner_performance)         |Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, losses, and win percentages. | Yes
