@@ -20,12 +20,12 @@
 - This package also provides you with the option to leverage the history mode to gather historical records of your essential tables.
 
 - This package enables users to:
-- Understand the performance of your opportunities
-- Drill into how the members of your sales team are performing
-- Have a daily summary of sales activities
-- Leverage an enhanced contact list
-- View more details about opportunity line items
-- Gather daily historical records of your accounts, contacts and opportunities
+  - Understand the performance of your opportunities
+  - Drill into how the members of your sales team are performing
+  - Have a daily summary of sales activities
+  - Leverage an enhanced contact list
+  - View more details about opportunity line items
+  - Gather daily historical records of your accounts, contacts and opportunities
 
 <!--section="salesforce_transformation_model"-->
 This package also generates a comprehensive data dictionary of your source and modeled Salesforce data via the [dbt docs site](https://fivetran.github.io/dbt_salesforce/)
