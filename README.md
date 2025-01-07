@@ -45,13 +45,15 @@ You can also refer to the table below for a detailed view of all tables material
 | [salesforce__opportunity_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_daily_history) | Each record is a daily record in an opportunity, starting with its first active date and updating up toward either the current date (if still active) or its last active date. | No
 
 **Note**: For Quickstart Data Model users only, in addition to the above output models that are Quickstart compatible, you will also receive models in your transformation list which replicate **all** of your Salesforce objects with the inclusion of the relevant formula fields in the generated output models.
+### Materialized Models
+Each Quickstart transformation job run materializes 23 models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
 <!--section-end-->
 
 ## How do I use the dbt package?
 ### Step 1: Pre-Requisites
-You will need to ensure you have the following before leveraging the dbt package.
-- **Connector**: Have the Fivetran Salesforce connector syncing data into your warehouse.
-- **Database support**: This package has been tested on **BigQuery**, **Snowflake**, **Redshift**, **Databricks**, and **Postgres**. Ensure you are using one of these supported databases.
+To use this dbt package, you must have the following:
+- At least one  Fivetran Salesforce connection syncing data into your destination.
+- A BigQuery, Snowflake, Redshift, PostgreSQL, or Databricks destination.
 
 #### Databricks Dispatch Configuration
 If you are using a Databricks destination with this package you will need to add the below (or a variation of the below) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
@@ -137,7 +139,7 @@ We are aware that bringing in additional fields will be very process-heavy, so w
 #### Configuring Your Salesforce History Mode Database and Schema Variables
 Customers leveraging the Salesforce connector generally fall into one of two categories when taking advantage of History mode. They either have one connector that is syncing non-historical records and a separate connector that syncs historical records, **or** they have one connector that is syncing historical records. We have designed this feature to support both scenarios.
 
-##### Option 1: Two connectors, one with non-historical data and another with historical data
+##### Option 1: Two connections, one with non-historical data and another with historical data
 If you are gathering data from both standard Salesforce as well as Salesforce History Mode, and your target database and schema differ as well, you will need to add an additional configuration for the history schema and database to your `dbt_project.yml`.
 
 ```yml
