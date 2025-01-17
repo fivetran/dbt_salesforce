@@ -1,3 +1,10 @@
+# dbt_salesforce v1.1.2
+[PR #61](https://github.com/fivetran/dbt_salesforce/pull/61) includes the following updates:
+
+## Quickstart Updates
+- Fixed casing syntax in `quickstart.yml` to match the default Salesforce connector schema. Source tables are now uppercased and snake casing is updated to camel casing. 
+
+
 # dbt_salesforce v1.1.1
 [PR #56](https://github.com/fivetran/dbt_salesforce/pull/56) includes the following updates:
 ## Bugfix
