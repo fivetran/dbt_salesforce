@@ -15,8 +15,8 @@ vars:
   # salesforce__opportunity_history_enabled: true
 
   salesforce_source:
-    salesforce_schema: salesforce_integrations_tests_3
-    salesforce_history_schema: salesforce_integrations_tests_3
+    salesforce_schema: salesforce_integrations_tests_4
+    salesforce_history_schema: salesforce_integrations_tests_4
 
     salesforce_account_identifier: "sf_account_data"
     salesforce_opportunity_identifier: "sf_opportunity_data"
