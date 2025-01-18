@@ -6,7 +6,7 @@ profile: 'integration_tests'
 
 models:
   +materialized: table
-  +schema: "salesforce_{{ var('directed_schema','dev') }}"
+#   +schema: "salesforce_{{ var('directed_schema','dev') }}" --Used for validation tests
 
 vars:
   # enable history models when generating docs!
