@@ -5,31 +5,22 @@ dbt_versions: ">=1.3.0 <2.0.0"
 
 table_variables:
   salesforce__user_role_enabled:
-    - user_role
+    - UserRole
   salesforce__lead_enabled:
-    - lead
+    - Lead
   salesforce__event_enabled:
-    - event
+    - Event
   salesforce__task_enabled:
-    - task
+    - Task
   salesforce__opportunity_line_item_enabled:
-    - opportunity_line_item
+    - OpportunityLineItem
   salesforce__order_enabled:
-    - order
+    - Order
   salesforce__product_2_enabled:
-    - product_2
+    - Product2
 
 destination_configurations:
   databricks:
     dispatch:
       - macro_namespace: dbt_utils
         search_order: [ 'spark_utils', 'dbt_utils' ]
-public_models: [
-  "salesforce__contact_enhanced",
-  "salesforce__daily_activity",
-  "salesforce__manager_performance",
-  "salesforce__opportunity_enhanced",
-  "salesforce__opportunity_line_item_enhanced",
-  "salesforce__owner_performance",
-  "salesforce__sales_snapshot"
-]
