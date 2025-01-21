@@ -1,4 +1,6 @@
-<p align="center">
+# Salesforce Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_salesforce/))
+
+<p align="left">
     <a alt="License"
         href="https://github.com/fivetran/dbt_salesforce/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
@@ -12,8 +14,6 @@
         href="https://fivetran.com/docs/transformations/dbt/quickstart">
         <img src="https://img.shields.io/badge/Fivetran_Quickstart_Compatible%3F-yes-green.svg" /></a>
 </p>
-
-# Salesforce Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_salesforce/))
 
 ## What does this dbt package do?
 - Produces modeled tables that leverage Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema) and builds off the output of our [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source).
