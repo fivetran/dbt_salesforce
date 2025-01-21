@@ -24,3 +24,12 @@ destination_configurations:
     dispatch:
       - macro_namespace: dbt_utils
         search_order: [ 'spark_utils', 'dbt_utils' ]
+public_models: [
+  "salesforce__contact_enhanced",
+  "salesforce__daily_activity",
+  "salesforce__manager_performance",
+  "salesforce__opportunity_enhanced",
+  "salesforce__opportunity_line_item_enhanced",
+  "salesforce__owner_performance",
+  "salesforce__sales_snapshot"
+]

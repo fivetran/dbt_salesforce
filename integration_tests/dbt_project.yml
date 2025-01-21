@@ -6,13 +6,13 @@ profile: 'integration_tests'
 
 models:
   +materialized: table
-  # +schema: "salesforce_{{ var('directed_schema','dev') }}" --Used for validation tests
+  +schema: "salesforce_{{ var('directed_schema','dev') }}" --Used for validation tests
 
 vars:
   # enable history models when generating docs!
-  salesforce__contact_history_enabled: true
-  salesforce__account_history_enabled: true
-  salesforce__opportunity_history_enabled: true
+  # salesforce__contact_history_enabled: true
+  # salesforce__account_history_enabled: true
+  # salesforce__opportunity_history_enabled: true
 
   salesforce_source:
     salesforce_schema: salesforce_integrations_tests_4
