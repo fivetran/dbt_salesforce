@@ -1,4 +1,4 @@
-# dbt_salesforce v1.1.2
+# dbt_salesforce v1.2.0
 This release includes the following updates:
 
 ## Quickstart Fixes
