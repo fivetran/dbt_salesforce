@@ -1,4 +1,6 @@
-<p align="center">
+# Salesforce Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_salesforce/))
+
+<p align="left">
     <a alt="License"
         href="https://github.com/fivetran/dbt_salesforce/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
@@ -12,8 +14,6 @@
         href="https://fivetran.com/docs/transformations/dbt/quickstart">
         <img src="https://img.shields.io/badge/Fivetran_Quickstart_Compatible%3F-yes-green.svg" /></a>
 </p>
-
-# Salesforce Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_salesforce/))
 
 ## What does this dbt package do?
 - Produces modeled tables that leverage Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema) and builds off the output of our [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source).
@@ -45,13 +45,15 @@ You can also refer to the table below for a detailed view of all tables material
 | [salesforce__opportunity_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_daily_history) | Each record is a daily record in an opportunity, starting with its first active date and updating up toward either the current date (if still active) or its last active date. | No
 
 **Note**: For Quickstart Data Model users only, in addition to the above output models that are Quickstart compatible, you will also receive models in your transformation list which replicate **all** of your Salesforce objects with the inclusion of the relevant formula fields in the generated output models.
+### Materialized Models
+Each Quickstart transformation job run materializes 23 models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
 <!--section-end-->
 
 ## How do I use the dbt package?
 ### Step 1: Pre-Requisites
-You will need to ensure you have the following before leveraging the dbt package.
-- **Connector**: Have the Fivetran Salesforce connector syncing data into your warehouse.
-- **Database support**: This package has been tested on **BigQuery**, **Snowflake**, **Redshift**, **Databricks**, and **Postgres**. Ensure you are using one of these supported databases.
+To use this dbt package, you must have the following:
+- At least one  Fivetran Salesforce connection syncing data into your destination.
+- A BigQuery, Snowflake, Redshift, PostgreSQL, or Databricks destination.
 
 #### Databricks Dispatch Configuration
 If you are using a Databricks destination with this package you will need to add the below (or a variation of the below) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
@@ -75,7 +77,7 @@ Include the following salesforce package version in your `packages.yml`
 ```yaml
 packages:
   - package: fivetran/salesforce 
-    version: [">=1.1.0", "<1.2.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=1.2.0", "<1.3.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 Do NOT include the `salesforce_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -91,7 +93,7 @@ vars:
 ```
 
 #### Disabling Models
-It is possible that your Salesforce connector does not sync every table that this package expects. If your syncs exclude certain tables, it is because you either don't use that functionality in Salesforce or actively excluded some tables from your syncs.
+Your Salesforce connection may not sync every table that this package expects. If your syncs exclude certain tables, it is because you either don't use that functionality in Salesforce or actively excluded some tables from your syncs.
 
 To disable the corresponding functionality in this package, you must add the corresponding variable(s) to your `dbt_project.yml`, which are listed below. By default, that is if none of these variables are added, all variables are assumed to be true. Add variables only for the tables you would like to disable:
 
@@ -113,31 +115,31 @@ If you do not have the `OPPORTUNITY` table, there is no variable to turn off opp
 However, you may still find value in this package without opportunity data, specifically in the `salesforce__contact_enhanced`, `salesforce__daily_activity`, `salesforce__account_daily_history` and `salesforce__contact_daily_history` (if using History Mode) end models.
 
 For this use case, to ensure the package runs successfully, we recommend leveraging this [Fivetran Feature](https://fivetran.com/docs/using-fivetran/features#syncingemptytablesandcolumns) to create an empty `opportunity` table. To do so, follow these steps:
-1. Navigate to your Salesforce connector in the "Connectors" tab within the Fivetran UI.
+1. Navigate to your Salesforce connection in the "Connectors" tab within the Fivetran UI.
 2. Click on the "Schema" tab.
 3. Scroll down to `Opportunity` and click on its checkbox to add it into your schema.
 4. Click "Save Changes" in the upper righthand corner of the screen.
-5. Either click "Resync" for the `Opportunity` table specifically or wait for your next connector-level sync.
+5. Either click "Resync" for the `Opportunity` table specifically or wait for your next connection-level sync.
 
 > Note that all other end models (`salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`, `salesforce__manager_performance`, `salesforce__owner_performance`, `salesforce__sales_snapshot`, and `salesforce__opportunity_daily_history`) will still materialize after a blanket `dbt run` but will be largely empty/null.
 
 ### (Optional) Step 4: Utilizing Salesforce History Mode records
-If you have Salesforce [History Mode](https://fivetran.com/docs/using-fivetran/features#historymode) enabled for your connector, we now include support for the `account`, `contact`, and `opportunity` tables directly. These staging models from our `dbt_salesforce_source` package flow into our daily history models. This will allow you access to your historical data for these tables while taking advantage of incremental loads to help with compute.
+If you have Salesforce [History Mode](https://fivetran.com/docs/using-fivetran/features#historymode) enabled for your connection, we now include support for the `account`, `contact`, and `opportunity` tables directly. These staging models from our `dbt_salesforce_source` package flow into our daily history models. This will allow you access to your historical data for these tables while taking advantage of incremental loads to help with compute.
 
 #### IMPORTANT: How To Update Your History Models
-To ensure maximum value for these history mode models and avoid messy historical data that could come with picking and choosing which fields you bring in, **all fields in your Salesforce history mode connector are being synced into your end staging models**. That means all custom fields you picked to sync are being brought in to the final models. [See our DECISIONLOG for more details on why we are bringing in all fields](https://github.com/fivetran/dbt_salesforce_source/blob/main/DECISIONLOG.md).
+To ensure maximum value for these history mode models and avoid messy historical data that could come with picking and choosing which fields you bring in, **all fields in your Salesforce history mode connection are being synced into your end staging models**. That means all custom fields you picked to sync are being brought in to the final models. [See our DECISIONLOG for more details on why we are bringing in all fields](https://github.com/fivetran/dbt_salesforce_source/blob/main/DECISIONLOG.md).
 
 To update the history mode models, you must follow these steps:
-1) Go to your Fivetran Salesforce History Mode connector page.
+1) Go to your Fivetran Salesforce History Mode connection page.
 2) Update the fields that you are bringing into the model.
 3) Run a `dbt run --full-refresh` on the specific staging models you've updated to bring in these fields and all the historical data available with these fields.
 
-We are aware that bringing in additional fields will be very process-heavy, so we do emphasize caution in making changes to your history mode connector. It would be best to batch as many field changes as possible before executing a `--full-refresh` to save on processing.
+We are aware that bringing in additional fields will be very process-heavy, so we do emphasize caution in making changes to your history mode connection. It would be best to batch as many field changes as possible before executing a `--full-refresh` to save on processing.
 
 #### Configuring Your Salesforce History Mode Database and Schema Variables
-Customers leveraging the Salesforce connector generally fall into one of two categories when taking advantage of History mode. They either have one connector that is syncing non-historical records and a separate connector that syncs historical records, **or** they have one connector that is syncing historical records. We have designed this feature to support both scenarios.
+Customers with a Salesforce connection generally fall into one of two categories when taking advantage of History mode. They either have one connection that is syncing non-historical records and a separate connection that syncs historical records, **or** they have one connection that is syncing historical records. We have designed this feature to support both scenarios.
 
-##### Option 1: Two connectors, one with non-historical data and another with historical data
+##### Option 1: Two connections, one with non-historical data and another with historical data
 If you are gathering data from both standard Salesforce as well as Salesforce History Mode, and your target database and schema differ as well, you will need to add an additional configuration for the history schema and database to your `dbt_project.yml`.
 
 ```yml
@@ -149,7 +151,7 @@ vars:
     salesforce_history_schema: your_history_schema_name
 ```
 
-##### Option 2: One connector being used to sync historical data
+##### Option 2: One connection being used to sync historical data
 Perhaps you may only want to use the Salesforce History Mode to bring in your data. Because the Salesforce schema is pointing to the default `salesforce` schema and database, you will want to add the following variable into your `dbt_project.yml` to point it to the `salesforce_history` equivalents.
 
 ```yml
@@ -161,7 +163,7 @@ vars:
     salesforce_history_schema: your_history_schema_name
 ```
 
-**IMPORTANT**: If you utilize Option 2, you must sync the equivalent enabled tables and fields in your history mode connector that are being brought into your end reports. Examine your data lineage and the model fields within the `salesforce` folder to see which tables and fields you are using and need to bring in and sync in the history mode connector.
+**IMPORTANT**: If you utilize Option 2, you must sync the equivalent enabled tables and fields in your history mode connection that are being brought into your end reports. Examine your data lineage and the model fields within the `salesforce` folder to see which tables and fields you are using and need to bring in and sync in the history mode connection.
 
 #### Enabling Salesforce History Mode Models
 The History Mode models can get quite expansive since it will take in **ALL** historical records, so we've disabled them by default. You can enable the history models you'd like to utilize by adding the below variable configurations within your `dbt_project.yml` file for the equivalent models.

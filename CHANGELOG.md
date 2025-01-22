@@ -1,3 +1,14 @@
+# dbt_salesforce v1.2.0
+This release includes the following updates:
+
+## Quickstart Fixes
+- Fixed casing syntax in `quickstart.yml` to match the default options in the Salesforce connector schema tab. Source tables are now in upper case, and snake casing is updated to camel casing. ([#61](https://github.com/fivetran/dbt_salesforce/pull/61))
+
+## Documentation
+- Added Quickstart model counts to README. ([#59](https://github.com/fivetran/dbt_salesforce/pull/59))
+- Corrected references to connectors and connections in the README. ([#59](https://github.com/fivetran/dbt_salesforce/pull/59))
+- Moved badges at top of the README below the H1 header to be consistent with popular README formats. ([#61](https://github.com/fivetran/dbt_salesforce/pull/61))
+
 # dbt_salesforce v1.1.1
 [PR #56](https://github.com/fivetran/dbt_salesforce/pull/56) includes the following updates:
 ## Bugfix
