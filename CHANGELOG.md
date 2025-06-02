@@ -1,3 +1,13 @@
+# dbt_salesforce v1.2.1
+This release includes the following updates:
+
+## Under the Hood
+- Prepends `materialized` configs in the package's `dbt_project.yml` file with `+` to improve compatibility with the newer versions of dbt-core starting with v1.10.0. ([PR #62](https://github.com/fivetran/dbt_salesforce/pull/62))
+- Updates the package maintainer pull request template. ([PR #63](https://github.com/fivetran/dbt_salesforce/pull/63))
+
+## Contributors
+- [@b-per](https://github.com/b-per) ([PR #62](https://github.com/fivetran/dbt_salesforce/pull/62))
+
 # dbt_salesforce v1.2.0
 This release includes the following updates:
 
