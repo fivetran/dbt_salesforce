@@ -1,6 +1,6 @@
 # dbt_salesforce v1.3.0
 
-[PR #64](https://github.com/fivetran/dbt_salesforce/pull/64) includes the following updates:
+[PR #65](https://github.com/fivetran/dbt_salesforce/pull/65) includes the following updates:
 
 ## Breaking Change for dbt Core < 1.9.6
 
