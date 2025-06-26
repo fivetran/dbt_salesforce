@@ -153,7 +153,6 @@ seeds:
         last_activity_date: timestamp
         last_referenced_date: timestamp
         last_viewed_date: timestamp
-        annual_revenue: float
         is_deleted: boolean
     sf_contact_history_data:
       +column_types:
