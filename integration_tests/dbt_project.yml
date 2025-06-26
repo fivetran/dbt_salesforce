@@ -68,14 +68,6 @@ seeds:
         offline_trial_expiration_date: timestamp
         latitude: float
         longitude: float
-    sf_user_data:
-      +column_types:
-        last_login_date: timestamp
-        last_referenced_date: timestamp
-        last_viewed_date: timestamp
-        offline_trial_expiration_date: timestamp
-        latitude: float
-        longitude: float
     sf_contact_data:
       +column_types:
         birthdate: timestamp
