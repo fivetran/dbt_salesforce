@@ -9,14 +9,14 @@ with opportunity_aggregation_by_owner as (
 user_role as (
 
     select *
-    from {{ var('user_role') }}
+    from {{ ref('stg_salesforce__user_role') }}
 ),
 {% endif %}
 
 salesforce_user as (
 
     select *
-    from {{ var('user') }}
+    from {{ ref('stg_salesforce__user') }}
 )
 
 select 

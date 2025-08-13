@@ -16,7 +16,7 @@
 </p>
 
 ## What does this dbt package do?
-- Produces modeled tables that leverage Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema) and builds off the output of our [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source).
+- Produces modeled tables that leverage Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema).
 - This package also provides you with the option to leverage the history mode to gather historical records of your essential tables.
 
 - This package enables users to:
@@ -77,10 +77,10 @@ Include the following salesforce package version in your `packages.yml`
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: [">=1.3.0", "<1.4.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=1.0.0", "<1.1.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
-Do NOT include the `salesforce_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
+> All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/salesforce_source` in your `packages.yml` since this package has been deprecated.
 
 ### Step 3: Configure Your Variables
 #### Database and Schema Variables
@@ -213,8 +213,10 @@ By default, this package builds the GitHub staging models within a schema titled
 
 ```yml
 models:
-    salesforce_source:
-      +schema: my_new_schema_name # leave blank for just the target_schema
+    salesforce:
+      +schema: my_new_schema_name # Leave +schema: blank to use the default target_schema.
+      staging:
+        +schema: my_new_schema_name # Leave +schema: blank to use the default target_schema.
 ```
 #### Adding Passthrough Columns
 This package allows users to add additional columns to the `salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`,`salesforce__contact_enhanced`, and any of the `daily_history` models if you have Salesforce history mode enabled. You can do this by using the below variables in your `dbt_project.yml` file. These variables allow these additional columns to be aliased (`alias`) and casted (`transform_sql`) if desired, but not required. Datatype casting is configured via a sql snippet within the `transform_sql` key. You may add the desired sql while omitting the `as field_name` at the end and your custom pass-though fields will be casted accordingly. Use the below format for declaring the respective pass-through variables.
@@ -288,8 +290,6 @@ This dbt package is dependent on the following dbt packages. For more informatio
 > **If you have any of these dependent packages in your own `packages.yml` I highly recommend you remove them to ensure there are no package version conflicts.**
 ```yml
 packages:
-    - package: fivetran/salesforce_source
-      version: [">=1.2.0", "<1.3.0"]
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]
     - package: dbt-labs/dbt_utils

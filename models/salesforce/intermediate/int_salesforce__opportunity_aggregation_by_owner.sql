@@ -7,7 +7,7 @@ with salesforce_opportunity_enhanced as (
 salesforce_user as (
 
     select * 
-    from {{ var('user') }}
+    from {{ ref('stg_salesforce__user') }}
 ), 
 
 booking_by_owner as (
