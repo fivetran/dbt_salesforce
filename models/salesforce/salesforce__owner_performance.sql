@@ -7,7 +7,7 @@ with opportunity_aggregation_by_owner as (
 salesforce_user as (
 
     select *
-    from {{ var('user') }}
+    from {{ ref('stg_salesforce__user') }}
 )
 
 select 

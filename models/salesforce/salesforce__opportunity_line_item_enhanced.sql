@@ -3,7 +3,7 @@
 with opportunity_line_item as (
     
     select *
-    from {{ var('opportunity_line_item') }}
+    from {{ ref('stg_salesforce__opportunity_line_item') }}
 ),
 
 -- If using product_2 table, the following will be included, otherwise it will not.
@@ -11,7 +11,7 @@ with opportunity_line_item as (
 product_2 as (
 
     select * 
-    from {{ var('product_2') }}
+    from {{ ref('stg_salesforce__product_2') }}
 ),
 {% endif %}
 

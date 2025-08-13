@@ -1,13 +1,13 @@
 with opportunity as (
 
     select *
-    from {{ var('opportunity') }}
+    from {{ ref('stg_salesforce__opportunity') }}
 ),
 
 salesforce_user as (
 
     select *
-    from {{ var('user') }}
+    from {{ ref('stg_salesforce__user') }}
 ), 
 
 -- If using user_role table, the following will be included, otherwise it will not.
@@ -15,14 +15,14 @@ salesforce_user as (
 user_role as (
 
     select *
-    from {{ var('user_role') }}
+    from {{ ref('stg_salesforce__user_role') }}
 ), 
 {% endif %}
 
 account as (
 
     select *
-    from {{ var('account') }}
+    from {{ ref('stg_salesforce__account') }}
 ),  
 
 add_fields as (

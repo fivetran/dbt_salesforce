@@ -11,7 +11,7 @@ task as (
     select 
         {{ dbt.date_trunc('day', 'activity_date') }} as activity_date,
         count(task_id) as tasks_completed
-    from {{ var('task') }}
+    from {{ ref('stg_salesforce__task') }}
     group by 1
 ), 
 {% endif %}
@@ -22,7 +22,7 @@ salesforce_event as (
     select 
         coalesce({{ dbt.date_trunc('day', 'activity_date') }}, {{ dbt.date_trunc('day', 'activity_date_time') }}) as activity_date,
         count(event_id) as events_completed
-    from {{ var('event') }}
+    from {{ ref('stg_salesforce__event') }}
     group by 1
 ), 
 {% endif %}
@@ -33,7 +33,7 @@ salesforce_lead as (
     select 
         {{ dbt.date_trunc('day', 'created_date') }} as created_date,
         count(lead_id) as leads_created 
-    from {{ var('lead') }}
+    from {{ ref('stg_salesforce__lead') }}
     group by 1
 ), 
 
@@ -42,7 +42,7 @@ salesforce_converted_lead as (
     select 
         {{ dbt.date_trunc('day', 'converted_date') }} as converted_date,
         count(lead_id) as leads_converted
-    from {{ var('lead') }}
+    from {{ ref('stg_salesforce__lead') }}
     where is_converted
     group by 1
 ), 
@@ -68,7 +68,7 @@ opportunity as (
             when not is_closed and lower(forecast_category) in ('pipeline','forecast','bestcase') then 'Pipeline'
             else 'Other'
         end as status
-    from {{ var('opportunity') }}
+    from {{ ref('stg_salesforce__opportunity') }}
 ),
 
 opportunities_created as (

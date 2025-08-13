@@ -43,7 +43,7 @@ with spine as (
 account_history as (
 
     select *        
-    from {{ var('account_history') }}
+    from {{ ref('stg_salesforce__account_history') }}
     {% if is_incremental() %}
         where _fivetran_start >= (select max(cast((_fivetran_start) as {{ dbt.type_timestamp() }})) from {{ this }} )
     {% endif %} 
