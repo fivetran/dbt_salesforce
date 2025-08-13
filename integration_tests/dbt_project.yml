@@ -36,6 +36,8 @@ vars:
     salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
 
 seeds:
+  +docs:
+    show: False
   salesforce_integration_tests:
     +quote_columns: "{{ true if target.type in ('redshift', 'postgres') else false }}"
     +column_types:
@@ -184,3 +186,5 @@ clean-targets:
 flags:
   send_anonymous_usage_stats: False
 
+
+  use_colors: True
