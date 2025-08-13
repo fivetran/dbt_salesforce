@@ -8,8 +8,9 @@ models:
     intermediate:
       +materialized: ephemeral
     staging:
-      +schema: salesforce_source
-      +materialized: view
+      +materialized: table
+      tmp:
+        +materialized: view
 
 vars:
   salesforce:

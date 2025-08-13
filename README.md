@@ -127,7 +127,7 @@ For this use case, to ensure the package runs successfully, we recommend leverag
 If you have Salesforce [History Mode](https://fivetran.com/docs/using-fivetran/features#historymode) enabled for your connection, we now include support for the `account`, `contact`, and `opportunity` tables directly. These staging models from our `dbt_salesforce_source` package flow into our daily history models. This will allow you access to your historical data for these tables while taking advantage of incremental loads to help with compute.
 
 #### IMPORTANT: How To Update Your History Models
-To ensure maximum value for these history mode models and avoid messy historical data that could come with picking and choosing which fields you bring in, **all fields in your Salesforce history mode connection are being synced into your end staging models**. That means all custom fields you picked to sync are being brought in to the final models. [See our DECISIONLOG for more details on why we are bringing in all fields](https://github.com/fivetran/dbt_salesforce_source/blob/main/DECISIONLOG.md).
+To ensure maximum value for these history mode models and avoid messy historical data that could come with picking and choosing which fields you bring in, **all fields in your Salesforce history mode connection are being synced into your end staging models**. That means all custom fields you picked to sync are being brought in to the final models. [See our DECISIONLOG for more details on why we are bringing in all fields](https://github.com/fivetran/dbt_salesforce/blob/main/DECISIONLOG.md).
 
 To update the history mode models, you must follow these steps:
 1) Go to your Fivetran Salesforce History Mode connection page.
@@ -200,7 +200,7 @@ vars:
 ### (Optional) Step 5: Additional Configurations
 #### Change the Source Table References
 Source tables are referenced using default names. If an individual source table has a different name than expected, provide the name of the table as it appears in your warehouse to the respective variable:
-> IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_salesforce_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
+> IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_salesforce/blob/main/dbt_project.yml) variable declarations to see the expected names.
 
 ```yml
 vars:
@@ -208,14 +208,14 @@ vars:
 ``` 
 
 #### Change the Build Schema
-By default, this package builds the GitHub staging models within a schema titled (<target_schema> + `_stg_salesforce`) in your target database. If this is not where you would like your GitHub staging data to be written to, add the following configuration to your root `dbt_project.yml` file:
+By default, this package builds all of the Salesforce models within your `target.schema` in your target database. If this is not where you would like your Salesforce data to be written to, add the following configuration to your root `dbt_project.yml` file:
 
 ```yml
 models:
     salesforce:
-      +schema: my_new_schema_name # Leave +schema: blank to use the default target_schema.
+      +schema: my_new_schema_name # Will write to <target_schema> + _my_new_schema_name
       staging:
-        +schema: my_new_schema_name # Leave +schema: blank to use the default target_schema.
+        +schema: my_new_schema_name # Will write to <target_schema> + _my_new_schema_name
 ```
 #### Adding Passthrough Columns
 This package allows users to add additional columns to the `salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`,`salesforce__contact_enhanced`, and any of the `daily_history` models if you have Salesforce history mode enabled. You can do this by using the below variables in your `dbt_project.yml` file. These variables allow these additional columns to be aliased (`alias`) and casted (`transform_sql`) if desired, but not required. Datatype casting is configured via a sql snippet within the `transform_sql` key. You may add the desired sql while omitting the `as field_name` at the end and your custom pass-though fields will be casted accordingly. Use the below format for declaring the respective pass-through variables.

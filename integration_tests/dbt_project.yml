@@ -10,11 +10,11 @@ models:
 
 vars:
   # enable history models when generating docs!
-  # salesforce__contact_history_enabled: true
-  # salesforce__account_history_enabled: true
-  # salesforce__opportunity_history_enabled: true
+  # salesforce__contact_history_enabled: true # @docs-include
+  # salesforce__account_history_enabled: true # @docs-include
+  # salesforce__opportunity_history_enabled: true # @docs-include
 
-  salesforce_source:
+  salesforce:
     salesforce_schema: salesforce_integrations_tests_4
     salesforce_history_schema: salesforce_integrations_tests_4
 
