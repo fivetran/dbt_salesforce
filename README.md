@@ -211,15 +211,15 @@ By default, this package builds all of the Salesforce models within your `target
 
 ```yml
 models:
-    salesforce: # If you want everything written to one schema, you can scope the +schema config to this package level
+    salesforce: # If you want everything written to one schema, you can scope the +schema config to the package level
       salesforce:
-      +schema: my_new_schema_name # Will write Salesforce end models to <target_schema> + _my_new_schema_name
-      staging:
-        +schema: my_new_schema_name # Will write Salesforce staging models to <target_schema> + _my_new_schema_name
+        +schema: my_new_schema_name # Will write Salesforce end models to <target_schema> + _my_new_schema_name
+        staging:
+          +schema: my_new_schema_name # Will write Salesforce staging models to <target_schema> + _my_new_schema_name
       salesforce_history:
-      +schema: my_new_schema_name # Will write Salesforce History models to <target_schema> + _my_new_schema_name
-      staging:
-        +schema: my_new_schema_name # Will write Salesforce History staging models to <target_schema> + _my_new_schema_name
+        +schema: my_new_schema_name # Will write Salesforce History models to <target_schema> + _my_new_schema_name
+        staging:
+          +schema: my_new_schema_name # Will write Salesforce History staging models to <target_schema> + _my_new_schema_name
 ```
 
 #### Adding Passthrough Columns
