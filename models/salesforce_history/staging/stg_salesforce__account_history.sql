@@ -39,6 +39,9 @@ final as (
         cast(_fivetran_start as date) as _fivetran_date,
         {{ dbt_utils.generate_surrogate_key(['id', '_fivetran_start']) }} as history_unique_key,
 
+        {{ log("columns are:\n" ~ dbt_utils.star(from=source('salesforce_history','account'),
+                        except=["id", "_fivetran_start", "_fivetran_end"]), info=True) }}
+
         {{ dbt_utils.star(from=source('salesforce_history','account'),
                         except=["id", "_fivetran_start", "_fivetran_end"]) }}
     from base
