@@ -1,4 +1,4 @@
-# Salesforce Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_salesforce/))
+# Salesforce dbt Package ([Docs](https://fivetran.github.io/dbt_salesforce/))
 
 <p align="left">
     <a alt="License"
