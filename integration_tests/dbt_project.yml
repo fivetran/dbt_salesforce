@@ -14,25 +14,26 @@ vars:
   # salesforce__account_history_enabled: true # @docs-include
   # salesforce__opportunity_history_enabled: true # @docs-include
 
-  salesforce_schema: salesforce_integrations_tests_4
-  salesforce_history_schema: salesforce_integrations_tests_4
+  salesforce:
+    salesforce_schema: salesforce_integrations_tests_4
+    salesforce_history_schema: salesforce_integrations_tests_4
 
-  salesforce_account_identifier: "sf_account_data"
-  salesforce_opportunity_identifier: "sf_opportunity_data"
-  salesforce_user_identifier: "sf_user_data"
-  salesforce_user_role_identifier: "sf_user_role_data"
-  salesforce_contact_identifier: "sf_contact_data"
-  salesforce_lead_identifier: "sf_lead_data"
-  salesforce_task_identifier: "sf_task_data"
-  salesforce_event_identifier: "sf_event_data"
-  salesforce_product_2_identifier: "sf_product_2_data"
-  salesforce_order_identifier: "sf_order_data"
-  salesforce_opportunity_line_item_identifier: "sf_opportunity_line_item_data"
+    salesforce_account_identifier: "sf_account_data"
+    salesforce_opportunity_identifier: "sf_opportunity_data"
+    salesforce_user_identifier: "sf_user_data"
+    salesforce_user_role_identifier: "sf_user_role_data"
+    salesforce_contact_identifier: "sf_contact_data"
+    salesforce_lead_identifier: "sf_lead_data"
+    salesforce_task_identifier: "sf_task_data"
+    salesforce_event_identifier: "sf_event_data"
+    salesforce_product_2_identifier: "sf_product_2_data"
+    salesforce_order_identifier: "sf_order_data"
+    salesforce_opportunity_line_item_identifier: "sf_opportunity_line_item_data"
 
-  ##history mode identifiers
-  salesforce_account_history_identifier: "sf_account_history_data"
-  salesforce_contact_history_identifier: "sf_contact_history_data"
-  salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
+    ##history mode identifiers
+    salesforce_account_history_identifier: "sf_account_history_data"
+    salesforce_contact_history_identifier: "sf_contact_history_data"
+    salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
 
 seeds:
   +docs:

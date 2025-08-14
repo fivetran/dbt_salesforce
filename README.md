@@ -124,7 +124,7 @@ For this use case, to ensure the package runs successfully, we recommend leverag
 > Note that all other end models (`salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`, `salesforce__manager_performance`, `salesforce__owner_performance`, `salesforce__sales_snapshot`, and `salesforce__opportunity_daily_history`) will still materialize after a blanket `dbt run` but will be largely empty/null.
 
 ### (Optional) Step 4: Utilizing Salesforce History Mode records
-If you have Salesforce [History Mode](https://fivetran.com/docs/using-fivetran/features#historymode) enabled for your connection, we now include support for the `account`, `contact`, and `opportunity` tables directly. These staging models from our `dbt_salesforce_source` package flow into our daily history models. This will allow you access to your historical data for these tables while taking advantage of incremental loads to help with compute.
+If you have Salesforce [History Mode](https://fivetran.com/docs/using-fivetran/features#historymode) enabled for your connection, we now include support for the `account`, `contact`, and `opportunity` tables directly. These staging models flow into our daily history models. This will allow you access to your historical data for these tables while taking advantage of incremental loads to help with compute.
 
 #### IMPORTANT: How To Update Your History Models
 To ensure maximum value for these history mode models and avoid messy historical data that could come with picking and choosing which fields you bring in, **all fields in your Salesforce history mode connection are being synced into your end staging models**. That means all custom fields you picked to sync are being brought in to the final models. [See our DECISIONLOG for more details on why we are bringing in all fields](https://github.com/fivetran/dbt_salesforce/blob/main/DECISIONLOG.md).
@@ -171,7 +171,6 @@ The History Mode models can get quite expansive since it will take in **ALL** hi
 ```yml
 # dbt_project.yml
 
-...
 vars:
   salesforce__account_history_enabled: true  # False by default. Only use if you have history mode enabled and wish to view the full historical record of all your synced account fields, particularly in the daily account history model.
   salesforce__contact_history_enabled: true  # False by default. Only use if you have history mode enabled and wish to view the full historical record of all your synced contact fields, particularly in the daily contact history model.
@@ -212,11 +211,17 @@ By default, this package builds all of the Salesforce models within your `target
 
 ```yml
 models:
-    salesforce:
-      +schema: my_new_schema_name # Will write to <target_schema> + _my_new_schema_name
+    salesforce: # If you want everything written to one schema, you can scope the +schema config to this package level
+      salesforce:
+      +schema: my_new_schema_name # Will write Salesforce end models to <target_schema> + _my_new_schema_name
       staging:
-        +schema: my_new_schema_name # Will write to <target_schema> + _my_new_schema_name
+        +schema: my_new_schema_name # Will write Salesforce staging models to <target_schema> + _my_new_schema_name
+      salesforce_history:
+      +schema: my_new_schema_name # Will write Salesforce History models to <target_schema> + _my_new_schema_name
+      staging:
+        +schema: my_new_schema_name # Will write Salesforce History staging models to <target_schema> + _my_new_schema_name
 ```
+
 #### Adding Passthrough Columns
 This package allows users to add additional columns to the `salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`,`salesforce__contact_enhanced`, and any of the `daily_history` models if you have Salesforce history mode enabled. You can do this by using the below variables in your `dbt_project.yml` file. These variables allow these additional columns to be aliased (`alias`) and casted (`transform_sql`) if desired, but not required. Datatype casting is configured via a sql snippet within the `transform_sql` key. You may add the desired sql while omitting the `as field_name` at the end and your custom pass-though fields will be casted accordingly. Use the below format for declaring the respective pass-through variables.
 
@@ -227,7 +232,6 @@ Additionally, you may add additional columns to the staging models. For example,
 ```yml
 # dbt_project.yml
 
-...
 vars:
   salesforce__account_pass_through_columns: 
     - name: "salesforce__account_field"
