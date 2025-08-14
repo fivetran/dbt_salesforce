@@ -1,4 +1,4 @@
-# dbt_salesforce v1.0.0
+# dbt_salesforce v2.0.0
 
 [PR #67](https://github.com/fivetran/dbt_salesforce/pull/67) includes the following updates:
 
