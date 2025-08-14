@@ -10,4 +10,5 @@ jobs:
     uses: fivetran/dbt_package_automations/.github/workflows/generate-docs.yml@main
     secrets: inherit
     with:
-      schema_var_name: salesforce_schema
+      # This needs to be kept a long list like this, and ': public' should not be included in the last var of the list.
+      schema_var_name: "salesforce_schema: 'public', salesforce_history_schema"
