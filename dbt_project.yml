@@ -10,13 +10,10 @@ models:
     salesforce:
       staging:
         +materialized: table
-        tmp:
-          +materialized: view
     salesforce_history:
       staging:
         +materialized: table
-        tmp:
-          +materialized: view
+
 vars:
   salesforce:
     account: "{{ source('salesforce', 'account') }}"
