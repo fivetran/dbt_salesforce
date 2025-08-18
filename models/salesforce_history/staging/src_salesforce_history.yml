@@ -16,7 +16,6 @@ sources:
         identifier: "{{ var('salesforce_account_history_identifier', 'account')}}"
         description: Represents historical records of individual accounts, which are organizations or people involved with your business (such as customers, competitors, and partners).
         config:
-          loaded_at_field: _fivetran_synced
           enabled: "{{ var('salesforce__account_history_enabled', False) }}"
         columns:
           - name: id
@@ -92,7 +91,6 @@ sources:
         identifier: "{{ var('salesforce_contact_history_identifier', 'contact')}}"
         description: Represents the historical record of contacts, which are people associated with an account.
         config:
-          loaded_at_field: _fivetran_synced
           enabled: "{{ var('salesforce__contact_history_enabled', False) }}"
         columns:
           - name: id
@@ -171,7 +169,6 @@ sources:
         identifier: "{{ var('salesforce_opportunity_history_identifier', 'opportunity')}}"
         description: Represents historical records of opportunities, which are sales or pending deals.
         config:
-          loaded_at_field: _fivetran_synced
           enabled: "{{ var('salesforce__opportunity_history_enabled', False) }}"
         columns:
           - name: id
