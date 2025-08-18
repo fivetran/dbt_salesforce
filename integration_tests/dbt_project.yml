@@ -5,7 +5,6 @@ config-version: 2
 profile: 'integration_tests'
 
 models:
-  +materialized: table
   +schema: "salesforce_{{ var('directed_schema','dev') }}"
 
 vars:
