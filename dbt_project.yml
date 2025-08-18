@@ -31,9 +31,10 @@ vars:
     order: "{{ source('salesforce', 'order') }}"
     opportunity_line_item: "{{ source('salesforce', 'opportunity_line_item') }}"
 
-    account_history: "{{ source('salesforce', 'account_history') }}"
-    contact_history: "{{ source('salesforce', 'contact_history') }}"
-    opportunity_history: "{{ source('salesforce', 'opportunity_history') }}"
+    account_history: "{{ source('salesforce_history', 'account') }}"
+    contact_history: "{{ source('salesforce_history', 'contact') }}"
+    opportunity_history: "{{ source('salesforce_history', 'opportunity') }}"
+
     
     salesforce__account_pass_through_columns: []
     salesforce__contact_pass_through_columns: []
