@@ -1,11 +1,11 @@
-# Salesforce Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_salesforce/))
+# Salesforce dbt Package ([Docs](https://fivetran.github.io/dbt_salesforce/))
 
 <p align="left">
     <a alt="License"
         href="https://github.com/fivetran/dbt_salesforce/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
     <a alt="dbt-core">
-        <img src="https://img.shields.io/badge/dbt_core™-version_>=1.3.0_<2.0.0-orange.svg" /></a>
+        <img src="https://img.shields.io/badge/dbt_Core™_version->=1.3.0_,<2.0.0-orange.svg" /></a>
     <a alt="Maintained?">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
     <a alt="PRs">
@@ -16,7 +16,7 @@
 </p>
 
 ## What does this dbt package do?
-- Produces modeled tables that leverage Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema) and builds off the output of our [Salesforce source package](https://github.com/fivetran/dbt_salesforce_source).
+- Produces modeled tables that leverage Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema).
 - This package also provides you with the option to leverage the history mode to gather historical records of your essential tables.
 
 - This package enables users to:
@@ -77,10 +77,10 @@ Include the following salesforce package version in your `packages.yml`
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: [">=1.3.0", "<1.4.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=2.0.0", "<2.1.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
-Do NOT include the `salesforce_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
+> All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/salesforce_source` in your `packages.yml` since this package has been deprecated.
 
 ### Step 3: Configure Your Variables
 #### Database and Schema Variables
@@ -124,10 +124,10 @@ For this use case, to ensure the package runs successfully, we recommend leverag
 > Note that all other end models (`salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`, `salesforce__manager_performance`, `salesforce__owner_performance`, `salesforce__sales_snapshot`, and `salesforce__opportunity_daily_history`) will still materialize after a blanket `dbt run` but will be largely empty/null.
 
 ### (Optional) Step 4: Utilizing Salesforce History Mode records
-If you have Salesforce [History Mode](https://fivetran.com/docs/using-fivetran/features#historymode) enabled for your connection, we now include support for the `account`, `contact`, and `opportunity` tables directly. These staging models from our `dbt_salesforce_source` package flow into our daily history models. This will allow you access to your historical data for these tables while taking advantage of incremental loads to help with compute.
+If you have Salesforce [History Mode](https://fivetran.com/docs/using-fivetran/features#historymode) enabled for your connection, we now include support for the `account`, `contact`, and `opportunity` tables directly. These staging models flow into our daily history models. This will allow you access to your historical data for these tables while taking advantage of incremental loads to help with compute.
 
 #### IMPORTANT: How To Update Your History Models
-To ensure maximum value for these history mode models and avoid messy historical data that could come with picking and choosing which fields you bring in, **all fields in your Salesforce history mode connection are being synced into your end staging models**. That means all custom fields you picked to sync are being brought in to the final models. [See our DECISIONLOG for more details on why we are bringing in all fields](https://github.com/fivetran/dbt_salesforce_source/blob/main/DECISIONLOG.md).
+To ensure maximum value for these history mode models and avoid messy historical data that could come with picking and choosing which fields you bring in, **all fields in your Salesforce history mode connection are being synced into your end staging models**. That means all custom fields you picked to sync are being brought in to the final models. [See our DECISIONLOG for more details on why we are bringing in all fields](https://github.com/fivetran/dbt_salesforce/blob/main/DECISIONLOG.md).
 
 To update the history mode models, you must follow these steps:
 1) Go to your Fivetran Salesforce History Mode connection page.
@@ -171,7 +171,6 @@ The History Mode models can get quite expansive since it will take in **ALL** hi
 ```yml
 # dbt_project.yml
 
-...
 vars:
   salesforce__account_history_enabled: true  # False by default. Only use if you have history mode enabled and wish to view the full historical record of all your synced account fields, particularly in the daily account history model.
   salesforce__contact_history_enabled: true  # False by default. Only use if you have history mode enabled and wish to view the full historical record of all your synced contact fields, particularly in the daily contact history model.
@@ -182,7 +181,6 @@ vars:
 By default, these models are set to bring in all your data from Salesforce History, but you may be interested in bringing in only a smaller sample of historical records, given the relative size of the Salesforce History source tables. By default, the package will use `2020-01-01` as the minimum date for the historical end models. This date was chosen to ensure there was a limit to the amount of historical data processed on first run. This default may be overwritten to your liking by leveraging the below variables.
 
 We have set up where conditions in our staging models to allow you to bring in only the data you need to run in. You can set a global history filter that would apply to all of our staging history models in your `dbt_project.yml`:
-
 
 ```yml 
 vars:
@@ -201,7 +199,7 @@ vars:
 ### (Optional) Step 5: Additional Configurations
 #### Change the Source Table References
 Source tables are referenced using default names. If an individual source table has a different name than expected, provide the name of the table as it appears in your warehouse to the respective variable:
-> IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_salesforce_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
+> IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_salesforce/blob/main/dbt_project.yml) variable declarations to see the expected names.
 
 ```yml
 vars:
@@ -209,13 +207,21 @@ vars:
 ``` 
 
 #### Change the Build Schema
-By default, this package builds the GitHub staging models within a schema titled (<target_schema> + `_stg_salesforce`) in your target database. If this is not where you would like your GitHub staging data to be written to, add the following configuration to your root `dbt_project.yml` file:
+By default, this package builds all of the Salesforce models within your `target.schema` in your target database. If this is not where you would like your Salesforce data to be written to, add the following configuration to your root `dbt_project.yml` file:
 
 ```yml
 models:
-    salesforce_source:
-      +schema: my_new_schema_name # leave blank for just the target_schema
+    salesforce: # If you want everything written to one schema, you can scope the +schema config to the package level
+      salesforce:
+        +schema: my_new_schema_name # Will write Salesforce end models to <target_schema> + _my_new_schema_name
+        staging:
+          +schema: my_new_schema_name # Will write Salesforce staging models to <target_schema> + _my_new_schema_name
+      salesforce_history:
+        +schema: my_new_schema_name # Will write Salesforce History models to <target_schema> + _my_new_schema_name
+        staging:
+          +schema: my_new_schema_name # Will write Salesforce History staging models to <target_schema> + _my_new_schema_name
 ```
+
 #### Adding Passthrough Columns
 This package allows users to add additional columns to the `salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`,`salesforce__contact_enhanced`, and any of the `daily_history` models if you have Salesforce history mode enabled. You can do this by using the below variables in your `dbt_project.yml` file. These variables allow these additional columns to be aliased (`alias`) and casted (`transform_sql`) if desired, but not required. Datatype casting is configured via a sql snippet within the `transform_sql` key. You may add the desired sql while omitting the `as field_name` at the end and your custom pass-though fields will be casted accordingly. Use the below format for declaring the respective pass-through variables.
 
@@ -226,7 +232,6 @@ Additionally, you may add additional columns to the staging models. For example,
 ```yml
 # dbt_project.yml
 
-...
 vars:
   salesforce__account_pass_through_columns: 
     - name: "salesforce__account_field"
@@ -288,8 +293,6 @@ This dbt package is dependent on the following dbt packages. For more informatio
 > **If you have any of these dependent packages in your own `packages.yml` I highly recommend you remove them to ensure there are no package version conflicts.**
 ```yml
 packages:
-    - package: fivetran/salesforce_source
-      version: [">=1.2.0", "<1.3.0"]
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]
     - package: dbt-labs/dbt_utils

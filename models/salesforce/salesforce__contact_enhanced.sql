@@ -1,19 +1,19 @@
 with contact as (
 
     select *
-    from {{ var('contact') }}
+    from {{ ref('stg_salesforce__contact') }}
 ), 
 
 account as (
 
     select *
-    from {{ var('account') }}
+    from {{ ref('stg_salesforce__account') }}
 ),
 
 salesforce_user as (
 
     select *
-    from {{ var('user') }}
+    from {{ ref('stg_salesforce__user') }}
 )
 
 select 

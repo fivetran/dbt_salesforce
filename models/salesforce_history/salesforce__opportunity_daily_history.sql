@@ -44,7 +44,7 @@ with spine as (
 opportunity_history as (
 
     select *        
-    from {{ var('opportunity_history') }}
+    from {{ ref('stg_salesforce__opportunity_history') }}
     {% if is_incremental() %}
         where _fivetran_start >= (select max(cast((_fivetran_start) as {{ dbt.type_timestamp() }})) from {{ this }} )
     {% endif %} 

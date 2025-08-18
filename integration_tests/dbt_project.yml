@@ -1,20 +1,19 @@
 name: 'salesforce_integration_tests'
-version: '1.3.0'
+version: '2.0.0'
 config-version: 2
 
 profile: 'integration_tests'
 
 models:
-  +materialized: table
   +schema: "salesforce_{{ var('directed_schema','dev') }}"
 
 vars:
   # enable history models when generating docs!
-  # salesforce__contact_history_enabled: true
-  # salesforce__account_history_enabled: true
-  # salesforce__opportunity_history_enabled: true
+  # salesforce__contact_history_enabled: true # @docs-include
+  # salesforce__account_history_enabled: true # @docs-include
+  # salesforce__opportunity_history_enabled: true # @docs-include
 
-  salesforce_source:
+  salesforce:
     salesforce_schema: salesforce_integrations_tests_4
     salesforce_history_schema: salesforce_integrations_tests_4
 
@@ -36,6 +35,8 @@ vars:
     salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
 
 seeds:
+  +docs:
+    show: False
   salesforce_integration_tests:
     +quote_columns: "{{ true if target.type in ('redshift', 'postgres') else false }}"
     +column_types:
@@ -184,3 +185,5 @@ clean-targets:
 flags:
   send_anonymous_usage_stats: False
 
+
+  use_colors: True

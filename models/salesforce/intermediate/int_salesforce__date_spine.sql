@@ -1,7 +1,7 @@
 {% if var('salesforce__lead_enabled', True) -%}
--- depends_on: {{ var('lead') }}
+-- depends_on: {{ ref('stg_salesforce__lead') }}
 {% else -%}
--- depends_on: {{ var('opportunity') }}
+-- depends_on: {{ ref('stg_salesforce__opportunity') }}
 {% endif %}  
 with spine as (
 
@@ -14,9 +14,9 @@ with spine as (
                 cast({{ dbt.dateadd("month", -1, "current_date") }} as date)
                 ) as min_date
         {% if var('salesforce__lead_enabled', True) %}
-            from {{ var('lead') }}
+            from {{ ref('stg_salesforce__lead') }}
         {% else %}
-            from {{ var('opportunity') }}
+            from {{ ref('stg_salesforce__opportunity') }}
         {% endif %}  
     {% endset -%}
 
@@ -27,9 +27,9 @@ with spine as (
                 cast(current_date as date)
                 ) as max_date
         {% if var('salesforce__lead_enabled', True) %}
-            from {{ var('lead') }}
+            from {{ ref('stg_salesforce__lead') }}
         {% else %}
-            from {{ var('opportunity') }}
+            from {{ ref('stg_salesforce__opportunity') }}
         {% endif %}  
     {% endset -%}
 
