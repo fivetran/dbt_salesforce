@@ -6,7 +6,6 @@
 /* This test is to make sure the final columns produced are the same between versions.
 Only one test is needed since it will fetch all tables and all columns in each schema.
 !!! THIS TEST IS WRITTEN FOR BIGQUERY!!! */
-{% if target.type == 'bigquery' %}
 with prod as (
     select
         table_name,
@@ -53,8 +52,3 @@ final as (
 
 select *
 from final
-
-{% else %}
-{{ print('This is written to run on bigquery. If you need to run on another warehouse, add another version for that warehouse') }}
-
-{% endif %}
