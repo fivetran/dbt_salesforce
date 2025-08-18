@@ -199,7 +199,6 @@ sources:
       - name: user
         identifier: "{{ var('salesforce_user_identifier', 'user')}}"
         config:
-          loaded_at_field: _fivetran_synced
           freshness: null
         description: Represents a user in your organization.
         columns:
