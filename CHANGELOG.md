@@ -1,3 +1,14 @@
+# dbt_salesforce v2.0.1-a1
+
+## Feature Update
+- Added support for multiple Salesforce source table naming conventions to handle different source table spelling variations (e.g., `user_role` vs `userrole` vs `UserRole`, `opportunity_line_item` vs `opportunitylineitem` vs `OpportunityLineItem`).
+  - Introduced new variable `salesforce_naming_convention` with three options:
+    - `snake_case` (default): Uses underscore-separated names like `user_role`, `opportunity_line_item`
+    - `lowercase`: Uses lowercase without separators like `userrole`, `opportunitylineitem`  
+    - `pascalcase`: Uses PascalCase like `UserRole`, `OpportunityLineItem`
+  - Updated all source table identifier configurations in `src_salesforce.yml` and `src_salesforce_history.yml` to dynamically apply the selected naming convention
+  - Added comprehensive documentation in README explaining the new variable and its usage
+
 # dbt_salesforce v2.0.0
 
 [PR #67](https://github.com/fivetran/dbt_salesforce/pull/67) includes the following updates:

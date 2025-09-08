@@ -13,7 +13,7 @@ sources:
 
     tables:
       - name: account
-        identifier: "{{ var('salesforce_account_history_identifier', 'account')}}"
+        identifier: "{{ var('salesforce_account_history_identifier', 'Account' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('account' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'account')) }}"
         description: Represents historical records of individual accounts, which are organizations or people involved with your business (such as customers, competitors, and partners).
         config:
           enabled: "{{ var('salesforce__account_history_enabled', False) }}"
@@ -88,7 +88,7 @@ sources:
             description: The website of this account.
 
       - name: contact
-        identifier: "{{ var('salesforce_contact_history_identifier', 'contact')}}"
+        identifier: "{{ var('salesforce_contact_history_identifier', 'Contact' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('contact' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'contact')) }}"
         description: Represents the historical record of contacts, which are people associated with an account.
         config:
           enabled: "{{ var('salesforce__contact_history_enabled', False) }}"
@@ -166,7 +166,7 @@ sources:
             description: Title
 
       - name: opportunity
-        identifier: "{{ var('salesforce_opportunity_history_identifier', 'opportunity')}}"
+        identifier: "{{ var('salesforce_opportunity_history_identifier', 'Opportunity' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('opportunity' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'opportunity')) }}"
         description: Represents historical records of opportunities, which are sales or pending deals.
         config:
           enabled: "{{ var('salesforce__opportunity_history_enabled', False) }}"
