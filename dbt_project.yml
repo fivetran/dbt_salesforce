@@ -32,7 +32,7 @@ vars:
     contact_history: "{{ source('salesforce_history', 'contact') }}"
     opportunity_history: "{{ source('salesforce_history', 'opportunity') }}"
 
-    
+    salesforce_naming_convention: 'lowercase'
     salesforce__account_pass_through_columns: []
     salesforce__contact_pass_through_columns: []
     salesforce__event_pass_through_columns: []

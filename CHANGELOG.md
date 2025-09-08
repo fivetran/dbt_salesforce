@@ -6,8 +6,11 @@
     - `snake_case` (default): Uses underscore-separated names like `user_role`, `opportunity_line_item`
     - `lowercase`: Uses lowercase without separators like `userrole`, `opportunitylineitem`  
     - `pascalcase`: Uses PascalCase like `UserRole`, `OpportunityLineItem`
+  - For testing this pre-release, the default `snake_case` variable setting is overridden in `dbt_project.yml` to use `lowercase`.
   - Updated all source table identifier configurations in `src_salesforce.yml` and `src_salesforce_history.yml` to dynamically apply the selected naming convention
-  - Added comprehensive documentation in README explaining the new variable and its usage
+
+## Documentation
+- Added comprehensive documentation in README explaining the new variable and its usage
 
 # dbt_salesforce v2.0.0
 
