@@ -4,6 +4,9 @@ version: '2.0.0'
 require-dbt-version: [">=1.3.0", "<2.0.0"]
 models:
   salesforce:
+    +persist_docs:
+      relation: true
+      columns: true
     +materialized: table
     intermediate:
       +materialized: ephemeral
