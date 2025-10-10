@@ -26,4 +26,4 @@ dbt run --vars '{salesforce__account_history_enabled: true, salesforce__contact_
 dbt test --target "$db"
 dbt run --vars '{salesforce__account_history_enabled: true, salesforce__contact_history_enabled: true, salesforce__opportunity_history_enabled: true}' --target "$db"
 dbt test --target "$db"
-dbt run-operation fivetran_utils.drop_schemas_automation --target "$db"
+# dbt run-operation fivetran_utils.drop_schemas_automation --target "$db"
