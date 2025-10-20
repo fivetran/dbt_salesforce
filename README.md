@@ -270,6 +270,17 @@ vars:
     - name: "salesforce__user_field"
 ```
 
+**IMPORTANT:** If you are creating a passthrough column that applies `transform_sql` to a field already included by default, you must capitalize the `name` value like such:
+
+```yml
+  salesforce__lead_pass_through_columns:
+    - name: "Email" # instead of email
+      alias: "email_domain"
+      transform_sql: "split(email_domain, '@')[0]"
+```
+
+> If you are applying `transform_sql` to a field already included by default
+
 ### (Optional) Step 6: Adding Formula Fields as Pass Through Columns
 #### Adding Formula Fields as Pass Through Columns
 The source tables Fivetran syncs do not include formula fields. If your company uses them, you can generate them by referring to the [Salesforce Formula Utils](https://github.com/fivetran/dbt_salesforce_formula_utils) package. To pass through the fields, add the [latest version of the package](https://github.com/fivetran/dbt_salesforce_formula_utils#installing-the-macro-package). We recommend confirming your formula field models successfully populate before integrating with the Salesforce package.
