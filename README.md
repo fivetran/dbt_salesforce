@@ -37,7 +37,7 @@ You can also refer to the table below for a detailed view of all tables material
 | [salesforce__owner_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__owner_performance)         |Each record represents an individual member of the sales team, enriched with data about their pipeline, bookings, losses, and win percentages.<br><br>**Example Analytics Questions:**<br>• How does quota attainment vary by sales rep experience level and territory?<br>• Which reps have high activity levels but low conversion rates, indicating potential training opportunities? | Yes
 | [salesforce__sales_snapshot](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__sales_snapshot)               |A single row snapshot that provides various metrics about your sales funnel.<br><br>**Example Analytics Questions:**<br>• Are we seeing seasonal patterns in our sales performance that should inform resource allocation?<br>• How does our current pipeline coverage compare to historical benchmarks for achieving quarterly targets? | Yes
 | [salesforce__opportunity_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_enhanced)  |Each record represents an opportunity, enriched with related data about the account and opportunity owner.<br><br>**Example Analytics Questions:**<br>• Which industries or account types generate the highest-value opportunities and shortest sales cycles?<br>• Which opportunities have been open the longest and what intervention strategies could help close them? | Yes
-| [salesforce__contact_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_enhanced)  |Each record represents a contact with additional account and owner information.<br><br>**Example Analytics Questions:**<br>• Do opportunities with multiple engaged contacts close faster or larger?<br>• Where are data hygiene gaps (opportunities missing a primary contact role)? | Yes
+| [salesforce__contact_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_enhanced)  |Each record represents a contact with additional account and owner information.<br><br>**Example Analytics Questions:**<br>• Do opportunities with multiple engaged contacts close faster or larger?<br>• Where are data hygiene gaps, such as opportunities missing a primary contact role? | Yes
 | [salesforce__daily_activity](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__daily_activity)  |Each record represents a daily summary of the number of sales activities, for example tasks and opportunities closed.<br><br>**Example Analytics Questions:**<br>• How does the mix of tasks versus events impact overall sales productivity and outcomes?<br>• Which days of the week or times of year show the highest conversion rates from activities to opportunities? | Yes
 | [salesforce__opportunity_line_item_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_line_item_enhanced)  |Each record represents a line item belonging to a certain opportunity, with additional product details.<br><br>**Example Analytics Questions:**<br>• What were the most popularly bundled products last quarter across different customer segments?<br>• Which accounts show early warning signs of churn based on historical patterns? | Yes
 | [salesforce__account_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__account_daily_history) | Each record is a daily record in an account, starting with its first active date and updating up toward either the current date (if still active) or its last active date.<br><br>**Example Analytics Questions:**<br>• How do account engagement levels fluctuate around contract renewal periods?<br>• Are there events or account updates that often precede churn? | No
@@ -270,16 +270,14 @@ vars:
     - name: "salesforce__user_field"
 ```
 
-**IMPORTANT:** If you are creating a passthrough column that applies `transform_sql` to a field already included by default, you must capitalize the `name` value like such:
-
+> **NOTE:** If you are creating a passthrough column that applies `transform_sql` to a field already included by default, you must capitalize the `name` value like such:
+> 
 ```yml
   salesforce__lead_pass_through_columns:
     - name: "Email" # instead of email
       alias: "email_domain"
       transform_sql: "split(email_domain, '@')[0]"
 ```
-
-> If you are applying `transform_sql` to a field already included by default
 
 ### (Optional) Step 6: Adding Formula Fields as Pass Through Columns
 #### Adding Formula Fields as Pass Through Columns
