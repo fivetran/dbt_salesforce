@@ -13,7 +13,7 @@ sources:
 
     tables:
       - name: account
-        identifier: "{{ var('salesforce_account_identifier', 'account')}}"
+        identifier: "{{ var('salesforce_account_identifier', 'Account' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('account' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'account')) }}"
         description: Represents an individual account, which is an organization or person involved with your business (such as customers, competitors, and partners).
         columns:
         - name: id
@@ -118,7 +118,7 @@ sources:
           description: The website of this account.
 
       - name: opportunity
-        identifier: "{{ var('salesforce_opportunity_identifier', 'opportunity')}}"
+        identifier: "{{ var('salesforce_opportunity_identifier', 'Opportunity' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('opportunity' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'opportunity')) }}"
         description: Represents an opportunity, which is a sale or pending deal.
         columns:
         - name: id
@@ -197,7 +197,7 @@ sources:
           description: Type of opportunity. For example, Existing Business or New Business.
 
       - name: user
-        identifier: "{{ var('salesforce_user_identifier', 'user')}}"
+        identifier: "{{ var('salesforce_user_identifier', 'User' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('user' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'user')) }}"
         config:
           freshness: null
         description: Represents a user in your organization.
@@ -336,7 +336,7 @@ sources:
           description: The category of user license.
 
       - name: user_role
-        identifier: "{{ var('salesforce_user_role_identifier', 'user_role')}}"
+        identifier: "{{ var('salesforce_user_role_identifier', 'UserRole' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('userrole' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'user_role')) }}"
         config:
           freshness: null
         description: Represents a user role in your organization.
@@ -372,7 +372,7 @@ sources:
 
 
       - name: contact
-        identifier: "{{ var('salesforce_contact_identifier', 'contact')}}"
+        identifier: "{{ var('salesforce_contact_identifier', 'Contact' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('contact' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'contact')) }}"
         config:
           freshness: null
         description: Represents a contact, which is a person associated with an account.
@@ -514,7 +514,7 @@ sources:
           description: Title
 
       - name: event
-        identifier: "{{ var('salesforce_event_identifier', 'event')}}"
+        identifier: "{{ var('salesforce_event_identifier', 'Event' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('event' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'event')) }}"
         config:
           freshness: null
         description: Represents an event in the calendar. In the user interface, event and task records are collectively referred to as activities.
@@ -663,7 +663,7 @@ sources:
             The WhoId represents a human such as a lead or a contact. WhoIds are polymorphic. Polymorphic means a WhoId is equivalent to a contact’s ID or a lead’s ID. The label is Name ID.
         
       - name: lead
-        identifier: "{{ var('salesforce_lead_identifier', 'lead')}}"
+        identifier: "{{ var('salesforce_lead_identifier', 'Lead' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('lead' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'lead')) }}"
         config:
           freshness: null
         description: Represents a prospect or lead.
@@ -778,7 +778,7 @@ sources:
           description: Website for the lead.
         
       - name: opportunity_line_item
-        identifier: "{{ var('salesforce_opportunity_line_item_identifier', 'opportunity_line_item')}}"
+        identifier: "{{ var('salesforce_opportunity_line_item_identifier', 'OpportunityLineItem' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('opportunitylineitem' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'opportunity_line_item')) }}"
         config:
           freshness: null
         description: Represents an opportunity line item, which is a member of the list of Product2 products associated with an Opportunity.
@@ -860,8 +860,10 @@ sources:
         
       - name: order
         identifier: >
-          {% if target.type == 'snowflake' %}{{ var('salesforce_order_identifier', '"ORDER"') }}
-          {% else %}{{ var('salesforce_order_identifier', 'order') }}{% endif %}
+          {{ var('salesforce_order_identifier', 
+             ('"Order"' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('"order"' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else '"ORDER"')) if target.type == 'snowflake' 
+             else ('Order' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('order' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'order'))
+          ) }}
         config:
           freshness: null
         description: Represents an order associated with a contract or an account.
@@ -968,7 +970,7 @@ sources:
           description: If you want to show more information about your order, you can add custom values to the Type picklist. By default, the Type field doesn't perform any actions or show any values.
         
       - name: product_2
-        identifier: "{{ var('salesforce_product_2_identifier', 'product_2')}}"
+        identifier: "{{ var('salesforce_product_2_identifier', 'Product2' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('product2' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'product_2')) }}"
         config:
           freshness: null
         description: Represents a product that your company sells.
@@ -1033,7 +1035,7 @@ sources:
           description: System Modstamp 
         
       - name: task
-        identifier: "{{ var('salesforce_task_identifier', 'task')}}"
+        identifier: "{{ var('salesforce_task_identifier', 'Task' if var('salesforce_naming_convention', 'snake_case') == 'pascalcase' else ('task' if var('salesforce_naming_convention', 'snake_case') == 'lowercase' else 'task')) }}"
         config:
           freshness: null
         description: Represents a business activity such as making a phone call or other to-do items. In the user interface, Task and Event records are collectively referred to as activities.

@@ -77,7 +77,7 @@ Include the following salesforce package version in your `packages.yml`
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: [">=2.0.0", "<2.1.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: 2.0.1-a1
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/salesforce_source` in your `packages.yml` since this package has been deprecated.
@@ -205,6 +205,21 @@ Source tables are referenced using default names. If an individual source table 
 vars:
     <package_name>_<default_source_table_name>_identifier: your_table_name
 ``` 
+
+#### Configure Source Table Naming Convention
+This package supports different Salesforce source table naming conventions that may exist in your data warehouse. By default, the package assumes your tables use snake_case naming with underscores (e.g., `user_role`, `opportunity_line_item`). However, you can configure the package to work with other naming conventions:
+
+```yml
+vars:
+    salesforce_naming_convention: 'snake_case' # Default
+```
+
+**Available options:**
+- `snake_case` (default): Snake case with underscores (`user_role`, `account`, `opportunity_line_item`)
+- `lowercase`: Lowercase without separators (`userrole`, `account`, `opportunitylineitem`)
+- `pascalcase`: PascalCase (`UserRole`, `Account`, `OpportunityLineItem`)
+
+This variable applies the appropriate naming convention to all source tables in the package. You can still override individual table names using the specific identifier variables if needed.
 
 #### Change the Build Schema
 By default, this package builds all of the Salesforce models within your `target.schema` in your target database. If this is not where you would like your Salesforce data to be written to, add the following configuration to your root `dbt_project.yml` file:
