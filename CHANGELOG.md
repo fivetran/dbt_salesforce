@@ -1,3 +1,10 @@
+# dbt_salesforce v2.1.0
+
+[PR #80](https://github.com/fivetran/dbt_salesforce/pull/80) includes the following updates:
+
+## Features
+  - Increases the required dbt version upper limit to v3.0.0
+
 # dbt_salesforce v2.0.0
 
 [PR #67](https://github.com/fivetran/dbt_salesforce/pull/67) includes the following updates:
