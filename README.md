@@ -1,4 +1,5 @@
-# Salesforce dbt Package ([Docs](https://fivetran.github.io/dbt_salesforce/))
+<!--section="salesforce_transformation_model"-->
+# Salesforce dbt Package
 
 <p align="left">
     <a alt="License"
@@ -15,53 +16,66 @@
         <img src="https://img.shields.io/badge/Fivetran_Quickstart_Compatible%3F-yes-green.svg" /></a>
 </p>
 
+This dbt package transforms data from Fivetran's Salesforce connector into analytics-ready tables.
+
+## Resources
+
+- Number of materialized models¹: 23
+- Connector documentation
+  - [Salesforce connector documentation](https://fivetran.com/docs/connectors/applications/salesforce)
+  - [Salesforce ERD](https://fivetran.com/docs/connectors/applications/salesforce#schemainformation)
+- dbt package documentation
+  - [GitHub repository](https://github.com/fivetran/dbt_salesforce)
+  - [dbt Docs](https://fivetran.github.io/dbt_salesforce/#!/overview)
+  - [DAG](https://fivetran.github.io/dbt_salesforce/#!/overview?g_v=1)
+  - [Changelog](https://github.com/fivetran/dbt_salesforce/blob/main/CHANGELOG.md)
+
 ## What does this dbt package do?
-- Produces modeled tables that leverage Salesforce data from [Fivetran's connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema).
-- This package also provides you with the option to leverage the history mode to gather historical records of your essential tables.
+This package enables you to understand opportunity performance, analyze sales team performance, and track daily sales activities. It creates enriched models with metrics focused on pipeline management, bookings analysis, and historical tracking.
 
-- This package enables users to:
-  - Understand the performance of your opportunities
-  - Drill into how the members of your sales team are performing
-  - Have a daily summary of sales activities
-  - Leverage an enhanced contact list
-  - View more details about opportunity line items
-  - Gather daily historical records of your accounts, contacts and opportunities
+**Note**: This package also provides you with the option to leverage the history mode to gather historical records of your essential tables.
 
-<!--section="salesforce_transformation_model"-->
-This package also generates a comprehensive data dictionary of your source and modeled Salesforce data via the [dbt docs site](https://fivetran.github.io/dbt_salesforce/)
-You can also refer to the table below for a detailed view of all tables materialized by default within this package.
+### Output schema
+Final output tables are generated in the following target schema:
 
-|**Table**|**Description**|**Available in Quickstart?**
------|-----|-----
-| [salesforce__manager_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__manager_performance)     | This table provides performance metrics by manager, showing team level pipeline, bookings, losses, and win rates.<br><br>**Example Analytics Questions:**<br>• What is the correlation between a manager's team size and their total bookings performance this quarter?<br>• Which managers are struggling with pipeline conversion and would benefit from additional coaching or resources? | Yes
-| [salesforce__owner_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__owner_performance)         | This table provides an enhanced view of individual sales team members, including metrics around bookings, pipeline, losses, and win percentage.<br><br>**Example Analytics Questions:**<br>• How does quota attainment vary by sales rep experience level and territory?<br>• Which reps have high activity levels but low conversion rates, indicating potential training opportunities? | Yes
-| [salesforce__sales_snapshot](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__sales_snapshot)               | This table provides a single-row snapshot of current and all-time sales funnel metrics.<br><br>**Example Analytics Questions:**<br>• Are we seeing seasonal patterns in our sales performance that should inform resource allocation?<br>• How does our current pipeline coverage compare to historical benchmarks for achieving quarterly targets? | Yes
-| [salesforce__opportunity_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_enhanced)  | This table enriches opportunities with data about the associated account and opportunity owner.<br><br>**Example Analytics Questions:**<br>• Which industries or account types generate the highest-value opportunities and shortest sales cycles?<br>• Which opportunities have been open the longest and what intervention strategies could help close them? | Yes
-| [salesforce__contact_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_enhanced)  | This table enriches contacts with information about the associated account and contact owner.<br><br>**Example Analytics Questions:**<br>• Do opportunities with multiple engaged contacts close faster or larger?<br>• Where are data hygiene gaps, such as opportunities missing a primary contact role? | Yes
-| [salesforce__daily_activity](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__daily_activity)  | This table provides a daily summary of sales activities related to the creation and conversion of leads, tasks, and opportunities.<br><br>**Example Analytics Questions:**<br>• How does the mix of tasks versus events impact overall sales productivity and outcomes?<br>• Which days of the week or times of year show the highest conversion rates from activities to opportunities? | Yes
-| [salesforce__opportunity_line_item_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_line_item_enhanced)  | This table showcases individual line items belonging to opportunities and adds associated product details.<br><br>**Example Analytics Questions:**<br>• What were the most popularly bundled products last quarter across different customer segments?<br>• Which accounts show early warning signs of churn based on historical patterns? | Yes
-| [salesforce__account_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__account_daily_history) | This table provides a daily record of each account, starting with its first active date and extending to its last active date, or the current date if the account is still active.<br><br>**Example Analytics Questions:**<br>• How do account engagement levels fluctuate around contract renewal periods?<br>• Are there events or account updates that often precede churn? | No
-| [salesforce__contact_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_daily_history) | This table provides a daily record of each contact, starting with its first active date and extending to its last active date, or the current date if the contact is still active.<br><br>**Example Analytics Questions:**<br>• How do contact engagement patterns change throughout the sales cycle?<br>• How do contact role changes within accounts impact ongoing sales opportunities? | No
-| [salesforce__opportunity_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_daily_history) | This table provides a daily record of each opportunity, starting with its first active date and extending to its last active date, or the current date if the opportunity is still active.<br><br>**Example Analytics Questions:**<br>• What are the typical progression patterns for opportunities that ultimately close-won versus close-lost?<br>• Which stage transitions take the longest and represent the biggest bottlenecks in our sales process? | No
+```
+<your_database>.<connector/schema_name>_salesforce
+```
+
+### Final output tables
+
+By default, this package materializes the following final tables:
+
+| Table | Description |
+| :---- | :---- |
+| [salesforce__manager_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__manager_performance) | This table provides performance metrics by manager, showing team level pipeline, bookings, losses, and win rates.<br><br>**Example Analytics Questions:**<br><ul><li>What is the correlation between a manager's team size and their total bookings performance this quarter?</li><li>Which managers are struggling with pipeline conversion and would benefit from additional coaching or resources?</li></ul> |
+| [salesforce__owner_performance](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__owner_performance) | This table provides an enhanced view of individual sales team members, including metrics around bookings, pipeline, losses, and win percentage.<br><br>**Example Analytics Questions:**<br><ul><li>How does quota attainment vary by sales rep experience level and territory?</li><li>Which reps have high activity levels but low conversion rates, indicating potential training opportunities?</li></ul> |
+| [salesforce__sales_snapshot](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__sales_snapshot) | This table provides a single-row snapshot of current and all-time sales funnel metrics.<br><br>**Example Analytics Questions:**<br><ul><li>Are we seeing seasonal patterns in our sales performance that should inform resource allocation?</li><li>How does our current pipeline coverage compare to historical benchmarks for achieving quarterly targets?</li></ul> |
+| [salesforce__opportunity_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_enhanced) | This table enriches opportunities with data about the associated account and opportunity owner.<br><br>**Example Analytics Questions:**<br><ul><li>Which industries or account types generate the highest-value opportunities and shortest sales cycles?</li><li>Which opportunities have been open the longest and what intervention strategies could help close them?</li></ul> |
+| [salesforce__contact_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_enhanced) | This table enriches contacts with information about the associated account and contact owner.<br><br>**Example Analytics Questions:**<br><ul><li>Do opportunities with multiple engaged contacts close faster or larger?</li><li>Where are data hygiene gaps, such as opportunities missing a primary contact role?</li></ul> |
+| [salesforce__daily_activity](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__daily_activity) | This table provides a daily summary of sales activities related to the creation and conversion of leads, tasks, and opportunities.<br><br>**Example Analytics Questions:**<br><ul><li>How does the mix of tasks versus events impact overall sales productivity and outcomes?</li><li>Which days of the week or times of year show the highest conversion rates from activities to opportunities?</li></ul> |
+| [salesforce__opportunity_line_item_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_line_item_enhanced) | This table showcases individual line items belonging to opportunities and adds associated product details.<br><br>**Example Analytics Questions:**<br><ul><li>What were the most popularly bundled products last quarter across different customer segments?</li><li>Which accounts show early warning signs of churn based on historical patterns?</li></ul> |
+| [salesforce__account_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__account_daily_history) | This table provides a daily record of each account, starting with its first active date and extending to its last active date, or the current date if the account is still active.<br><br>**Example Analytics Questions:**<br><ul><li>How do account engagement levels fluctuate around contract renewal periods?</li><li>Are there events or account updates that often precede churn?</li></ul> |
+| [salesforce__contact_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_daily_history) | This table provides a daily record of each contact, starting with its first active date and extending to its last active date, or the current date if the contact is still active.<br><br>**Example Analytics Questions:**<br><ul><li>How do contact engagement patterns change throughout the sales cycle?</li><li>How do contact role changes within accounts impact ongoing sales opportunities?</li></ul> |
+| [salesforce__opportunity_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_daily_history) | This table provides a daily record of each opportunity, starting with its first active date and extending to its last active date, or the current date if the opportunity is still active.<br><br>**Example Analytics Questions:**<br><ul><li>What are the typical progression patterns for opportunities that ultimately close-won versus close-lost?</li><li>Which stage transitions take the longest and represent the biggest bottlenecks in our sales process?</li></ul> |
 
 **Note**: For Quickstart Data Model users only, in addition to the above output models that are Quickstart compatible, you will also receive models in your transformation list which replicate **all** of your Salesforce objects with the inclusion of the relevant formula fields in the generated output models.
-### Materialized Models
-Each Quickstart transformation job run materializes 23 models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
-<!--section-end-->
 
-## How do I use the dbt package?
-### Step 1: Pre-Requisites
+¹ Each Quickstart transformation job run materializes these models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
+
+---
+
+## Prerequisites
 To use this dbt package, you must have the following:
-- At least one  Fivetran Salesforce connection syncing data into your destination.
+
+- At least one Fivetran Salesforce connection syncing data into your destination.
 - A BigQuery, Snowflake, Redshift, PostgreSQL, or Databricks destination.
 
-#### Databricks Dispatch Configuration
-If you are using a Databricks destination with this package you will need to add the below (or a variation of the below) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
-```yml
-dispatch:
-  - macro_namespace: dbt_utils
-    search_order: ['spark_utils', 'dbt_utils']
-```
+## How do I use the dbt package?
+You can either add this dbt package in the Fivetran dashboard or import it into your dbt project:
+
+- To add the package in the Fivetran dashboard, follow our [Quickstart guide](https://fivetran.com/docs/transformations/dbt).
+- To add the package to your dbt project, follow the setup instructions in the dbt package's [README file](https://github.com/fivetran/dbt_salesforce/blob/main/README.md#how-do-i-use-the-dbt-package) to use this package.
 
 #### Database Incremental Strategies
 The history end models in this package are materialized incrementally. We have chosen `insert_overwrite` as the default strategy for **BigQuery** and **Databricks** databases, as it is only available for these dbt adapters. For **Snowflake**, **Redshift**, and **Postgres** databases, we have chosen `delete+insert` as the default strategy.
@@ -71,18 +85,26 @@ The history end models in this package are materialized incrementally. We have c
 `delete+insert` is our second-choice as it resembles `insert_overwrite` but lacks partitions. This strategy works most of the time and appropriately handles incremental loads that do not contain changes to past records. However, if a past record has been updated and is outside of the incremental window, `delete+insert` will insert a duplicate record.
 > Because of this, we highly recommend that **Snowflake**, **Redshift**, and **Postgres** users periodically run a `--full-refresh` to ensure a high level of data quality and remove any possible duplicates.
 
-### Step 2: Installing the Package
+### Installing the Package
 Include the following salesforce package version in your `packages.yml`
 > Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: [">=2.1.0", "<2.2.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=2.2.0", "<2.3.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/salesforce_source` in your `packages.yml` since this package has been deprecated.
 
-### Step 3: Configure Your Variables
+#### Databricks Dispatch Configuration
+If you are using a Databricks destination with this package you will need to add the below (or a variation of the below) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
+```yml
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['spark_utils', 'dbt_utils']
+```
+
+### Configure Your Variables
 #### Database and Schema Variables
 By default, this package will run using your target database and the `salesforce` schema. If this is not where your Salesforce data is, add the following configuration to your root `dbt_project.yml` file:
 
@@ -123,7 +145,7 @@ For this use case, to ensure the package runs successfully, we recommend leverag
 
 > Note that all other end models (`salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`, `salesforce__manager_performance`, `salesforce__owner_performance`, `salesforce__sales_snapshot`, and `salesforce__opportunity_daily_history`) will still materialize after a blanket `dbt run` but will be largely empty/null.
 
-### (Optional) Step 4: Utilizing Salesforce History Mode records
+### (Optional) Utilizing Salesforce History Mode records
 If you have Salesforce [History Mode](https://fivetran.com/docs/using-fivetran/features#historymode) enabled for your connection, we now include support for the `account`, `contact`, and `opportunity` tables directly. These staging models flow into our daily history models. This will allow you access to your historical data for these tables while taking advantage of incremental loads to help with compute.
 
 #### IMPORTANT: How To Update Your History Models
@@ -196,7 +218,7 @@ vars:
     opportunity_history_start_date: 'YYYY-MM-DD' # The first date in opportunity history you wish to pull records from, filtering on `_fivetran_start`.
 ```
 
-### (Optional) Step 5: Additional Configurations
+### (Optional) Additional Configurations
 #### Change the Source Table References
 Source tables are referenced using default names. If an individual source table has a different name than expected, provide the name of the table as it appears in your warehouse to the respective variable:
 > IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_salesforce/blob/main/dbt_project.yml) variable declarations to see the expected names.
@@ -279,7 +301,7 @@ vars:
       transform_sql: "split(email_domain, '@')[0]"
 ```
 
-### (Optional) Step 6: Adding Formula Fields as Pass Through Columns
+### (Optional) Adding Formula Fields as Pass Through Columns
 #### Adding Formula Fields as Pass Through Columns
 The source tables Fivetran syncs do not include formula fields. If your company uses them, you can generate them by referring to the [Salesforce Formula Utils](https://github.com/fivetran/dbt_salesforce_formula_utils) package. To pass through the fields, add the [latest version of the package](https://github.com/fivetran/dbt_salesforce_formula_utils#installing-the-macro-package). We recommend confirming your formula field models successfully populate before integrating with the Salesforce package.
 
@@ -294,7 +316,7 @@ Include the following within your `dbt_project.yml` file:
       alias: "opportunity_field_x"
 ```
 
-### (Optional) Step 7: Orchestrate your models with Fivetran Transformations for dbt Core™
+### (Optional) Orchestrate your models with Fivetran Transformations for dbt Core™
 Fivetran offers the ability for you to orchestrate your dbt project through the [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt) product. Refer to the linked docs for more information on how to setup your project for orchestration through Fivetran.
 
 ## Does this package have dependencies?
@@ -309,13 +331,19 @@ packages:
     - package: dbt-labs/spark_utils
       version: [">=0.3.0", "<0.4.0"]
 ```
-## How is this package maintained and can I contribute?
-### Package Maintenance
-The Fivetran team maintaining this package **only** maintains the latest version of the package. We highly recommend you stay consistent with the [latest version](https://hub.getdbt.com/fivetran/salesforce/latest/) of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_salesforce/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
-### Contributions
-These dbt packages are developed by a small team of analytics engineers at Fivetran. However, the packages are made better by community contributions.
 
-We highly encourage and welcome contributions to this package. Check out [this post](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657) on the best workflow for contributing to a package.
+<!--section="salesforce_maintenance"-->
+## How is this package maintained and can I contribute?
+
+### Package Maintenance
+The Fivetran team maintaining this package only maintains the [latest version](https://hub.getdbt.com/fivetran/salesforce/latest/) of the package. We highly recommend you stay consistent with the latest version of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_salesforce/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
+
+### Contributions
+A small team of analytics engineers at Fivetran develops these dbt packages. However, the packages are made better by community contributions.
+
+We highly encourage and welcome contributions to this package. Learn how to contribute to a package in dbt's [Contributing to an external dbt package article](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657).
+
+<!--section-end-->
 
 ## Are there any resources available?
 - If you encounter any questions or want to reach out for help, see the [GitHub Issue](https://github.com/fivetran/dbt_salesforce/issues/new/choose) section to find the right avenue of support for you.
