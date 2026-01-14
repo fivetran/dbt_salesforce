@@ -37,36 +37,36 @@ public_models: [
 supported_vars:
   salesforce__account_pass_through_columns:
     type: dictionary
-    description: "Addtional `ACCOUNT` columns to include in `salesforce__opportunity_enhanced` and `salesforce__contact_enhanced`"
+    description: "Additional `ACCOUNT` columns to include in `salesforce__opportunity_enhanced` and `salesforce__contact_enhanced`"
     display_name: "Additional Account Columns"
 
   salesforce__contact_pass_through_columns:
     type: dictionary
-    description: "Addtional `CONTACT` columns to include in `salesforce__contact_enhanced`"
+    description: "Additional `CONTACT` columns to include in `salesforce__contact_enhanced`"
     display_name: "Additional Contact Columns"
 
   salesforce__opportunity_pass_through_columns:
     type: dictionary
-    description: "Addtional `OPPORTUNITY` columns to include in `salesforce__opportunity_enhanced`"
+    description: "Additional `OPPORTUNITY` columns to include in `salesforce__opportunity_enhanced`"
     display_name: "Additional Opportunity Columns"
 
   salesforce__opportunity_line_item_pass_through_columns:
     type: dictionary
-    description: "Addtional `OPPORTUNITY_LINE_ITEM` columns to include in `salesforce__opportunity_line_item_enhanced`"
+    description: "Additional `OPPORTUNITY_LINE_ITEM` columns to include in `salesforce__opportunity_line_item_enhanced`"
     display_name: "Additional Opportunity Line Item Columns"
 
   salesforce__product_2_pass_through_columns:
     type: dictionary
-    description: "Addtional `PRODUCT_2` columns to include in `salesforce__opportunity_line_item_enhanced`"
+    description: "Additional `PRODUCT_2` columns to include in `salesforce__opportunity_line_item_enhanced`"
     display_name: "Additional Product_2 Columns"
 
   salesforce__user_role_pass_through_columns:
     type: dictionary
-    description: "Addtional `USER_ROLE` columns to include in `salesforce__opportunity_enhanced`"
+    description: "Additional `USER_ROLE` columns to include in `salesforce__opportunity_enhanced`"
     display_name: "Additional User Role Columns"
 
   salesforce__user_pass_through_columns:
     type: dictionary
-    description: "Addtional `USER` columns to include in `salesforce__opportunity_enhanced` and `salesforce__contact_enhanced`"
+    description: "Additional `USER` columns to include in `salesforce__opportunity_enhanced` and `salesforce__contact_enhanced`"
     display_name: "Additional User Columns"
 
