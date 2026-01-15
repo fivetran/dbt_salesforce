@@ -7,7 +7,6 @@
 
 ## Under the Hood
 - In the `quickstart.yml` file:
-  - Adds `table_variables` for relevant sources to prevent missing sources from blocking downstream Quickstart models.
   - Adds `supported_vars` for Quickstart UI customization.
 
 # dbt_salesforce v2.1.0
