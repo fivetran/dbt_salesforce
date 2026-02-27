@@ -5,6 +5,9 @@ config-version: 2
 profile: 'integration_tests'
 
 models:
+  +persist_docs:
+    relation: true
+    columns: "{{ false if target.type in ('databricks') else true }}"
   +schema: "salesforce_{{ var('directed_schema','dev') }}"
 
 vars:
