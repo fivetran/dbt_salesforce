@@ -7,6 +7,8 @@
 #   databricks: ">=1.6.0,<2.0.0"
 
 schema_variable_name: "salesforce_schema"
+additional_schema_variables:
+  - "salesforce_history_schema"
 
 include_databricks_sql: false
 include_sqlserver: false
