@@ -27,11 +27,4 @@ test_scenarios:
       salesforce__account_history_enabled: true
       salesforce__contact_history_enabled: true
       salesforce__opportunity_history_enabled: true
-    include_incremental: false
-
-  - name: "history enabled incremental"
-    vars:
-      salesforce__account_history_enabled: true
-      salesforce__contact_history_enabled: true
-      salesforce__opportunity_history_enabled: true
     include_incremental: true
