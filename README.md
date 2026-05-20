@@ -23,6 +23,7 @@ This package enables you to understand opportunity performance, analyze sales te
 **Note**: This package also provides you with the option to leverage the history mode to gather historical records of your essential tables.
 
 ### Output schema
+
 Final output tables are generated in the following target schema:
 
 ```
