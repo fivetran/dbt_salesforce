@@ -42,11 +42,10 @@ seeds:
     show: False
   salesforce_integration_tests:
     +quote_columns: "{{ true if target.type in ('redshift', 'postgres') else false }}"
-    +column_types:
-      _fivetran_synced: timestamp
-      _fivetran_active: boolean
     sf_account_data:
       +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         last_activity_date: timestamp
         last_referenced_date: timestamp
         last_viewed_date: timestamp
@@ -57,6 +56,8 @@ seeds:
         shipping_longitude: float
     sf_opportunity_data:
       +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         close_date: timestamp
         created_date: timestamp
         last_activity_date: timestamp
@@ -66,6 +67,8 @@ seeds:
         probability: float
     sf_user_data:
       +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         last_login_date: timestamp
         last_referenced_date: timestamp
         last_viewed_date: timestamp
@@ -74,7 +77,8 @@ seeds:
         longitude: float
     sf_contact_data:
       +column_types:
-        birthdate: timestamp
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         created_date: timestamp
         email_bounced_date: timestamp
         last_activity_date: timestamp
@@ -87,6 +91,8 @@ seeds:
         is_deleted: boolean
     sf_lead_data:
       +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         converted_date: timestamp
         created_date: timestamp
         email_bounced_date: timestamp
@@ -98,6 +104,8 @@ seeds:
         is_deleted: boolean
     sf_task_data:
       +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         activity_date: timestamp
         completed_date_time: timestamp
         created_date: timestamp
@@ -109,10 +117,11 @@ seeds:
         is_deleted: boolean
     sf_event_data:
       +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         activity_date: timestamp
         activity_date_time: timestamp
         created_date: timestamp
-        end_date: timestamp
         end_date_time: timestamp
         last_modified_date   : timestamp
         recurrence_2_pattern_start_date   : timestamp
@@ -124,6 +133,8 @@ seeds:
         is_deleted: boolean
     sf_product_2_data:
       +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         created_date: timestamp
         last_modified_date: timestamp
         last_referenced_date: timestamp
@@ -132,6 +143,8 @@ seeds:
         is_deleted: boolean
     sf_order_data:
       +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         activated_date: timestamp
         created_date: timestamp
         effective_date: timestamp
@@ -143,6 +156,8 @@ seeds:
         is_deleted: boolean
     sf_opportunity_line_item_data:
       +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         created_date: timestamp
         last_modified_date: timestamp
         last_referenced_date: timestamp
@@ -153,6 +168,8 @@ seeds:
 
     sf_account_history_data:
       +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         annual_revenue: float
         last_activity_date: timestamp
         last_referenced_date: timestamp
@@ -160,13 +177,16 @@ seeds:
         is_deleted: boolean
     sf_contact_history_data:
       +column_types:
-        birthdate: timestamp 
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         last_activity_date: timestamp 
         last_modified_date: timestamp 
         last_viewed_date: timestamp
         is_deleted: boolean
     sf_opportunity_history_data:
       +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
         close_date: timestamp
         created_date: timestamp
         last_activity_date: timestamp
