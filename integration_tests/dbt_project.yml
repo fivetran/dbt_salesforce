@@ -1,5 +1,5 @@
 name: 'salesforce_integration_tests'
-version: '2.2.0'
+version: '2.3.0'
 config-version: 2
 
 profile: 'integration_tests'
@@ -21,7 +21,10 @@ vars:
     salesforce_history_schema: salesforce_integrations_tests_4
 
     salesforce_account_identifier: "sf_account_data"
+    salesforce_campaign_identifier: "sf_campaign_data"
+    salesforce_campaign_member_identifier: "sf_campaign_member_data"
     salesforce_opportunity_identifier: "sf_opportunity_data"
+    salesforce_record_type_identifier: "sf_record_type_data"
     salesforce_user_identifier: "sf_user_data"
     salesforce_user_role_identifier: "sf_user_role_data"
     salesforce_contact_identifier: "sf_contact_data"
@@ -54,6 +57,37 @@ seeds:
         billing_longitude: float
         shipping_latitude: float
         shipping_longitude: float
+    sf_campaign_data:
+      +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
+        start_date: timestamp
+        end_date: timestamp
+        is_active: boolean
+        is_deleted: boolean
+        budgeted_cost: float
+        actual_cost: float
+        number_of_leads: integer
+        number_of_converted_leads: integer
+        number_of_contacts: integer
+        number_of_responses: integer
+        number_of_opportunities: integer
+        number_of_won_opportunities: integer
+        amount_all_opportunities: float
+    sf_campaign_member_data:
+      +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
+        created_date: timestamp
+        first_responded_date: timestamp
+        has_responded: boolean
+        is_deleted: boolean
+    sf_record_type_data:
+      +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
+        is_active: boolean
+        is_master: boolean
     sf_opportunity_data:
       +column_types:
         _fivetran_synced: timestamp

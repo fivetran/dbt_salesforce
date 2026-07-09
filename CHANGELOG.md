@@ -1,3 +1,25 @@
+# dbt_salesforce v2.3.0
+
+[PR #84](https://github.com/fivetran/dbt_salesforce/pull/84) includes the following updates:
+
+## Schema/Data Change
+**1 total change • 0 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ---------- | ----------- | -------- | -------- | ----- |
+| `salesforce__campaign_performance` | New model | — | One row per campaign | Requires the `campaign` source table. Conditionally joins `campaign_member` and `record_type`. |
+
+## Feature Update
+- Adds the new `salesforce__campaign_performance` end model, which provides campaign attribution reporting by connecting campaign data to downstream pipeline and revenue outcomes. The model includes pipeline totals, member volume, conversion rates, and ROI metrics — answering questions like "Which campaigns drove the most pipeline?" and "Which campaigns had the best closed-won return?"
+- Adds three supporting staging models:
+  - `stg_salesforce__campaign`: Stages the `campaign` source table. Enable or disable via the `salesforce__campaign_enabled` variable (default: `true`).
+  - `stg_salesforce__campaign_member`: Stages the `campaign_member` source table. Enable or disable via the `salesforce__campaign_member_enabled` variable (default: `true`).
+  - `stg_salesforce__record_type`: Stages the `record_type` source table. Enable or disable via the `salesforce__record_type_enabled` variable (default: `true`).
+
+## Under the Hood
+- Adds integration test seed files for `campaign`, `campaign_member`, and `record_type` source tables.
+- Updates `quickstart.yml` to include `salesforce__campaign_performance` in public models and the three new source table variables.
+
 # dbt_salesforce v2.2.0
 
 [PR #81](https://github.com/fivetran/dbt_salesforce/pull/81) includes the following updates:

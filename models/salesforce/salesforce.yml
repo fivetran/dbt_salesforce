@@ -551,3 +551,60 @@ models:
         description: '{{ doc("product_revenue_installment_period") }}'
       - name: product_revenue_schedule_type
         description: '{{ doc("product_revenue_schedule_type") }}'
+
+  - name: salesforce__campaign_performance
+    description: Each record represents a campaign, enriched with pipeline, revenue, member volume, conversion rates, and ROI metrics.
+    columns:
+      - name: campaign_id
+        description: The unique, system-generated ID assigned during creation.
+        tests:
+          - not_null
+          - unique
+      - name: campaign_name
+        description: Name of the campaign.
+      - name: campaign_type
+        description: Type of campaign, such as Direct Mail, Email, or Webinar.
+      - name: campaign_status
+        description: Status of the campaign, such as Planned, In Progress, or Completed.
+      - name: start_date
+        description: Starting date for the campaign.
+      - name: end_date
+        description: Ending date for the campaign.
+      - name: is_active
+        description: Indicates whether the campaign is active (true) or not (false).
+      - name: parent_campaign_id
+        description: The ID of the parent campaign, if applicable.
+      - name: budgeted_cost
+        description: Amount of money budgeted for the campaign.
+      - name: actual_cost
+        description: Amount of money spent to run the campaign.
+      - name: number_of_leads
+        description: Number of leads associated with the campaign.
+      - name: number_of_converted_leads
+        description: Number of leads associated with the campaign that have been converted.
+      - name: number_of_contacts
+        description: Number of contacts associated with the campaign.
+      - name: number_of_responses
+        description: Number of contacts and leads that responded to the campaign.
+      - name: number_of_opportunities
+        description: Number of opportunities where this campaign is the primary campaign source.
+      - name: number_of_won_opportunities
+        description: Number of closed-won opportunities where this campaign is the primary campaign source.
+      - name: total_pipeline_amount
+        description: Total amount of all open and closed opportunities where this campaign is the primary campaign source.
+      - name: record_type_id
+        description: ID of the record type assigned to this campaign.
+      - name: record_type_name
+        description: Name of the record type assigned to this campaign. Null if the record_type table is not enabled.
+      - name: member_count
+        description: Total number of campaign members (contacts and leads) associated with this campaign. Null if the campaign_member table is not enabled.
+      - name: total_won_amount
+        description: Sum of the closed-won opportunity amounts where this campaign is the primary campaign source.
+      - name: win_rate
+        description: Ratio of won opportunities to total opportunities. Null if there are no opportunities.
+      - name: cost_per_opportunity
+        description: Actual cost divided by the number of opportunities. Null if actual cost is not set.
+      - name: cost_per_won_opportunity
+        description: Actual cost divided by the number of won opportunities. Null if actual cost is not set.
+      - name: roi
+        description: Return on investment, calculated as (total_won_amount - actual_cost) / actual_cost. Null if actual cost is not set.

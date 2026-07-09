@@ -4,6 +4,12 @@ schema_key: salesforce_schema
 dbt_versions: ">=1.3.0 <3.0.0"
 
 table_variables:
+  salesforce__campaign_enabled:
+    - Campaign
+  salesforce__campaign_member_enabled:
+    - CampaignMember
+  salesforce__record_type_enabled:
+    - RecordType
   salesforce__user_role_enabled:
     - UserRole
   salesforce__lead_enabled:
@@ -25,6 +31,7 @@ destination_configurations:
       - macro_namespace: dbt_utils
         search_order: [ 'spark_utils', 'dbt_utils' ]
 public_models: [
+  "salesforce__campaign_performance",
   "salesforce__contact_enhanced",
   "salesforce__daily_activity",
   "salesforce__manager_performance",

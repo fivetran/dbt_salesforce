@@ -1,6 +1,6 @@
 config-version: 2
 name: 'salesforce'
-version: '2.2.0'
+version: '2.3.0'
 require-dbt-version: [">=1.3.0", "<3.0.0"]
 models:
   salesforce:
@@ -34,6 +34,8 @@ vars:
 
     
     salesforce__account_pass_through_columns: []
+    salesforce__campaign_pass_through_columns: []
+    salesforce__campaign_member_pass_through_columns: []
     salesforce__contact_pass_through_columns: []
     salesforce__event_pass_through_columns: []
     salesforce__lead_pass_through_columns: []
