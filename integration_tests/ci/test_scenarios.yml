@@ -19,9 +19,10 @@ test_scenarios:
     vars: {}
     include_incremental: false
 
-  - name: "user role disabled"
+  - name: "features disabled"
     vars:
       salesforce__user_role_enabled: false
+      salesforce__campaign_enabled: false
     include_incremental: false
 
   - name: "history enabled"
