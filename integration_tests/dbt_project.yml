@@ -12,6 +12,7 @@ models:
 
 vars:
   # enable history models when generating docs!
+  # salesforce__campaign_history_enabled: true # @docs-include
   # salesforce__contact_history_enabled: true # @docs-include
   # salesforce__account_history_enabled: true # @docs-include
   # salesforce__opportunity_history_enabled: true # @docs-include
@@ -36,6 +37,7 @@ vars:
     salesforce_opportunity_line_item_identifier: "sf_opportunity_line_item_data"
 
     ##history mode identifiers
+    salesforce_campaign_history_identifier: "sf_campaign_history_data"
     salesforce_account_history_identifier: "sf_account_history_data"
     salesforce_contact_history_identifier: "sf_contact_history_data"
     salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
@@ -200,6 +202,25 @@ seeds:
         system_modstamp: timestamp
         is_deleted: boolean
 
+    sf_campaign_history_data:
+      +column_types:
+        _fivetran_synced: timestamp
+        _fivetran_active: boolean
+        _fivetran_start: timestamp
+        _fivetran_end: timestamp
+        start_date: timestamp
+        end_date: timestamp
+        is_active: boolean
+        is_deleted: boolean
+        budgeted_cost: float
+        actual_cost: float
+        number_of_leads: integer
+        number_of_converted_leads: integer
+        number_of_contacts: integer
+        number_of_responses: integer
+        number_of_opportunities: integer
+        number_of_won_opportunities: integer
+        amount_all_opportunities: float
     sf_account_history_data:
       +column_types:
         _fivetran_synced: timestamp
