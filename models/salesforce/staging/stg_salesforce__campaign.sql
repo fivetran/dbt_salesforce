@@ -22,12 +22,13 @@ final as (
 
     select
         cast(_fivetran_synced as {{ dbt.type_timestamp() }}) as _fivetran_synced,
+        {{ salesforce.coalesce_rename("id", campaign_dict, alias="campaign_id") }},
         {{ salesforce.coalesce_rename("actual_cost", campaign_dict, datatype=dbt.type_numeric()) }},
         {{ salesforce.coalesce_rename("amount_all_opportunities", campaign_dict, alias="total_pipeline_amount", datatype=dbt.type_numeric()) }},
         {{ salesforce.coalesce_rename("budgeted_cost", campaign_dict, datatype=dbt.type_numeric()) }},
+        {{ salesforce.coalesce_rename("campaign_member_record_type_id", campaign_dict) }},
         {{ salesforce.coalesce_rename("description", campaign_dict, alias="campaign_description") }},
         {{ salesforce.coalesce_rename("end_date", campaign_dict) }},
-        {{ salesforce.coalesce_rename("id", campaign_dict, alias="campaign_id") }},
         {{ salesforce.coalesce_rename("is_active", campaign_dict) }},
         {{ salesforce.coalesce_rename("is_deleted", campaign_dict) }},
         {{ salesforce.coalesce_rename("name", campaign_dict, alias="campaign_name") }},
@@ -38,7 +39,6 @@ final as (
         {{ salesforce.coalesce_rename("number_of_responses", campaign_dict) }},
         {{ salesforce.coalesce_rename("number_of_won_opportunities", campaign_dict) }},
         {{ salesforce.coalesce_rename("parent_id", campaign_dict, alias="parent_campaign_id") }},
-        {{ salesforce.coalesce_rename("record_type_id", campaign_dict) }},
         {{ salesforce.coalesce_rename("start_date", campaign_dict) }},
         {{ salesforce.coalesce_rename("status", campaign_dict, alias="campaign_status") }},
         {{ salesforce.coalesce_rename("type", campaign_dict, alias="campaign_type") }}

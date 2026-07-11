@@ -47,6 +47,11 @@ supported_vars:
     description: "Additional `ACCOUNT` columns to include in `salesforce__opportunity_enhanced` and `salesforce__contact_enhanced`"
     display_name: "Additional Account Columns"
 
+  salesforce__campaign_pass_through_columns:
+    type: dictionary
+    description: "Additional `CAMPAIGN` columns to include in `salesforce__campaign_performance`"
+    display_name: "Additional Campaign Columns"
+
   salesforce__contact_pass_through_columns:
     type: dictionary
     description: "Additional `CONTACT` columns to include in `salesforce__contact_enhanced`"

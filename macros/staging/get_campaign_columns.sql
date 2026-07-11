@@ -19,8 +19,8 @@
     {"name": "number_of_opportunities", "datatype": dbt.type_int()},
     {"name": "number_of_responses", "datatype": dbt.type_int()},
     {"name": "number_of_won_opportunities", "datatype": dbt.type_int()},
+    {"name": "campaign_member_record_type_id", "datatype": dbt.type_string()},
     {"name": "parent_id", "datatype": dbt.type_string()},
-    {"name": "record_type_id", "datatype": dbt.type_string()},
     {"name": "start_date", "datatype": dbt.type_timestamp()},
     {"name": "status", "datatype": dbt.type_string()},
     {"name": "type", "datatype": dbt.type_string()}

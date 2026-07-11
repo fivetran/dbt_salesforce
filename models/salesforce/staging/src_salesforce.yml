@@ -1167,10 +1167,10 @@ sources:
           description: Number of contacts and leads that have a campaign member status where the Has Responded field is true.
         - name: number_of_won_opportunities
           description: Number of opportunities associated with the campaign that have a probability of 100% because they are closed and won.
+        - name: campaign_member_record_type_id
+          description: ID of the record type assigned to campaign members of this campaign.
         - name: parent_id
           description: The ID of the parent campaign, if applicable.
-        - name: record_type_id
-          description: ID of the record type assigned to this object.
         - name: start_date
           description: Starting date for the campaign.
         - name: status
@@ -1188,20 +1188,32 @@ sources:
           description: The time at which fivetran last synced this record.
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled.
+        - name: account_id
+          description: ID of the account associated with the contact or lead.
         - name: campaign_id
           description: Required. ID of the campaign.
         - name: contact_id
           description: ID of the contact associated with this campaign member. Either ContactId or LeadId must be specified.
+        - name: created_by_id
+          description: ID of the user who created the campaign member record.
         - name: created_date
           description: Date when the campaign member record was created.
         - name: first_responded_date
           description: Date when the contact or lead first responded to the campaign.
+        - name: has_opted_out_of_email
+          description: Indicates whether the contact or lead has opted out of email communications.
         - name: has_responded
           description: Indicates whether the contact or lead has responded to the campaign.
         - name: is_deleted
           description: Indicates whether the object has been moved to the Recycle Bin (true) or not (false).
+        - name: last_modified_by_id
+          description: ID of the user who last modified the campaign member record.
         - name: lead_id
           description: ID of the lead associated with this campaign member. Either ContactId or LeadId must be specified.
+        - name: lead_or_contact_id
+          description: ID of the lead or contact associated with this campaign member.
+        - name: lead_or_contact_owner_id
+          description: ID of the owner of the lead or contact associated with this campaign member.
         - name: status
           description: The status of the campaign member, such as Sent or Responded.
 

@@ -592,12 +592,18 @@ models:
         description: Number of closed-won opportunities where this campaign is the primary campaign source.
       - name: total_pipeline_amount
         description: Total amount of all open and closed opportunities where this campaign is the primary campaign source.
-      - name: record_type_id
-        description: ID of the record type assigned to this campaign.
-      - name: record_type_name
-        description: Name of the record type assigned to this campaign. Null if the record_type table is not enabled.
-      - name: member_count
-        description: Total number of campaign members (contacts and leads) associated with this campaign. Null if the campaign_member table is not enabled.
+      - name: campaign_member_record_type_name
+        description: Name of the campaign member record type associated with this campaign. Only present if the record_type table is enabled.
+      - name: campaign_member_count
+        description: Total number of campaign members (contacts and leads) associated with this campaign. Only present if the campaign_member table is enabled.
+      - name: opted_out_of_email_count
+        description: Number of campaign members who have opted out of email communications. Only present if the campaign_member table is enabled.
+      - name: responded_count
+        description: Number of campaign members who have responded to the campaign. Only present if the campaign_member table is enabled.
+      - name: contact_count
+        description: Number of campaign members who are contacts. Only present if the campaign_member table is enabled.
+      - name: lead_count
+        description: Number of campaign members who are leads. Only present if the campaign_member table is enabled.
       - name: total_won_amount
         description: Sum of the closed-won opportunity amounts where this campaign is the primary campaign source.
       - name: win_rate

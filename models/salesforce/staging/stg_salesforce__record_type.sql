@@ -22,9 +22,9 @@ final as (
 
     select
         cast(_fivetran_synced as {{ dbt.type_timestamp() }}) as _fivetran_synced,
+        {{ salesforce.coalesce_rename("id", record_type_dict, alias="record_type_id") }},
         {{ salesforce.coalesce_rename("description", record_type_dict, alias="record_type_description") }},
         {{ salesforce.coalesce_rename("developer_name", record_type_dict) }},
-        {{ salesforce.coalesce_rename("id", record_type_dict, alias="record_type_id") }},
         {{ salesforce.coalesce_rename("is_active", record_type_dict) }},
         {{ salesforce.coalesce_rename("name", record_type_dict, alias="record_type_name") }},
         {{ salesforce.coalesce_rename("namespace_prefix", record_type_dict) }},
