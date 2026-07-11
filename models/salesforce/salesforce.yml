@@ -230,6 +230,8 @@ models:
         description: Percentage of estimated confidence in closing the opportunity.
       - name: record_type_id
         description: ID of the record type assigned to this object.
+      - name: opportunity_record_type_name
+        description: Name of the record type assigned to this opportunity. Only present if the record_type table is enabled.
       - name: stage_name
         description: Required. Current stage of this record. The StageName field controls several other fields on an opportunity.
       - name: synced_quote_id

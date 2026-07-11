@@ -41,6 +41,7 @@ record_type as (
 
     select *
     from {{ ref('stg_salesforce__record_type') }}
+    where lower(sobject_type) = 'campaignmember'
 ),
 {% endif %}
 
