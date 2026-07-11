@@ -1,6 +1,67 @@
 version: 2
 
 models:
+  - name: salesforce__campaign_daily_history
+    description: Each record is a daily snapshot of a campaign, starting with its first active date and updating up toward either the current date (if still active) or its last active date.
+    columns:
+      - name: campaign_day_id
+        description: Surrogate key hashed on `date_day` and `campaign_id`.
+        tests:
+          - unique
+          - not_null
+      - name: date_day
+        description: Date on which the campaign had these field values.
+      - name: campaign_id
+        description: The unique, system-generated ID assigned during creation.
+      - name: _fivetran_active
+        description: true if it is the currently active record. false if it is a historical version of the record. Only one version of the record can be true.
+      - name: _fivetran_start
+        description: The time when the record was first created or modified in the source, based on a timestamp value in the source table that monotonically increases over time with data change or update.
+      - name: _fivetran_end
+        description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
+      - name: _fivetran_synced
+        description: The time at which fivetran last synced this record.
+      - name: history_unique_key
+        description: Surrogate key hashed on `_fivetran_start` and `campaign_id`.
+      - name: actual_cost
+        description: Amount of money spent to run the campaign.
+      - name: total_pipeline_amount
+        description: Total amount of all opportunities associated with the campaign.
+      - name: budgeted_cost
+        description: Amount of money budgeted for the campaign.
+      - name: campaign_member_record_type_id
+        description: ID of the record type assigned to campaign members of this campaign.
+      - name: campaign_description
+        description: Text description of the campaign.
+      - name: end_date
+        description: Ending date for the campaign.
+      - name: is_active
+        description: Indicates whether the campaign is active (true) or not (false).
+      - name: is_deleted
+        description: Indicates whether the object has been moved to the Recycle Bin (true) or not (false).
+      - name: campaign_name
+        description: Name of the campaign.
+      - name: number_of_contacts
+        description: Number of contacts associated with the campaign.
+      - name: number_of_converted_leads
+        description: Number of leads associated with the campaign that have been converted.
+      - name: number_of_leads
+        description: Number of leads associated with the campaign.
+      - name: number_of_opportunities
+        description: Number of opportunities where this campaign is the primary campaign source.
+      - name: number_of_responses
+        description: Number of contacts and leads that responded to the campaign.
+      - name: number_of_won_opportunities
+        description: Number of closed-won opportunities where this campaign is the primary campaign source.
+      - name: parent_campaign_id
+        description: The ID of the parent campaign, if applicable.
+      - name: start_date
+        description: Starting date for the campaign.
+      - name: campaign_status
+        description: Status of the campaign, such as Planned, In Progress, or Completed.
+      - name: campaign_type
+        description: Type of campaign, such as Direct Mail, Email, or Webinar.
+
   - name: salesforce__account_daily_history
     description: Each record is a daily record in an account, starting with its first active date and updating up toward either the current date (if still active) or its last active date.
     columns:

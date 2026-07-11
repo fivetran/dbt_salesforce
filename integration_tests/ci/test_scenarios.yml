@@ -28,6 +28,7 @@ test_scenarios:
   - name: "history enabled"
     vars:
       salesforce__account_history_enabled: true
+      salesforce__campaign_history_enabled: true
       salesforce__contact_history_enabled: true
       salesforce__opportunity_history_enabled: true
     include_incremental: true
