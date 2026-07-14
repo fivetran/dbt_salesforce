@@ -14,7 +14,7 @@ opportunity as (
 
     select
         campaign_id,
-        sum(amount) as total_won_amount
+        sum(coalesce(amount, 0)) as total_won_amount
     from {{ ref('stg_salesforce__opportunity') }}
     where is_won = true
         and campaign_id is not null
@@ -27,10 +27,10 @@ campaign_member as (
     select
         campaign_id,
         count(*) as campaign_member_count,
-        sum(case when has_opted_out_of_email then 1 else 0 end) as opted_out_of_email_count,
-        sum(case when has_responded then 1 else 0 end) as responded_count,
         count(contact_id) as contact_count,
-        count(lead_id) as lead_count
+        count(lead_id) as lead_count,
+        sum(case when has_opted_out_of_email then 1 else 0 end) as opted_out_of_email_count,
+        sum(case when has_responded then 1 else 0 end) as responded_count
     from {{ ref('stg_salesforce__campaign_member') }}
     group by 1
 ),

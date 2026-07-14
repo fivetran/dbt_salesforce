@@ -87,9 +87,8 @@ seeds:
     sf_record_type_data:
       +column_types:
         _fivetran_synced: timestamp
-        _fivetran_active: boolean
+        _fivetran_deleted: boolean
         is_active: boolean
-        is_master: boolean
     sf_opportunity_data:
       +column_types:
         _fivetran_synced: timestamp

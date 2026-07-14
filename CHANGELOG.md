@@ -3,22 +3,19 @@
 [PR #84](https://github.com/fivetran/dbt_salesforce/pull/84) includes the following updates:
 
 ## Schema/Data Change
-**1 total change • 0 possible breaking changes**
+**5 total changes • 1 possible breaking change**
 
 | Data Model(s) | Change type | Old | New | Notes |
 | ---------- | ----------- | -------- | -------- | ----- |
 | `salesforce__campaign_performance` | New model | — | One row per campaign | Requires the `campaign` source table. Conditionally joins `campaign_member` and `record_type`. |
+| `salesforce__campaign_daily_history` | New model | — | One row per campaign per day | Disabled by default. Requires Salesforce History Mode and `salesforce__campaign_history_enabled: true`. |
+| `salesforce__opportunity_enhanced` | New column | — | `opportunity_record_type_name` | Conditionally populated when `salesforce__record_type_enabled: true`. Joins `record_type` filtered to `sobject_type = 'Opportunity'`. |
+| `stg_salesforce__campaign` | Column renamed | `record_type_id` | `campaign_member_record_type_id` | Reflects the Salesforce field `CampaignMemberRecordTypeId`, a campaign-level attribute. **Breaking for downstream models that reference `record_type_id` from this staging model.** |
+| `stg_salesforce__campaign_member` | New columns | — | `account_id`, `created_by_id`, `has_opted_out_of_email`, `last_modified_by_id`, `lead_or_contact_id`, `lead_or_contact_owner_id` | Added identity and engagement fields for more complete member-level analysis. |
 
 ## Feature Update
-- Adds the new `salesforce__campaign_performance` end model, which provides campaign attribution reporting by connecting campaign data to downstream pipeline and revenue outcomes. The model includes pipeline totals, member volume, conversion rates, and ROI metrics — answering questions like "Which campaigns drove the most pipeline?" and "Which campaigns had the best closed-won return?"
-- Adds three supporting staging models:
-  - `stg_salesforce__campaign`: Stages the `campaign` source table. Enable or disable via the `salesforce__campaign_enabled` variable (default: `true`).
-  - `stg_salesforce__campaign_member`: Stages the `campaign_member` source table. Enable or disable via the `salesforce__campaign_member_enabled` variable (default: `true`).
-  - `stg_salesforce__record_type`: Stages the `record_type` source table. Enable or disable via the `salesforce__record_type_enabled` variable (default: `true`).
-
-## Under the Hood
-- Adds integration test seed files for `campaign`, `campaign_member`, and `record_type` source tables.
-- Updates `quickstart.yml` to include `salesforce__campaign_performance` in public models and the three new source table variables.
+- `salesforce__campaign_performance` includes pipeline totals (`total_pipeline_amount`, `total_won_amount`), member volume (`campaign_member_count`, `responded_count`, `contact_count`, `lead_count`, `opted_out_of_email_count`), and ROI measures (`win_rate`, `cost_per_opportunity`, `cost_per_won_opportunity`, `roi`).
+- Adds support for `salesforce__campaign_pass_through_columns` to pass custom campaign fields through to `salesforce__campaign_performance`. See the [README](https://github.com/fivetran/dbt_salesforce/blob/main/README.md#adding-passthrough-columns) for configuration details.
 
 # dbt_salesforce v2.2.0
 
