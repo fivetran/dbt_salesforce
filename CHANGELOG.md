@@ -13,7 +13,6 @@
 | `stg_salesforce__campaign`<br>`stg_salesforce__campaign_member`<br>`stg_salesforce__campaign_member` | New staging models |  |  | Upstream models of `salesforce__campaign_performance`. |
 
 ## Feature Update
-- `salesforce__campaign_performance` includes pipeline totals (`total_pipeline_amount`, `total_won_amount`), member volume (`campaign_member_count`, `responded_count`, `contact_count`, `lead_count`, `opted_out_of_email_count`), and ROI measures (`win_rate`, `cost_per_opportunity`, `cost_per_won_opportunity`, `roi`).
 - Adds support for `salesforce__campaign_pass_through_columns` to pass custom campaign fields through to `salesforce__campaign_performance`. See the [README](https://github.com/fivetran/dbt_salesforce/blob/main/README.md#adding-passthrough-columns) for configuration details.
 
 # dbt_salesforce v2.2.0
