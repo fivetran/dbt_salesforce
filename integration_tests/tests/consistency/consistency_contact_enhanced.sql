@@ -1,19 +1,19 @@
 {{ config(
     tags="fivetran_validations",
-    enabled=var('fivetran_validation_tests_enabled', false) and var('salesforce__campaign_enabled', true)
+    enabled=var('fivetran_validation_tests_enabled', false)
 ) }}
 
 {% set exclude_columns = var('consistency_test_exclude_columns', []) %}
 
--- this test ensures the campaign_performance end model matches the prior version
+-- this test ensures the contact_enhanced end model matches the prior version
 with prod as (
-    select {{ dbt_utils.star(from=ref('salesforce__campaign_performance'), except=exclude_columns) }}
-    from {{ target.schema }}_salesforce_prod.salesforce__campaign_performance
+    select {{ dbt_utils.star(from=ref('salesforce__contact_enhanced'), except=exclude_columns) }}
+    from {{ target.schema }}_salesforce_prod.salesforce__contact_enhanced
 ),
 
 dev as (
-    select {{ dbt_utils.star(from=ref('salesforce__campaign_performance'), except=exclude_columns) }}
-    from {{ target.schema }}_salesforce_dev.salesforce__campaign_performance
+    select {{ dbt_utils.star(from=ref('salesforce__contact_enhanced'), except=exclude_columns) }}
+    from {{ target.schema }}_salesforce_dev.salesforce__contact_enhanced
 ),
 
 prod_not_in_dev as (

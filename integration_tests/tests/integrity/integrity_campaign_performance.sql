@@ -1,6 +1,6 @@
 {{ config(
     tags="fivetran_validations",
-    enabled=var('fivetran_validation_tests_enabled', false)
+    enabled=var('fivetran_validation_tests_enabled', false) and var('salesforce__campaign_enabled', true)
 ) }}
 
 -- this test validates that the campaign_performance end model correctly reflects
