@@ -3,15 +3,14 @@
 [PR #84](https://github.com/fivetran/dbt_salesforce/pull/84) includes the following updates:
 
 ## Schema/Data Change
-**5 total changes • 1 possible breaking change**
+**5 total changes • 0 possible breaking changes**
 
 | Data Model(s) | Change type | Old | New | Notes |
 | ---------- | ----------- | -------- | -------- | ----- |
 | `salesforce__campaign_performance` | New model | — | One row per campaign | Requires the `campaign` source table. Conditionally joins `campaign_member` and `record_type`. |
 | `salesforce__campaign_daily_history` | New model | — | One row per campaign per day | Disabled by default. Requires Salesforce History Mode and `salesforce__campaign_history_enabled: true`. |
 | `salesforce__opportunity_enhanced` | New column | — | `opportunity_record_type_name` | Conditionally populated when `salesforce__record_type_enabled: true`. Joins `record_type` filtered to `sobject_type = 'Opportunity'`. |
-| `stg_salesforce__campaign` | Column renamed | `record_type_id` | `campaign_member_record_type_id` | Reflects the Salesforce field `CampaignMemberRecordTypeId`, a campaign-level attribute. **Breaking for downstream models that reference `record_type_id` from this staging model.** |
-| `stg_salesforce__campaign_member` | New columns | — | `account_id`, `created_by_id`, `has_opted_out_of_email`, `last_modified_by_id`, `lead_or_contact_id`, `lead_or_contact_owner_id` | Added identity and engagement fields for more complete member-level analysis. |
+| `stg_salesforce__campaign`<br>`stg_salesforce__campaign_member`<br>`stg_salesforce__campaign_member` | New staging models |  |  | Upstream models of `salesforce__campaign_performance`. |
 
 ## Feature Update
 - `salesforce__campaign_performance` includes pipeline totals (`total_pipeline_amount`, `total_won_amount`), member volume (`campaign_member_count`, `responded_count`, `contact_count`, `lead_count`, `opted_out_of_email_count`), and ROI measures (`win_rate`, `cost_per_opportunity`, `cost_per_won_opportunity`, `roi`).
