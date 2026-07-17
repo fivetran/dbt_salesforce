@@ -27,45 +27,49 @@ row_parity_check as (
     select *
     from campaign_row_parity
     join stg_campaign_count
-        on end_model_count != stg_count
+        on campaign_row_parity.end_model_count != stg_campaign_count.stg_count
 ),
 
 -- verify member_count matches direct count from stg_campaign_member
+stg_campaign_member_count as (
+    select
+        campaign_id,
+        count(*) as stg_member_count
+    from {{ target.schema }}_salesforce_dev.stg_salesforce__campaign_member
+    group by campaign_id
+),
+
 member_count_check as (
     select
-        e.campaign_id,
-        e.campaign_member_count as end_model_member_count,
-        coalesce(m.stg_member_count, 0) as stg_member_count
-    from end_model e
-    left join (
-        select
-            campaign_id,
-            count(*) as stg_member_count
-        from {{ target.schema }}_salesforce_dev.stg_salesforce__campaign_member
-        group by 1
-    ) m
-        on e.campaign_id = m.campaign_id
-    where coalesce(e.member_count, 0) != coalesce(m.stg_member_count, 0)
+        end_model.campaign_id,
+        end_model.campaign_member_count as end_model_member_count,
+        coalesce(stg_campaign_member_count.stg_member_count, 0) as stg_member_count
+    from end_model
+    left join stg_campaign_member_count
+        on end_model.campaign_id = stg_campaign_member_count.campaign_id
+    where coalesce(end_model.campaign_member_count, 0) != coalesce(stg_campaign_member_count.stg_member_count, 0)
 ),
 
 -- verify total_won_amount matches direct sum from stg_opportunity
+stg_opportunity_won_amount as (
+    select
+        campaign_id,
+        sum(amount) as stg_won_amount
+    from {{ target.schema }}_salesforce_dev.stg_salesforce__opportunity
+    where is_won = true
+        and campaign_id is not null
+    group by campaign_id
+),
+
 won_amount_check as (
     select
-        e.campaign_id,
-        e.total_won_amount as end_model_won_amount,
-        o.stg_won_amount
-    from end_model e
-    left join (
-        select
-            campaign_id,
-            sum(amount) as stg_won_amount
-        from {{ target.schema }}_salesforce_dev.stg_salesforce__opportunity
-        where is_won = true
-            and campaign_id is not null
-        group by 1
-    ) o
-        on e.campaign_id = o.campaign_id
-    where coalesce(e.total_won_amount, 0) != coalesce(o.stg_won_amount, 0)
+        end_model.campaign_id,
+        end_model.total_won_amount as end_model_won_amount,
+        stg_opportunity_won_amount.stg_won_amount
+    from end_model
+    left join stg_opportunity_won_amount
+        on end_model.campaign_id = stg_opportunity_won_amount.campaign_id
+    where coalesce(end_model.total_won_amount, 0) != coalesce(stg_opportunity_won_amount.stg_won_amount, 0)
 ),
 
 final as (
