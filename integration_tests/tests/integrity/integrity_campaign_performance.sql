@@ -34,7 +34,7 @@ row_parity_check as (
 member_count_check as (
     select
         e.campaign_id,
-        e.member_count as end_model_member_count,
+        e.campaign_member_count as end_model_member_count,
         coalesce(m.stg_member_count, 0) as stg_member_count
     from end_model e
     left join (
