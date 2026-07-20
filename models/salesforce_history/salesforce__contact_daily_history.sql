@@ -8,34 +8,19 @@
         } if target.type not in ['spark', 'databricks'] else ['date_day'],
         unique_key = 'contact_day_id',
         incremental_strategy = 'insert_overwrite' if target.type in ('bigquery', 'spark', 'databricks') else 'delete+insert',
-        file_format = 'parquet',
+        file_format = 'delta',
         on_schema_change = 'fail'
     )
 }}
 
-{% if execute %}
-    {% set date_query %}
-    select 
-        {{ dbt.date_trunc('day', dbt.current_timestamp_backcompat()) }} as max_date
-    {% endset %}
-
-    {% set last_date = run_query(date_query).columns[0][0]|string %}
-
-    {# If only compiling, creates range going back 1 year #}
-    {% else %} 
-        {% set last_date = dbt.dateadd("year", "-1", "current_date") %}
-    {% endif %}
-
+{% set first_date = var('contact_history_start_date', var('global_history_start_date', '2020-01-01')) %}
 
 with spine as (
-    {# Prioritizes variables over calculated dates #}
-    {% set first_date = var('contact_history_start_date', var('global_history_start_date', '2020-01-01'))|string %}
-    {% set last_date = last_date|string %}
 
     {{ dbt_utils.date_spine(
         datepart="day",
-        start_date = "cast('" ~ first_date[0:10] ~ "'as date)",
-        end_date = "cast('" ~ last_date[0:10] ~ "'as date)"
+        start_date = "cast('" ~ first_date ~ "' as date)",
+        end_date = "cast(current_date as date)"
         )
     }}
 ),

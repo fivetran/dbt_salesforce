@@ -1,20 +1,20 @@
 {{ config(
     tags="fivetran_validations",
-    enabled=var('fivetran_validation_tests_enabled', false)
+    enabled=var('fivetran_validation_tests_enabled', false) and var('salesforce__contact_history_enabled', false)
 ) }}
 
 {% set exclude_columns = var('consistency_test_exclude_columns', []) %}
 
--- this test ensures the daily_activity end model matches the prior version
+-- this test ensures the contact_daily_history end model matches the prior version
 with prod as (
-    select {{ dbt_utils.star(from=ref('salesforce__daily_activity'), except=exclude_columns) }}
-    from {{ target.schema }}_salesforce_prod.salesforce__daily_activity
+    select {{ dbt_utils.star(from=ref('salesforce__contact_daily_history'), except=exclude_columns) }}
+    from {{ target.schema }}_salesforce_prod.salesforce__contact_daily_history
     where date(date_day) < date({{ dbt.current_timestamp() }})
 ),
 
 dev as (
-    select {{ dbt_utils.star(from=ref('salesforce__daily_activity'), except=exclude_columns) }}
-    from {{ target.schema }}_salesforce_dev.salesforce__daily_activity
+    select {{ dbt_utils.star(from=ref('salesforce__contact_daily_history'), except=exclude_columns) }}
+    from {{ target.schema }}_salesforce_dev.salesforce__contact_daily_history
     where date(date_day) < date({{ dbt.current_timestamp() }})
 ),
 

@@ -7,7 +7,7 @@
             "field": "_fivetran_date", 
             "data_type": "date"
         } if target.type not in ('spark','databricks') else ['_fivetran_date'],
-        file_format='parquet',
+        file_format='delta',
         on_schema_change='fail'
     ) 
 }}

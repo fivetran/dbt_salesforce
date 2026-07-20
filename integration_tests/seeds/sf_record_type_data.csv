@@ -1,0 +1,3 @@
+_fivetran_synced,_fivetran_deleted,id,name,developer_name,sobject_type,is_active,description,namespace_prefix
+2024-01-15 00:00:00,false,rtype001AAA00001,Campaign Standard,Campaign_Standard,Campaign,true,Standard campaign record type,
+2024-01-15 00:00:00,false,rtype002AAA00002,Campaign Premium,Campaign_Premium,Campaign,true,Premium campaign record type,

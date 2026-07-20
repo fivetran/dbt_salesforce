@@ -1,21 +1,19 @@
 {{ config(
     tags="fivetran_validations",
-    enabled=var('fivetran_validation_tests_enabled', false)
+    enabled=var('fivetran_validation_tests_enabled', false) and var('salesforce__campaign_enabled', true)
 ) }}
 
 {% set exclude_columns = var('consistency_test_exclude_columns', []) %}
 
--- this test ensures the daily_activity end model matches the prior version
+-- this test ensures the campaign_performance end model matches the prior version
 with prod as (
-    select {{ dbt_utils.star(from=ref('salesforce__daily_activity'), except=exclude_columns) }}
-    from {{ target.schema }}_salesforce_prod.salesforce__daily_activity
-    where date(date_day) < date({{ dbt.current_timestamp() }})
+    select {{ dbt_utils.star(from=ref('salesforce__campaign_performance'), except=exclude_columns) }}
+    from {{ target.schema }}_salesforce_prod.salesforce__campaign_performance
 ),
 
 dev as (
-    select {{ dbt_utils.star(from=ref('salesforce__daily_activity'), except=exclude_columns) }}
-    from {{ target.schema }}_salesforce_dev.salesforce__daily_activity
-    where date(date_day) < date({{ dbt.current_timestamp() }})
+    select {{ dbt_utils.star(from=ref('salesforce__campaign_performance'), except=exclude_columns) }}
+    from {{ target.schema }}_salesforce_dev.salesforce__campaign_performance
 ),
 
 prod_not_in_dev as (

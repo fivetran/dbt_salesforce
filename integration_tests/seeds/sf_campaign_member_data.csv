@@ -1,0 +1,6 @@
+_fivetran_synced,_fivetran_active,id,account_id,campaign_id,contact_id,created_by_id,created_date,first_responded_date,has_opted_out_of_email,has_responded,is_deleted,last_modified_by_id,lead_id,lead_or_contact_id,lead_or_contact_owner_id,status
+2024-01-15 00:00:00,true,mem001AAA000001,acct001AAAAAAA,camp001AAA000001,cont001AAAAAAA,user001AAAAAAA,2024-01-10 00:00:00,2024-01-12 00:00:00,false,true,false,user001AAAAAAA,,cont001AAAAAAA,user002AAAAAAA,Responded
+2024-01-15 00:00:00,true,mem002AAA000002,acct002AAAAAAA,camp001AAA000001,,user001AAAAAAA,2024-01-10 00:00:00,,true,false,false,user001AAAAAAA,lead001AAAAAAA,lead001AAAAAAA,user002AAAAAAA,Sent
+2024-01-15 00:00:00,true,mem003AAA000003,acct001AAAAAAA,camp002AAA000002,cont002AAAAAAA,user001AAAAAAA,2024-02-05 00:00:00,,false,false,false,user001AAAAAAA,,cont002AAAAAAA,user002AAAAAAA,Sent
+2024-01-15 00:00:00,true,mem004AAA000004,acct002AAAAAAA,camp002AAA000002,,user001AAAAAAA,2024-02-05 00:00:00,2024-02-10 00:00:00,false,true,false,user001AAAAAAA,lead002AAAAAAA,lead002AAAAAAA,user002AAAAAAA,Responded
+2024-01-15 00:00:00,true,mem005AAA000005,acct001AAAAAAA,camp003AAA000003,cont003AAAAAAA,user001AAAAAAA,2024-05-02 00:00:00,,false,false,false,user001AAAAAAA,,cont003AAAAAAA,user002AAAAAAA,Sent

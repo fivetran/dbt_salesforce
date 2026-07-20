@@ -1,0 +1,5 @@
+_fivetran_synced,_fivetran_active,id,name,type,status,start_date,end_date,is_active,is_deleted,parent_id,budgeted_cost,actual_cost,number_of_leads,number_of_converted_leads,number_of_contacts,number_of_responses,number_of_opportunities,number_of_won_opportunities,amount_all_opportunities,description,campaign_member_record_type_id
+2024-01-15 00:00:00,true,camp001AAA000001,Q1 Webinar Campaign,Webinar,Active,2024-01-01 00:00:00,2024-03-31 00:00:00,true,false,,5000,4200,50,10,30,20,8,3,95000,Q1 webinar campaign for lead generation,rtype001AAA00001
+2024-01-15 00:00:00,true,camp002AAA000002,Email Nurture Series,Email,Completed,2024-02-01 00:00:00,2024-04-30 00:00:00,false,false,,2000,1800,80,15,40,25,5,2,50000,Email nurture campaign,
+2024-01-15 00:00:00,true,camp003AAA000003,Trade Show Spring,Other,Planned,2024-05-01 00:00:00,2024-05-31 00:00:00,true,false,,10000,,20,0,10,5,2,0,0,Spring trade show,rtype002AAA00002
+2024-01-15 00:00:00,true,camp004AAA000004,Social Media Ads,Social,Active,2024-03-01 00:00:00,2024-06-30 00:00:00,true,false,camp001AAA000001,8000,7500,120,25,60,40,12,5,140000,Paid social campaign,

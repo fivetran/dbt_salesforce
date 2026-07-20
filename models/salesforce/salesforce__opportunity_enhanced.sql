@@ -1,3 +1,5 @@
+{% set record_type_enabled = var('salesforce__record_type_enabled', True) %}
+
 with opportunity as (
 
     select *
@@ -23,7 +25,16 @@ account as (
 
     select *
     from {{ ref('stg_salesforce__account') }}
-),  
+),
+
+{% if record_type_enabled %}
+record_type as (
+
+    select *
+    from {{ ref('stg_salesforce__record_type') }}
+    where lower(sobject_type) = 'opportunity'
+),
+{% endif %}
 
 add_fields as (
 
@@ -51,6 +62,10 @@ add_fields as (
         user_role.developer_name as opportunity_owner_developer_name,
         user_role.parent_role_id as opportunity_owner_parent_role_id,
         user_role.rollup_description as opportunity_owner_rollup_description,
+        {% endif %}
+
+        {% if record_type_enabled %}
+        record_type.record_type_name as opportunity_record_type_name,
         {% endif %}
 
         case
@@ -88,8 +103,13 @@ add_fields as (
 
     -- If using user_role table, the following will be included, otherwise it will not.
     {% if var('salesforce__user_role_enabled', True) %}
-    left join user_role 
+    left join user_role
         on opportunity_owner.user_role_id = user_role.user_role_id
+    {% endif %}
+
+    {% if record_type_enabled %}
+    left join record_type
+        on opportunity.record_type_id = record_type.record_type_id
     {% endif %}
 )
 

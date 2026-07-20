@@ -1,3 +1,20 @@
+# dbt_salesforce v2.3.0
+
+[PR #84](https://github.com/fivetran/dbt_salesforce/pull/84) includes the following updates:
+
+## Schema/Data Change
+**5 total changes • 0 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ---------- | ----------- | -------- | -------- | ----- |
+| `salesforce__campaign_performance` | New model | — | One row per campaign | Requires the `campaign` source table. Conditionally joins `campaign_member` and `record_type`. |
+| `salesforce__campaign_daily_history` | New model | — | One row per campaign per day | Disabled by default. Requires Salesforce History Mode and `salesforce__campaign_history_enabled: true`. |
+| `salesforce__opportunity_enhanced` | New column | — | `opportunity_record_type_name` | Conditionally populated when `salesforce__record_type_enabled: true`. Joins `record_type` filtered to `sobject_type = 'Opportunity'`. |
+| `stg_salesforce__campaign`<br>`stg_salesforce__campaign_member`<br>`stg_salesforce__campaign_member` | New staging models |  |  | Upstream models of `salesforce__campaign_performance`. |
+
+## Feature Update
+- Adds support for `salesforce__campaign_pass_through_columns` to pass custom campaign fields through to `salesforce__campaign_performance`. See the [README](https://github.com/fivetran/dbt_salesforce/blob/main/README.md#adding-passthrough-columns) for configuration details.
+
 # dbt_salesforce v2.2.0
 
 [PR #81](https://github.com/fivetran/dbt_salesforce/pull/81) includes the following updates:
