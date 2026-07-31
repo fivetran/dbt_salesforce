@@ -20,7 +20,7 @@
         select coalesce(max(date_day), cast('{{ first_date[0:10] }}' as date)) as spine_start_date
         from {{ this }}
     {% endset %}
-    {% set spine_start_date = (dbt_utils.get_single_value(spine_start_query, first_date[0:10]) | string)[0:10] %}
+    {% set spine_start_date = (dbt_utils.get_single_value(spine_start_query) | string) %}
 {% else %}
     {% set spine_start_date = first_date[0:10] %}
 {% endif %}
