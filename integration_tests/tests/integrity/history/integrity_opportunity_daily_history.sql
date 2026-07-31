@@ -3,7 +3,7 @@
     enabled=var('fivetran_validation_tests_enabled', false) and var('salesforce__opportunity_history_enabled', false)
 ) }}
 
--- this test confirms two properties of the opportunity daily history incremental boundary fix:
+-- this test confirms two properties of the opportunity daily history spine:
 -- 1) every opportunity has a continuous daily spine with no gaps between its first and last date_day
 -- 2) opportunities that are still active (per _fivetran_active) continue to receive a row through the
 --    most recently materialized date_day, even if the record hasn't changed recently

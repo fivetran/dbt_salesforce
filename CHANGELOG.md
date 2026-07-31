@@ -6,11 +6,8 @@ This release includes the following updates:
 
 | Data Model(s) | Change type | Old | New | Notes |
 | ------------- | ----------- | --- | --- | ----- |
-| `salesforce__account_daily_history`, `salesforce__contact_daily_history`, `salesforce__opportunity_daily_history` | Removed model | Read from the `stg_salesforce__account_history`, `stg_salesforce__contact_history`, and `stg_salesforce__opportunity_history` staging models | Staging models removed. The daily history models now read directly from the `salesforce_history` source, matching the `salesforce__campaign_daily_history` pattern | ❗Breaking. Run `--full-refresh` on the three daily history models after upgrading. |
+| `stg_salesforce__account_history`, `stg_salesforce__contact_history`, `stg_salesforce__opportunity_history` | Removed model | Staging models the daily history models read from | Removed. `salesforce__account_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history` now read directly from the `salesforce_history` source, matching the `salesforce__campaign_daily_history` pattern | ❗Breaking. Run `--full-refresh` on the three daily history models after upgrading. |
 | `salesforce__account_daily_history`, `salesforce__contact_daily_history`, `salesforce__opportunity_daily_history` | Changed model (bug fix) | A record that remained current but had not changed recently could silently stop receiving new daily rows on incremental runs | Currently active records continue to receive a daily row regardless of how recently they last changed | Requires `--full-refresh` to backfill any rows that were previously missing. |
-
-## Under the Hood
-- Adds integrity validation tests for the `account`, `contact`, and `opportunity` daily history models under `integration_tests/tests/integrity/history/`.
 
 # dbt_salesforce v2.3.0
 
