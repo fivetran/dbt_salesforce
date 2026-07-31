@@ -15,16 +15,7 @@
 
 {% set first_date = var('opportunity_history_start_date', var('global_history_start_date', '2020-01-01')) %}
 
-{% if is_incremental() %}
-    {% set spine_start_date = salesforce.salesforce_lookback(
-        from_date='max(date_day)',
-        datepart='day',
-        interval=var('lookback_window', 1),
-        safety_date=first_date[0:10]
-        ) %}
-{% else %}
-    {% set spine_start_date = "cast('" ~ first_date[0:10] ~ "' as date)" %}
-{% endif %}
+{% set spine_start_date = salesforce.history_spine_start_date(first_date) %}
 
 with spine as (
 
