@@ -6,8 +6,7 @@ This release includes the following updates:
 
 | Data Model(s) | Change type | Old | New | Notes |
 | ------------- | ----------- | --- | --- | ----- |
-| `stg_salesforce__account_history`, `stg_salesforce__contact_history`, `stg_salesforce__opportunity_history` | Removed model | Staging models the daily history models read from | Removed. `salesforce__account_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history` now read directly from the `salesforce_history` source, matching the `salesforce__campaign_daily_history` pattern | ❗Breaking. Run `--full-refresh` on the three daily history models after upgrading. |
-| `salesforce__account_daily_history`, `salesforce__contact_daily_history`, `salesforce__opportunity_daily_history` | Changed model (bug fix) | A record that remained current but had not changed recently could silently stop receiving new daily rows on incremental runs | Currently active records continue to receive a daily row regardless of how recently they last changed | Requires `--full-refresh` to backfill any rows that were previously missing. |
+| `stg_salesforce__account_history`<br>`stg_salesforce__contact_history`<br>`stg_salesforce__opportunity_history` | | | `salesforce__account_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history` now read directly from the `salesforce_history` sources, matching the `salesforce__campaign_daily_history` pattern | BREAKING: Run `--full-refresh` on the three daily history models after upgrading. |
 
 # dbt_salesforce v2.3.0
 
