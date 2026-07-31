@@ -44,9 +44,7 @@ contact_history as (
         cast(_fivetran_start as date) as _fivetran_date,
         {{ dbt_utils.generate_surrogate_key(['id', '_fivetran_start']) }} as history_unique_key,
         {{ dbt_utils.star(from=source('salesforce_history', 'contact'),
-                        except=["id", "_fivetran_start", "_fivetran_end", "description", "name"]) }},
-        description as contact_description,
-        name as contact_name
+                        except=["id", "_fivetran_start", "_fivetran_end"]) }}
 
     from {{ source('salesforce_history', 'contact') }}
 

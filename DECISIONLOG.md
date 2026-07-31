@@ -20,11 +20,6 @@ This also means the model no longer rebuilds the full date spine on every increm
 
 **Assumption validated during testing:** The spine join (`_fivetran_start <= date_day AND _fivetran_end >= date_day`) relies on consecutive versions of the same record never overlapping at the day grain, i.e. that `_fivetran_end` is always the next version's `_fivetran_start` minus epsilon, per the column's documented definition. We validated this holds (no duplicate or missing daily rows across a same-day version change) as long as that epsilon gap is respected; a source record with `_fivetran_end` exactly equal to the next version's `_fivetran_start` would produce a duplicate `*_day_id` on the transition date.
 
-## Renaming `description` and `name` on the history models
-The `account`, `contact`, and `opportunity` daily history models select every field from their respective Salesforce History Mode source table, including the generic `description` and `name` columns. Every other model in this package disambiguates these same fields with an entity-specific alias (for example, `stg_salesforce__account` renames `description` to `account_description` and `name` to `account_name`), since generic names like these are easy to collide with when a model is joined downstream.
-
-As part of the consolidation above, we aligned the history models with this convention by explicitly renaming `description`/`name` to `account_description`/`account_name`, `contact_description`/`contact_name`, and `opportunity_description`/`opportunity_name`, respectively. This is a breaking change for any downstream query currently referencing the unprefixed `description` or `name` columns on these three history models.
-
 ## Syncing all of your fields from the Salesforce History Mode connector
 When creating these new History Mode models, our hypothesis was that the primary reason customers would leverage this data would be to view changes in historical records.
 

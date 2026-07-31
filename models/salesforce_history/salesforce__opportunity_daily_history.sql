@@ -44,9 +44,7 @@ opportunity_history as (
         cast(_fivetran_start as date) as _fivetran_date,
         {{ dbt_utils.generate_surrogate_key(['id', '_fivetran_start']) }} as history_unique_key,
         {{ dbt_utils.star(from=source('salesforce_history', 'opportunity'),
-                        except=["id", "_fivetran_start", "_fivetran_end", "description", "name"]) }},
-        description as opportunity_description,
-        name as opportunity_name
+                        except=["id", "_fivetran_start", "_fivetran_end"]) }}
 
     from {{ source('salesforce_history', 'opportunity') }}
 
