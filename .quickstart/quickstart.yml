@@ -25,6 +25,14 @@ table_variables:
   salesforce__product_2_enabled:
     - Product2
 
+  # Staged for GA-1032074 Phase 3 -- not yet live in Quickstart.
+  # salesforce__account_history_enabled:
+  #   - Account
+  # salesforce__contact_history_enabled:
+  #   - Contact
+  # salesforce__opportunity_history_enabled:
+  #   - Opportunity
+
 destination_configurations:
   databricks:
     dispatch:
@@ -39,14 +47,43 @@ public_models: [
   "salesforce__opportunity_line_item_enhanced",
   "salesforce__owner_performance",
   "salesforce__sales_snapshot"
+  # Staged for GA-1032074 Phase 3 -- not yet live in Quickstart.
+  # , "salesforce__account_daily_history"
+  # , "salesforce__contact_daily_history"
+  # , "salesforce__opportunity_daily_history"
 ]
 
 supported_vars:
-  lookback_window:
-    type: integer
-    value: 1
-    description: "Number of days into the past that the account, contact, and opportunity daily history models will look back to capture late-arriving records on incremental runs"
-    display_name: "Incremental Run Lookback Window (Days)"
+  # Staged for GA-1032074 Phase 3 -- not yet live in Quickstart.
+  # lookback_window:
+  #   type: integer
+  #   value: 1
+  #   description: "Number of days into the past that the account, contact, and opportunity daily history models will look back to capture late-arriving records on incremental runs"
+  #   display_name: "Incremental Run Lookback Window (Days)"
+  #
+  # global_history_start_date:
+  #   type: date
+  #   value: "2020-01-01"
+  #   description: "The first _fivetran_start date to filter data on across all history models (YYYY-MM-DD format)"
+  #   display_name: "Global History Start Date"
+  #
+  # account_history_start_date:
+  #   type: date
+  #   value: "2020-01-01"
+  #   description: "The first _fivetran_start date to filter account history records on (YYYY-MM-DD format)"
+  #   display_name: "Account History Start Date"
+  #
+  # contact_history_start_date:
+  #   type: date
+  #   value: "2020-01-01"
+  #   description: "The first _fivetran_start date to filter contact history records on (YYYY-MM-DD format)"
+  #   display_name: "Contact History Start Date"
+  #
+  # opportunity_history_start_date:
+  #   type: date
+  #   value: "2020-01-01"
+  #   description: "The first _fivetran_start date to filter opportunity history records on (YYYY-MM-DD format)"
+  #   display_name: "Opportunity History Start Date"
 
   salesforce__account_pass_through_columns:
     type: dictionary
