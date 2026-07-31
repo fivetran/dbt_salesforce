@@ -25,14 +25,6 @@ table_variables:
   salesforce__product_2_enabled:
     - Product2
 
-  # Staged for GA-1032074 Phase 3 -- not yet live in Quickstart.
-  # salesforce__account_history_enabled:
-  #   - Account
-  # salesforce__contact_history_enabled:
-  #   - Contact
-  # salesforce__opportunity_history_enabled:
-  #   - Opportunity
-
 destination_configurations:
   databricks:
     dispatch:
@@ -84,6 +76,31 @@ supported_vars:
   #   value: "2020-01-01"
   #   description: "The first _fivetran_start date to filter opportunity history records on (YYYY-MM-DD format)"
   #   display_name: "Opportunity History Start Date"
+  #
+  # History model enablement toggles -- staged, not yet exposed in Quickstart.
+  # salesforce__campaign_history_enabled:
+  #   type: boolean
+  #   value: false
+  #   description: "Enable the `salesforce__campaign_daily_history` model"
+  #   display_name: "Enable Campaign Daily History"
+  #
+  # salesforce__account_history_enabled:
+  #   type: boolean
+  #   value: false
+  #   description: "Enable the `salesforce__account_daily_history` model"
+  #   display_name: "Enable Account Daily History"
+  #
+  # salesforce__contact_history_enabled:
+  #   type: boolean
+  #   value: false
+  #   description: "Enable the `salesforce__contact_daily_history` model"
+  #   display_name: "Enable Contact Daily History"
+  #
+  # salesforce__opportunity_history_enabled:
+  #   type: boolean
+  #   value: false
+  #   description: "Enable the `salesforce__opportunity_daily_history` model"
+  #   display_name: "Enable Opportunity Daily History"
 
   salesforce__account_pass_through_columns:
     type: dictionary
