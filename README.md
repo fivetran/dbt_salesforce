@@ -210,6 +210,18 @@ vars:
     opportunity_history_start_date: 'YYYY-MM-DD' # The first date in opportunity history you wish to pull records from, filtering on `_fivetran_start`.
 ```
 
+#### Adjusting the Incremental Lookback Window
+Corrected or backfilled history records may occasionally arrive after the date they apply to has already been materialized. To pick these up without requiring a full refresh, the `salesforce__account_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history` models reprocess a small window of already-materialized dates on every incremental run, in addition to any new dates.
+
+To change the default lookback window, add the following variable to your `dbt_project.yml` file:
+
+```yml
+vars:
+    lookback_window: number_of_days # default is 1
+```
+
+> Corrections landing further back than the configured lookback window will still require a `--full-refresh` on the affected model(s) to be picked up.
+
 ### (Optional) Additional Configurations
 #### Change the Source Table References
 Source tables are referenced using default names. If an individual source table has a different name than expected, provide the name of the table as it appears in your warehouse to the respective variable:

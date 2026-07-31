@@ -16,20 +16,21 @@
 {% set first_date = var('account_history_start_date', var('global_history_start_date', '2020-01-01')) %}
 
 {% if is_incremental() %}
-    {% set spine_start_query %}
-        select coalesce(max(date_day), cast('{{ first_date[0:10] }}' as date)) as spine_start_date
-        from {{ this }}
-    {% endset %}
-    {% set spine_start_date = (dbt_utils.get_single_value(spine_start_query) | string) %}
+    {% set spine_start_date = salesforce.salesforce_lookback(
+        from_date='max(date_day)',
+        datepart='day',
+        interval=var('lookback_window', 1),
+        safety_date=first_date[0:10]
+        ) %}
 {% else %}
-    {% set spine_start_date = first_date[0:10] %}
+    {% set spine_start_date = "cast('" ~ first_date[0:10] ~ "' as date)" %}
 {% endif %}
 
 with spine as (
 
     {{ dbt_utils.date_spine(
         datepart="day",
-        start_date="cast('" ~ spine_start_date ~ "' as date)",
+        start_date=spine_start_date,
         end_date="cast(current_date as date)"
         )
     }}
@@ -52,7 +53,7 @@ account_history as (
     -- history records are pulled: any record still open or closed on/after that boundary could
     -- apply to a newly generated spine date, regardless of when it last changed.
     {% if is_incremental() %}
-    where cast(_fivetran_end as date) >= cast('{{ spine_start_date }}' as date)
+    where cast(_fivetran_end as date) >= {{ spine_start_date }}
     {% else %}
     {% if var('global_history_start_date', []) or var('account_history_start_date', []) %}
     where cast(_fivetran_start as date) >= cast('{{ first_date[0:10] }}' as date)
