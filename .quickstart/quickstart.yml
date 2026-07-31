@@ -42,6 +42,12 @@ public_models: [
 ]
 
 supported_vars:
+  lookback_window:
+    type: integer
+    value: 1
+    description: "Number of days into the past that the account, contact, and opportunity daily history models will look back to capture late-arriving records on incremental runs"
+    display_name: "Incremental Run Lookback Window (Days)"
+
   salesforce__account_pass_through_columns:
     type: dictionary
     description: "Additional `ACCOUNT` columns to include in `salesforce__opportunity_enhanced` and `salesforce__contact_enhanced`"
