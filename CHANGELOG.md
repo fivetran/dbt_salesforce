@@ -6,7 +6,7 @@ This release includes the following updates:
 
 | Data Model(s) | Change type | Old | New | Notes |
 | ------------- | ----------- | --- | --- | ----- |
-| `stg_salesforce__account_history`<br>`stg_salesforce__contact_history`<br>`stg_salesforce__opportunity_history` | Removed model | Staging models the daily history models read from | Removed. `salesforce__account_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history` now read directly from the `salesforce_history` sources, matching the `salesforce__campaign_daily_history` pattern | BREAKING: Run `--full-refresh` on the three daily history models after upgrading. |
+| `stg_salesforce__account_history`<br>`stg_salesforce__contact_history`<br>`stg_salesforce__opportunity_history` | Removed model | | | BREAKING: Run `--full-refresh` on the three daily history models after upgrading.<br><br>`salesforce__account_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history` now read directly from the `salesforce_history` sources, matching the `salesforce__campaign_daily_history` pattern |
 
 ## Bug Fix
 - Fixes an issue in `salesforce__account_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history` where a record that remained current but hadn't changed recently could stop receiving new daily rows on incremental runs. Currently active records now continue to receive a daily row regardless of how recently they last changed. Requires `--full-refresh` to backfill any rows that were previously missing.
