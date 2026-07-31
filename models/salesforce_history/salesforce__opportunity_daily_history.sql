@@ -20,7 +20,7 @@
         select coalesce(max(date_day), cast('{{ first_date[0:10] }}' as date)) as spine_start_date
         from {{ this }}
     {% endset %}
-    {% set spine_start_date = (run_query(spine_start_query).columns[0][0] | string)[0:10] %}
+    {% set spine_start_date = (dbt_utils.get_single_value(spine_start_query, first_date[0:10]) | string)[0:10] %}
 {% else %}
     {% set spine_start_date = first_date[0:10] %}
 {% endif %}
@@ -48,9 +48,9 @@ opportunity_history as (
 
     from {{ source('salesforce_history', 'opportunity') }}
 
-    {# The shared boundary below drives both which spine dates get (re)generated and which source
-       history records are pulled: any record still open or closed on/after that boundary could
-       apply to a newly generated spine date, regardless of when it last changed. #}
+    -- The shared boundary below drives both which spine dates get (re)generated and which source
+    -- history records are pulled: any record still open or closed on/after that boundary could
+    -- apply to a newly generated spine date, regardless of when it last changed.
     {% if is_incremental() %}
     where cast(_fivetran_end as date) >= cast('{{ spine_start_date }}' as date)
     {% else %}
