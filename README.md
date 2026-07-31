@@ -74,7 +74,7 @@ Include the following salesforce package version in your `packages.yml`
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: [">=2.3.0", "<2.4.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=2.4.0", "<2.5.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/salesforce_source` in your `packages.yml` since this package has been deprecated.
@@ -136,15 +136,15 @@ For this use case, to ensure the package runs successfully, we recommend leverag
 > Note that all other end models (`salesforce__opportunity_enhanced`, `salesforce__opportunity_line_item_enhanced`, `salesforce__manager_performance`, `salesforce__owner_performance`, `salesforce__sales_snapshot`, and `salesforce__opportunity_daily_history`) will still materialize after a blanket `dbt run` but will be largely empty/null.
 
 ### (Optional) Utilizing Salesforce History Mode records
-If you have Salesforce [History Mode](https://fivetran.com/docs/using-fivetran/features#historymode) enabled for your connection, we now include support for the `account`, `campaign`, `contact`, and `opportunity` tables directly. These staging models flow into our daily history models. This will allow you access to your historical data for these tables while taking advantage of incremental loads to help with compute.
+If you have Salesforce [History Mode](https://fivetran.com/docs/using-fivetran/features#historymode) enabled for your connection, we now include support for the `account`, `campaign`, `contact`, and `opportunity` tables directly in our daily history models. This will allow you access to your historical data for these tables while taking advantage of incremental loads to help with compute.
 
 #### IMPORTANT: How To Update Your History Models
-To ensure maximum value for these history mode models and avoid messy historical data that could come with picking and choosing which fields you bring in, **all fields in your Salesforce history mode connection are being synced into your end staging models**. That means all custom fields you picked to sync are being brought in to the final models. [See our DECISIONLOG for more details on why we are bringing in all fields](https://github.com/fivetran/dbt_salesforce/blob/main/DECISIONLOG.md).
+To ensure maximum value for these history mode models and avoid messy historical data that could come with picking and choosing which fields you bring in, **all fields in your Salesforce history mode connection are being synced into your end daily history models**. That means all custom fields you picked to sync are being brought in to the final models. [See our DECISIONLOG for more details on why we are bringing in all fields](https://github.com/fivetran/dbt_salesforce/blob/main/DECISIONLOG.md).
 
 To update the history mode models, you must follow these steps:
 1) Go to your Fivetran Salesforce History Mode connection page.
 2) Update the fields that you are bringing into the model.
-3) Run a `dbt run --full-refresh` on the specific staging models you've updated to bring in these fields and all the historical data available with these fields.
+3) Run a `dbt run --full-refresh` on the specific daily history models you've updated to bring in these fields and all the historical data available with these fields.
 
 We are aware that bringing in additional fields will be very process-heavy, so we do emphasize caution in making changes to your history mode connection. It would be best to batch as many field changes as possible before executing a `--full-refresh` to save on processing.
 
@@ -232,8 +232,6 @@ models:
           +schema: my_new_schema_name # Will write Salesforce staging models to <target_schema> + _my_new_schema_name
       salesforce_history:
         +schema: my_new_schema_name # Will write Salesforce History models to <target_schema> + _my_new_schema_name
-        staging:
-          +schema: my_new_schema_name # Will write Salesforce History staging models to <target_schema> + _my_new_schema_name
 ```
 
 #### Adding Passthrough Columns

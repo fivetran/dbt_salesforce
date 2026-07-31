@@ -5,7 +5,12 @@
 
 {% set exclude_columns = var('consistency_test_exclude_columns', []) %}
 
--- this test ensures the contact_daily_history end model matches the prior version
+-- this test ensures the contact_daily_history end model matches the prior version.
+-- NOTE: as of the account/contact/opportunity history model consolidation, expect
+-- `dev_not_in_prod` rows for: 1) previously-unchanged-but-still-active contacts that were
+-- missing daily rows in prod (the incremental boundary bug fix), and 2) the `description`/
+-- `name` columns, now aliased to `contact_description`/`contact_name`. Use
+-- `consistency_test_exclude_columns` to exclude the renamed columns if isolating (1).
 with prod as (
     select {{ dbt_utils.star(from=ref('salesforce__contact_daily_history'), except=exclude_columns) }}
     from {{ target.schema }}_salesforce_prod.salesforce__contact_daily_history
