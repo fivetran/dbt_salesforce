@@ -19,6 +19,8 @@ models:
         description: The time when the record was first created or modified in the source, based on a timestamp value in the source table that monotonically increases over time with data change or update.
       - name: _fivetran_end
         description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
+      - name: _fivetran_date
+        description: The date component of `_fivetran_start`, used to identify the single latest version of the record on any given source-reported day.
       - name: _fivetran_synced
         description: The time at which fivetran last synced this record.
       - name: history_unique_key

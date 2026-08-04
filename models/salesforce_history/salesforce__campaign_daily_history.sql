@@ -15,12 +15,14 @@
 
 {% set first_date = var('campaign_history_start_date', var('global_history_start_date', '2020-01-01')) %}
 
+{% set spine_start_date = salesforce.history_spine_start_date(first_date) %}
+
 with spine as (
 
     {{ dbt_utils.date_spine(
         datepart="day",
-        start_date = "cast('" ~ first_date ~ "' as date)",
-        end_date = "cast(current_date as date)"
+        start_date=spine_start_date,
+        end_date="cast(current_date as date)"
         )
     }}
 ),
@@ -39,9 +41,11 @@ campaign_history as (
     from {{ source('salesforce_history','campaign') }}
 
     {% if is_incremental() %}
-    where cast(_fivetran_start as date) >= (select max(cast((_fivetran_start) as date)) from {{ this }})
+    where cast(_fivetran_end as date) >= {{ spine_start_date }}
     {% else %}
-    where cast(_fivetran_start as date) >= cast('{{ first_date }}' as date)
+    {% if var('global_history_start_date', []) != [] or var('campaign_history_start_date', []) != [] %}
+    where cast(_fivetran_start as date) >= cast('{{ first_date[0:10] }}' as date)
+    {% endif %}
     {% endif %}
 ),
 

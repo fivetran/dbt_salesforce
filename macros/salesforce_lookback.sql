@@ -1,6 +1,6 @@
 {% macro salesforce_lookback(from_date, datepart, interval, safety_date='2010-01-01') %}
 
-{{ adapter.dispatch('salesforce_lookback', 'salesforce') (from_date, datepart, interval, safety_date='2010-01-01') }}
+{{ return(adapter.dispatch('salesforce_lookback', 'salesforce') (from_date, datepart, interval, safety_date=safety_date)) }}
 
 {%- endmacro %}
 

@@ -46,7 +46,7 @@ opportunity_history as (
     {% if is_incremental() %}
     where cast(_fivetran_end as date) >= {{ spine_start_date }}
     {% else %}
-    {% if var('global_history_start_date', []) or var('opportunity_history_start_date', []) %}
+    {% if var('global_history_start_date', []) != [] or var('opportunity_history_start_date', []) != [] %}
     where cast(_fivetran_start as date) >= cast('{{ first_date[0:10] }}' as date)
     {% endif %}
     {% endif %}

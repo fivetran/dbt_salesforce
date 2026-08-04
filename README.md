@@ -211,7 +211,7 @@ vars:
 ```
 
 #### Adjusting the Incremental Lookback Window
-Corrected or backfilled history records may occasionally arrive after the date they apply to has already been materialized. To pick these up without requiring a full refresh, the `salesforce__account_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history` models reprocess a small window of already-materialized dates on every incremental run, in addition to any new dates.
+Corrected or backfilled history records may occasionally arrive after the date they apply to has already been materialized. To pick these up without requiring a full refresh, the `salesforce__account_daily_history`, `salesforce__campaign_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history` models reprocess a small window of already-materialized dates on every incremental run, in addition to any new dates.
 
 To change the default lookback window, add the following variable to your `dbt_project.yml` file:
 

@@ -9,10 +9,10 @@ This release includes the following updates:
 | `stg_salesforce__account_history`<br>`stg_salesforce__contact_history`<br>`stg_salesforce__opportunity_history` | Removed model | | | BREAKING: Run `--full-refresh` on the three daily history models after upgrading.<br><br>`salesforce__account_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history` now read directly from the `salesforce_history` sources, matching the `salesforce__campaign_daily_history` pattern |
 
 ## Bug Fix
-- Fixes an issue in `salesforce__account_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history` where a record that remained current but hadn't changed recently could stop receiving new daily rows on incremental runs. Currently active records now continue to receive a daily row regardless of how recently they last changed. Requires `--full-refresh` to backfill any rows that were previously missing.
+- Fixes an issue in `salesforce__account_daily_history`, `salesforce__campaign_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history` where a record that remained current but hadn't changed recently could stop receiving new daily rows on incremental runs. Currently active records now continue to receive a daily row regardless of how recently they last changed. Requires `--full-refresh` to backfill any rows that were previously missing.
 
 ## Feature Update
-- Adds a configurable `lookback_window` variable (default 1 day) to `salesforce__account_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history`. Each incremental run now reprocesses the last `lookback_window` days in addition to any new dates, so a corrected or backfilled history record landing within that window is picked up automatically instead of requiring a `--full-refresh`.
+- Adds a configurable `lookback_window` variable (default 1 day) to `salesforce__account_daily_history`, `salesforce__campaign_daily_history`, `salesforce__contact_daily_history`, and `salesforce__opportunity_daily_history`. Each incremental run now reprocesses the last `lookback_window` days in addition to any new dates, so a corrected or backfilled history record landing within that window is picked up automatically instead of requiring a `--full-refresh`. Not yet configurable from the Quickstart UI.
 
 # dbt_salesforce v2.3.0
 

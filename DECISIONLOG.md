@@ -1,5 +1,5 @@
 ## History models' incremental boundary
-The `account`, `contact`, and `opportunity` daily history models compute a single shared boundary per run (`spine_start_date`) that drives both:
+The `account`, `campaign`, `contact`, and `opportunity` daily history models compute a single shared boundary per run (`spine_start_date`) that drives both:
 - Which spine dates get (re)generated: from `spine_start_date` through `current_date`, rather than the full configured history range.
 - Which source history records are pulled: any record whose `_fivetran_end` is on or after `spine_start_date`. This is deliberately `_fivetran_end`, not `_fivetran_start` -- a record's `_fivetran_start` doesn't change just because it's still open, but whether it's relevant to a given spine date is entirely determined by whether its validity (`_fivetran_end`) still covers that date.
 
