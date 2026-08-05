@@ -19,6 +19,8 @@ models:
         description: The time when the record was first created or modified in the source, based on a timestamp value in the source table that monotonically increases over time with data change or update.
       - name: _fivetran_end
         description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
+      - name: _fivetran_date
+        description: The date component of `_fivetran_start`, used to identify the single latest version of the record on any given source-reported day.
       - name: _fivetran_synced
         description: The time at which fivetran last synced this record.
       - name: history_unique_key
@@ -80,6 +82,8 @@ models:
         description: The time when the record was first created or modified in the source, based on a timestamp value in the source table that monotonically increases over time with data change or update.
       - name: _fivetran_end
         description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
+      - name: _fivetran_date
+        description: The date component of `_fivetran_start`, used to identify the single latest version of the record on any given source-reported day.
       - name: _fivetran_synced
         description: The time at which fivetran last synced this record.
       - name: history_unique_key
@@ -100,7 +104,7 @@ models:
         description: Details for the billing address of this account.
       - name: billing_street
         description: Street address for the billing address of this account.
-      - name: account_description 
+      - name: description
         description: Text description of the account.
       - name: industry
         description: An industry associated with this account.
@@ -114,7 +118,7 @@ models:
         description: The timestamp when the current user last viewed this record or list view. If this value is null, the user might have only accessed this record or list view (LastReferencedDate) but not viewed it.
       - name: master_record_id
         description: If this object was deleted as the result of a merge, this field contains the ID of the record that was kept. If this object was deleted for any other reason, or has not been deleted, the value is null.
-      - name: account_name
+      - name: name
         description: Required. Name of the account.
       - name: number_of_employees
         description: Number of employees working at the company represented by this account.
@@ -161,13 +165,15 @@ models:
         description: The time when the record was first created or modified in the source, based on a timestamp value in the source table that monotonically increases over time with data change or update.
       - name: _fivetran_end
         description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
+      - name: _fivetran_date
+        description: The date component of `_fivetran_start`, used to identify the single latest version of the record on any given source-reported day.
       - name: _fivetran_synced
         description: The time at which fivetran last synced this record.
       - name: history_unique_key
         description: Surrogate key hashed on `_fivetran_start` and `contact_id`.
       - name: account_id
         description: ID of the account that’s the parent of this contact.
-      - name: contact_description
+      - name: description
         description: A description of the contact. Label is Contact Description up to 32 KB.
       - name: email
         description: The contact’s email address.
@@ -212,7 +218,7 @@ models:
           This is a relationship field.
       - name: mobile_phone
         description: Contact’s mobile phone number.
-      - name: contact_name
+      - name: name
         description: Concatenation of FirstName, MiddleName, LastName, and Suffix up to 203 characters, including whitespaces.
       - name: owner_id
         description: >
@@ -245,6 +251,8 @@ models:
         description: The time when the record was first created or modified in the source, based on a timestamp value in the source table that monotonically increases over time with data change or update.
       - name: _fivetran_end
         description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
+      - name: _fivetran_date
+        description: The date component of `_fivetran_start`, used to identify the single latest version of the record on any given source-reported day.
       - name: _fivetran_synced
         description: The time at which fivetran last synced this record.
       - name: history_unique_key
@@ -259,7 +267,7 @@ models:
         description: Required. Date when the opportunity is expected to close.
       - name: created_date
         description: Date when the opportunity is was created.
-      - name: opportunity_description
+      - name: description
         description: Text description of the opportunity.
       - name: expected_revenue
         description: Read-only field that is equal to the product of the opportunity Amount field and the Probability.
@@ -293,7 +301,7 @@ models:
         description: The timestamp when the current user last viewed this record or list view. If this value is null, the user might have only accessed this record or list view (LastReferencedDate) but not viewed it.
       - name: lead_source
         description: Source of this opportunity, such as Advertisement or Trade Show.
-      - name: opportunity_name
+      - name: name
         description: Required. A name for this opportunity.
       - name: next_step
         description: Description of next task in closing opportunity.
