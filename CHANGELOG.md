@@ -1,3 +1,11 @@
+# dbt_salesforce v2.2.1
+
+[PR #87](https://github.com/fivetran/dbt_salesforce/pull/87) includes the following updates:
+
+## Feature Updates
+- Adds DuckDB as a supported destination.
+
+
 # dbt_salesforce v2.2.0
 
 [PR #81](https://github.com/fivetran/dbt_salesforce/pull/81) includes the following updates:
