@@ -5,7 +5,7 @@
         partition_by = {
             'field': 'date_day',
             'data_type': 'date'
-        } if target.type not in ['spark', 'databricks'] else ['date_day'],
+        } if target.type not in ['spark','databricks','duckdb'] else ['date_day'],
         unique_key = 'opportunity_day_id',
         incremental_strategy = 'insert_overwrite' if target.type in ('bigquery', 'spark', 'databricks') else 'delete+insert',
         file_format = 'delta',
