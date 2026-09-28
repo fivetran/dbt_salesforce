@@ -1,5 +1,5 @@
 name: 'salesforce_integration_tests'
-version: '2.4.1'
+version: '2.4.2'
 config-version: 2
 
 profile: 'integration_tests'
@@ -20,6 +20,7 @@ vars:
   salesforce:
     salesforce_schema: salesforce_integrations_tests_4
     salesforce_history_schema: salesforce_integrations_tests_4
+    # salesforce_naming_convention: 'snake_case' # additionally supported: lowercase and pascalcase
 
     salesforce_account_identifier: "sf_account_data"
     salesforce_campaign_identifier: "sf_campaign_data"
