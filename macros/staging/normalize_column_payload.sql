@@ -1,18 +1,18 @@
-{% macro normalize_column_payload(raw_payload) %}
+{% macro normalize_column_payload(full_payload, schema_name, table_name) %}
 {#
-    Normalizes the exhaustive column payload the quickstart runtime supplies for a table
-    (a dict of canonical_column_name -> current_column_name in the source table, covering
-    every column the connector produces, renamed or not) before it's consumed column-by-column
-    by `apply_column_payload`. Keys are lowercased so lookups are case-insensitive; values are
-    left untouched since a renamed column's actual spelling can be meaningfully cased.
+    The quickstart runtime supplies a single exhaustive payload for the whole package,
+    keyed by schema then table, covering every column each table's connector produces
+    (renamed or not): {schema: {table: {canonical_column_name: current_column_name}}}.
 
-    A canonical column absent from the payload means the column doesn't exist for this
-    customer -- `apply_column_payload` null-fills it using the datatype from the matching
-    `get_*_columns()` macro. There is no introspection fallback: an unset/empty payload means
-    every column is treated as absent.
+    This drills down to the flat canonical_name -> current_name dict for one table and
+    lowercases its keys so `apply_column_payload` can look columns up case-insensitively.
+    A table missing from the payload behaves like an empty payload: every column for that
+    table is treated as absent and null-filled.
 #}
+{%- set schema_payload = (full_payload or {}).get(schema_name | lower, {}) -%}
+{%- set table_payload = (schema_payload or {}).get(table_name | lower, {}) -%}
 {%- set normalized_payload = {} -%}
-{%- for original_name, current_name in (raw_payload or {}).items() -%}
+{%- for original_name, current_name in (table_payload or {}).items() -%}
     {%- do normalized_payload.update({original_name | lower: current_name}) -%}
 {%- endfor -%}
 {{ return(normalized_payload) }}

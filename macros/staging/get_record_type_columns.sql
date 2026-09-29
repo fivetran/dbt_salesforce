@@ -1,14 +1,18 @@
+
 {% macro get_record_type_columns() %}
 
 {% set columns = [
-    {"name": "description", "datatype": dbt.type_string(), "alias": "record_type_description"},
+    {"name": "_fivetran_deleted", "datatype": "boolean"},
+    {"name": "_fivetran_synced", "datatype": dbt.type_timestamp()},
+    {"name": "description", "datatype": dbt.type_string()},
     {"name": "developer_name", "datatype": dbt.type_string()},
-    {"name": "id", "datatype": dbt.type_string(), "alias": "record_type_id"},
+    {"name": "id", "datatype": dbt.type_string()},
     {"name": "is_active", "datatype": "boolean"},
-    {"name": "name", "datatype": dbt.type_string(), "alias": "record_type_name"},
+    {"name": "name", "datatype": dbt.type_string()},
     {"name": "namespace_prefix", "datatype": dbt.type_string()},
     {"name": "sobject_type", "datatype": dbt.type_string()}
 ] %}
+
 
 {{ return(columns) }}
 
