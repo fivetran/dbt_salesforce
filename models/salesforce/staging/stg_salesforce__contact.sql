@@ -1,5 +1,4 @@
 {% set contact_column_list = get_contact_columns() -%}
-{% set contact_dict = column_list_to_dict(contact_column_list) -%}
 {% set contact_relation = source('salesforce','contact') %}
 {% set contact_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), contact_relation.schema, contact_relation.identifier) %}
 
@@ -17,36 +16,36 @@ final as (
     
     select 
         cast(_fivetran_synced as {{ dbt.type_timestamp() }}) as _fivetran_synced,
-        {{ salesforce.cast_and_alias_column("id", contact_dict, alias="contact_id") }},
-        {{ salesforce.cast_and_alias_column("account_id", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("department", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("description", contact_dict, alias="contact_description") }},
-        {{ salesforce.cast_and_alias_column("email", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("first_name", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("home_phone", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("individual_id", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("is_deleted", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("last_activity_date", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("last_modified_by_id", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("last_modified_date", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("last_name", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("last_referenced_date", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("last_viewed_date", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("lead_source", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("mailing_city", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("mailing_country", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("mailing_country_code", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("mailing_postal_code", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("mailing_state", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("mailing_state_code", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("mailing_street", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("master_record_id", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("mobile_phone", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("name", contact_dict, alias="contact_name") }},
-        {{ salesforce.cast_and_alias_column("owner_id", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("phone", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("reports_to_id", contact_dict) }},
-        {{ salesforce.cast_and_alias_column("title", contact_dict) }}
+        id as contact_id,
+        account_id,
+        department,
+        description as contact_description,
+        email,
+        first_name,
+        home_phone,
+        individual_id,
+        is_deleted,
+        last_activity_date,
+        last_modified_by_id,
+        last_modified_date,
+        last_name,
+        last_referenced_date,
+        last_viewed_date,
+        lead_source,
+        mailing_city,
+        mailing_country,
+        mailing_country_code,
+        mailing_postal_code,
+        mailing_state,
+        mailing_state_code,
+        mailing_street,
+        master_record_id,
+        mobile_phone,
+        name as contact_name,
+        owner_id,
+        phone,
+        reports_to_id,
+        title
         
         {{ fivetran_utils.fill_pass_through_columns('salesforce__contact_pass_through_columns') }}
         
