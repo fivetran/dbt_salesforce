@@ -54,7 +54,7 @@ vars:
           __identifier__: sf_account_data
           _fivetran_synced: _fivetran_synced
           _fivetran_active: _fivetran_active
-          account_number: account_number
+          account_number: AccountNumber
           account_source: account_source
           annual_revenue: annual_revenue
           billing_city: billing_city
@@ -86,7 +86,6 @@ vars:
           shipping_state_code: shipping_state_code
           shipping_street: shipping_street
           type: type
-          website: website
         campaign:
           __identifier__: sf_campaign_data
           _fivetran_active: _fivetran_active
