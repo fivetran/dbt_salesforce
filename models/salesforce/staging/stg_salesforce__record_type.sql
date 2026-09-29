@@ -1,20 +1,9 @@
 --To disable this model, set the salesforce__record_type_enabled within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__record_type_enabled', True)) }}
 
-{% set record_type_column_list = get_record_type_columns() -%}
-{% set record_type_source = source('salesforce','record_type') %}
-{% set record_type_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), record_type_source.schema, 'record_type') %}
-{% set record_type_relation = api.Relation.create(database=record_type_source.database, schema=record_type_source.schema, identifier=record_type_column_payload.get('__identifier__', 'record_type')) %}
-
 with fields as (
 
-    select
-
-        {{
-            apply_column_payload(record_type_column_list, record_type_column_payload)
-        }}
-
-    from {{ record_type_relation }}
+    {{ salesforce.select_payload_fields('record_type', get_record_type_columns()) }}
 ),
 
 final as (

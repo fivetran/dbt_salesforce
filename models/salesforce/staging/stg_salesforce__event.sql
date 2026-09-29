@@ -1,19 +1,9 @@
 --To disable this model, set the salesforce__event_enabled variable within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__event_enabled', True)) }}
 
-{% set event_column_list = get_event_columns() -%}
-{% set event_source = source('salesforce','event') %}
-{% set event_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), event_source.schema, 'event') %}
-{% set event_relation = api.Relation.create(database=event_source.database, schema=event_source.schema, identifier=event_column_payload.get('__identifier__', 'event')) %}
-
 with fields as (
 
-    select
-        {{
-            apply_column_payload(event_column_list, event_column_payload)
-        }}
-
-    from {{ event_relation }}
+    {{ salesforce.select_payload_fields('event', get_event_columns()) }}
 ), 
 
 final as (

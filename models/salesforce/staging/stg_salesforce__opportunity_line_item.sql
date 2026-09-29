@@ -1,19 +1,9 @@
 --To disable this model, set the salesforce__opportunity_line_item_enabled variable within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__opportunity_line_item_enabled', True)) }}
 
-{% set opportunity_line_item_column_list = get_opportunity_line_item_columns() -%}
-{% set opportunity_line_item_source = source('salesforce','opportunity_line_item') %}
-{% set opportunity_line_item_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), opportunity_line_item_source.schema, 'opportunity_line_item') %}
-{% set opportunity_line_item_relation = api.Relation.create(database=opportunity_line_item_source.database, schema=opportunity_line_item_source.schema, identifier=opportunity_line_item_column_payload.get('__identifier__', 'opportunity_line_item')) %}
-
 with fields as (
 
-    select
-        {{
-            apply_column_payload(opportunity_line_item_column_list, opportunity_line_item_column_payload)
-        }}
-        
-    from {{ opportunity_line_item_relation }}
+    {{ salesforce.select_payload_fields('opportunity_line_item', get_opportunity_line_item_columns()) }}
 ), 
 
 final as (

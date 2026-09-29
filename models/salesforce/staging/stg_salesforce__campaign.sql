@@ -1,20 +1,9 @@
 --To disable this model, set the salesforce__campaign_enabled within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__campaign_enabled', True)) }}
 
-{% set campaign_column_list = get_campaign_columns() -%}
-{% set campaign_source = source('salesforce','campaign') %}
-{% set campaign_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), campaign_source.schema, 'campaign') %}
-{% set campaign_relation = api.Relation.create(database=campaign_source.database, schema=campaign_source.schema, identifier=campaign_column_payload.get('__identifier__', 'campaign')) %}
-
 with fields as (
 
-    select
-
-        {{
-            apply_column_payload(campaign_column_list, campaign_column_payload)
-        }}
-
-    from {{ campaign_relation }}
+    {{ salesforce.select_payload_fields('campaign', get_campaign_columns()) }}
 ),
 
 final as (

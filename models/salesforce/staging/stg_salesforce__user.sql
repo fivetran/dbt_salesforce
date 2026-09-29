@@ -1,17 +1,6 @@
-{% set user_column_list = get_user_columns() -%}
-{% set user_source = source('salesforce','user') %}
-{% set user_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), user_source.schema, 'user') %}
-{% set user_relation = api.Relation.create(database=user_source.database, schema=user_source.schema, identifier=user_column_payload.get('__identifier__', 'user')) %}
-
 with fields as (
 
-    select
-
-        {{
-            apply_column_payload(user_column_list, user_column_payload)
-        }}
-
-    from {{ user_relation }}
+    {{ salesforce.select_payload_fields('user', get_user_columns()) }}
 ), 
 
 final as (

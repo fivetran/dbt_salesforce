@@ -1,19 +1,9 @@
 --To disable this model, set the salesforce__order_enabled within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__order_enabled', True)) }}
 
-{% set order_column_list = get_order_columns() -%}
-{% set order_source = source('salesforce','order') %}
-{% set order_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), order_source.schema, 'order') %}
-{% set order_relation = api.Relation.create(database=order_source.database, schema=order_source.schema, identifier=order_column_payload.get('__identifier__', 'order')) %}
-
 with fields as (
 
-    select
-        {{
-            apply_column_payload(order_column_list, order_column_payload)
-        }}
-        
-    from {{ order_relation }}
+    {{ salesforce.select_payload_fields('order', get_order_columns()) }}
 ), 
 
 final as (

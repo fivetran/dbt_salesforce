@@ -1,19 +1,9 @@
 --To disable this model, set the salesforce__lead_enabled within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__lead_enabled', True)) }}
 
-{% set lead_column_list = get_lead_columns() -%}
-{% set lead_source = source('salesforce','lead') %}
-{% set lead_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), lead_source.schema, 'lead') %}
-{% set lead_relation = api.Relation.create(database=lead_source.database, schema=lead_source.schema, identifier=lead_column_payload.get('__identifier__', 'lead')) %}
-
 with fields as (
 
-    select
-        {{
-            apply_column_payload(lead_column_list, lead_column_payload)
-        }}
-        
-    from {{ lead_relation }}
+    {{ salesforce.select_payload_fields('lead', get_lead_columns()) }}
 ), 
 
 final as (

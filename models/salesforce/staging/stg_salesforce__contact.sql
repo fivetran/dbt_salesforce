@@ -1,16 +1,6 @@
-{% set contact_column_list = get_contact_columns() -%}
-{% set contact_source = source('salesforce','contact') %}
-{% set contact_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), contact_source.schema, 'contact') %}
-{% set contact_relation = api.Relation.create(database=contact_source.database, schema=contact_source.schema, identifier=contact_column_payload.get('__identifier__', 'contact')) %}
-
 with fields as (
 
-    select
-        {{
-            apply_column_payload(contact_column_list, contact_column_payload)
-        }}
-        
-    from {{ contact_relation }}
+    {{ salesforce.select_payload_fields('contact', get_contact_columns()) }}
 ), 
 
 final as (

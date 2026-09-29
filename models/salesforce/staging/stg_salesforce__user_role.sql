@@ -1,20 +1,9 @@
 --To disable this model, set the salesforce__user_role_enabled within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__user_role_enabled', True)) }}
 
-{% set user_role_column_list = get_user_role_columns() -%}
-{% set user_role_source = source('salesforce','user_role') %}
-{% set user_role_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), user_role_source.schema, 'user_role') %}
-{% set user_role_relation = api.Relation.create(database=user_role_source.database, schema=user_role_source.schema, identifier=user_role_column_payload.get('__identifier__', 'user_role')) %}
-
 with fields as (
 
-    select
-        
-        {{
-            apply_column_payload(user_role_column_list, user_role_column_payload)
-        }}
-
-    from {{ user_role_relation }}
+    {{ salesforce.select_payload_fields('user_role', get_user_role_columns()) }}
 ), 
 
 final as (

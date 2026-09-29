@@ -1,19 +1,9 @@
 --To disable this model, set the salesforce__task_enabled variable within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__task_enabled', True)) }}
 
-{% set task_column_list = get_task_columns() -%}
-{% set task_source = source('salesforce','task') %}
-{% set task_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), task_source.schema, 'task') %}
-{% set task_relation = api.Relation.create(database=task_source.database, schema=task_source.schema, identifier=task_column_payload.get('__identifier__', 'task')) %}
-
 with fields as (
 
-    select
-        {{
-            apply_column_payload(task_column_list, task_column_payload)
-        }}
-        
-    from {{ task_relation }}
+    {{ salesforce.select_payload_fields('task', get_task_columns()) }}
 ), 
 
 final as (

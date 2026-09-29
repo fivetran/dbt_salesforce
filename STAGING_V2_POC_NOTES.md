@@ -65,25 +65,26 @@ payload format change.
   replacement for `fivetran_utils.fill_staging_columns` (fed previously by
   `adapter.get_columns_in_relation`). Mirrors its exact branching and `alias` support: present
   columns pass through raw/uncast under their current name; absent columns get
-  `cast(null as datatype)`. Used only in the `fields` CTE.
+  `cast(null as datatype)`.
+- **`select_payload_fields(table_name, staging_columns)`** — the single call each model's
+  `fields` CTE makes. Wraps the source/payload/relation resolution below and
+  `apply_column_payload` together, emitting the complete `select ... from ...` body:
+  calls `source('salesforce', table_name)` for schema/database, calls
+  `normalize_column_payload` for this table's payload, rebuilds the relation via
+  `api.Relation.create()` using the payload's `__identifier__` (falling back to
+  `table_name` itself if absent), and generates the column list.
 
 ## Model shape
 
 Restored to look like every other Fivetran package's staging layer — `fields` then `final`,
-not the old salesforce-specific per-column macro/dict pattern:
+not the old salesforce-specific per-column macro/dict pattern. `get_account_columns()` is
+called inline in the macro call, since nothing else in the model needs the column list:
 
 ```sql
-{% set account_column_list = get_account_columns() -%}
-{% set account_source = source('salesforce','account') %}
-{% set account_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), account_source.schema, 'account') %}
-{% set account_relation = api.Relation.create(database=account_source.database, schema=account_source.schema, identifier=account_column_payload.get('__identifier__', 'account')) %}
-
 with fields as (
 
-    select
-        {{ apply_column_payload(account_column_list, account_column_payload) }}
+    {{ salesforce.select_payload_fields('account', get_account_columns()) }}
 
-    from {{ account_relation }}
 ),
 
 final as (
