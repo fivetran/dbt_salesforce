@@ -10,13 +10,13 @@ final as (
 
     select
         cast(_fivetran_synced as {{ dbt.type_timestamp() }}) as _fivetran_synced,
-        id as record_type_id,
-        description as record_type_description,
-        developer_name,
-        is_active,
-        name as record_type_name,
-        namespace_prefix,
-        sobject_type
+        cast(id as {{ dbt.type_string() }}) as record_type_id,
+        cast(description as {{ dbt.type_string() }}) as record_type_description,
+        cast(developer_name as {{ dbt.type_string() }}) as developer_name,
+        cast(is_active as {{ "boolean" }}) as is_active,
+        cast(name as {{ dbt.type_string() }}) as record_type_name,
+        cast(namespace_prefix as {{ dbt.type_string() }}) as namespace_prefix,
+        cast(sobject_type as {{ dbt.type_string() }}) as sobject_type
 
     from fields
     where not coalesce(_fivetran_deleted, false)

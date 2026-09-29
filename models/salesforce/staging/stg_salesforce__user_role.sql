@@ -11,13 +11,13 @@ final as (
     select
         _fivetran_deleted,
         cast(_fivetran_synced as {{ dbt.type_timestamp() }}) as _fivetran_synced,
-        developer_name,
-        id as user_role_id,
-        name as user_role_name,
-        opportunity_access_for_account_owner,
-        parent_role_id,
-        rollup_description
-        
+        cast(developer_name as {{ dbt.type_string() }}) as developer_name,
+        cast(id as {{ dbt.type_string() }}) as user_role_id,
+        cast(name as {{ dbt.type_string() }}) as user_role_name,
+        cast(opportunity_access_for_account_owner as {{ dbt.type_string() }}) as opportunity_access_for_account_owner,
+        cast(parent_role_id as {{ dbt.type_string() }}) as parent_role_id,
+        cast(rollup_description as {{ dbt.type_string() }}) as rollup_description
+
         {{ fivetran_utils.fill_pass_through_columns('salesforce__user_role_pass_through_columns') }}
         
     from fields

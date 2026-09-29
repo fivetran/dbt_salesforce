@@ -93,11 +93,10 @@ final as (
 
     select
         cast(_fivetran_synced as {{ dbt.type_timestamp() }}) as _fivetran_synced,
-        account_number,
-        ...
-        cast(annual_revenue as {{ dbt.type_numeric() }}) as annual_revenue,   -- only where a real type override is needed
-        description as account_description,                                   -- rename via plain `as`
-        id as account_id,
+        cast(account_number as {{ dbt.type_string() }}) as account_number,
+        cast(annual_revenue as {{ dbt.type_numeric() }}) as annual_revenue,
+        cast(description as {{ dbt.type_string() }}) as account_description,
+        cast(id as {{ dbt.type_string() }}) as account_id,
         ...
         {{ fivetran_utils.fill_pass_through_columns('salesforce__account_pass_through_columns') }}
 
@@ -110,15 +109,48 @@ from final
 where not coalesce(is_deleted, false)
 ```
 
-`final` is hand-written SQL, not a macro call per column — bare column, `x as alias`, or
-`cast(x as type) as alias` only where a real type override is needed (e.g. money fields cast
-to numeric). This is deliberately the same shape as e.g. `stg_google_ads__campaign_stats`:
-`fields` resolves/fills columns via a macro, `final` is plain SQL. `get_*_columns()` macros
-are unchanged from `main` except for the removed `add_renamed_columns()` call — they're still
+`final` is hand-written SQL, not a macro call per column, but **every column is explicitly
+cast** — not just the ones with a real type override. See "A real bug this caught" below for
+why that's load-bearing, not just defensive style. `get_*_columns()` macros are unchanged from
+`main` except for the removed `add_renamed_columns()` call — they're still
 the single source of truth for datatypes used to null-fill absent columns.
 
 `opportunity` keeps its extra `calculated` CTE (date-diff logic) unchanged, sourced from
 `final` as before.
+
+## A real bug this caught: `final` must cast every column, not just overridden ones
+
+An earlier version of this POC only cast a column in `final` when the original code had an
+explicit `datatype=` override (e.g. money fields cast to numeric), leaving everything else as
+a bare, uncast reference — reasoning it looked like `stg_google_ads__campaign_stats`'s `final`.
+That was wrong, and it broke on BigQuery, not DuckDB: `salesforce__campaign_performance`
+failed with `No matching signature for operator = for argument types: STRING, INT64` joining
+`stg_salesforce__campaign.campaign_id` (aliased from `id`, always a string) against
+`stg_salesforce__opportunity.campaign_id`.
+
+The old `coalesce_rename` macro this POC replaces **always** cast every column to its declared
+`get_*_columns()` datatype, override or not — that was never just style. `fields`
+(`apply_column_payload`, like `fill_staging_columns` before it) never casts a *present* column,
+only a null-filled *absent* one, so a present column's actual type is whatever the warehouse
+infers for the raw source column. BigQuery in particular will happily infer `INT64` for an
+all-null/all-blank column with no explicit schema (exactly what `sf_opportunity_data.csv`'s
+`campaign_id` column is in this seed) — silently swapped out from under a supposedly-`string`
+column the moment nothing casts it. The old code's unconditional per-column cast was a real
+safety net against this, not just defensive verbosity, and dropping it for "only cast where
+overridden" broke real data on real warehouse type-inference behavior that DuckDB's own
+(more permissive) inference didn't happen to reproduce.
+
+Fixed by making every column in every `final` an explicit `cast(col as {{ datatype }}) as
+alias_or_col` line, still hand-written plain SQL (no macro/dict lookup — that part of the
+"look like other packages" goal holds), just with no column skipped. Re-verified: all 24
+models (staging + downstream) build clean against DuckDB, and specifically
+`salesforce__campaign_performance` (the model that surfaced this) succeeds.
+
+**This also means the DuckDB-only verification used throughout this POC has a real blind
+spot**: DuckDB's type inference is more permissive than BigQuery's, so a bug like this one
+compiles and runs fine there and only surfaces on a stricter warehouse. Nothing else here was
+re-checked against BigQuery/Snowflake/Postgres before this was caught by chance during manual
+testing — see Open questions.
 
 ## What got deleted
 
@@ -190,12 +222,28 @@ nothing reads them anymore. The payload's `__identifier__` for each table (e.g.
 
 - **How the real quickstart runtime supplies this var per customer** — this POC hand-authors
   it in `integration_tests/dbt_project.yml`; production wiring is undesigned.
-- **`get_source_identifier` reads a var at yml-parse time** — this works today because dbt
-  evaluates source config Jinja with the same `var()`/project context as everything else, but
-  it does mean `identifier:` resolution now depends on `salesforce__column_payload` being
-  available at parse time for every invocation (`dbt docs generate`, `dbt source freshness`,
-  `dbt parse`), not just at model-build time. Worth confirming this holds up across whatever
-  actually invokes parsing in the real quickstart runtime's workflow.
+- **`get_source_identifier` in `identifier:` only works on dbt 2.0 (the Fusion-era engine,
+  tested here as `dbt-oss 2.0.5`), not real dbt-core.** Confirmed directly: real dbt-core
+  1.11.12 fails `identifier: "{{ salesforce.get_source_identifier('account') }}"` with
+  `Compilation Error: Could not render ...: 'salesforce' is undefined` — reproduced with the
+  actual `dbt-core==1.11.12` package, not just inferred. dbt-core's YAML property-file Jinja
+  rendering only exposes built-in globals (`var`, `env_var`, `target`, ...), never custom
+  package macros, even self-namespaced ones; dbt 2.0 evidently renders source config with the
+  full macro context available. **This POC's `identifier:` design is dbt-2.0-only by explicit
+  choice** (see conversation) — it will not work as-is on any dbt-core 1.x project, which is
+  what real customers run today. If this ships before dbt-core parity (or for a dbt-core
+  target), `identifier:` needs to go back to a plain `var()`-based per-table default (as it was
+  before this POC), with the payload's `__identifier__` handled as a runtime override inside
+  `select_payload_fields` (via `api.Relation.create()`) instead of at the yml level.
+- **The payload's top-level schema key is a manual sync point.** Hit this directly switching
+  the integration_tests target from DuckDB to BigQuery: `salesforce_schema` was changed to
+  `zz_dbt_catherine` without updating `salesforce__column_payload`'s outer key (still
+  `salesforce_integrations_tests_4`), so every lookup missed and every identifier silently fell
+  back to the literal table name — the exact same `Table ... was not found` failure as the
+  dbt-core/dbt-2.0 issue above, but from stale config instead of a rendering limitation. Not a
+  bug in the resolution logic, but a real footgun for a hand-maintained fixture; a real
+  quickstart-supplied payload wouldn't have this problem since it would always be keyed to
+  wherever it's actually deploying.
 - **Multi-org/union** — the schema-keyed structure should extend to per-`source_relation`
   payloads, but no union model was built or tested here (this package doesn't currently union
   multiple Salesforce orgs in staging).

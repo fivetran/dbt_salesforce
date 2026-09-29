@@ -18,8 +18,8 @@ vars:
   # salesforce__opportunity_history_enabled: true # @docs-include
 
   salesforce:
-    salesforce_schema: salesforce_integrations_tests_4
-    salesforce_history_schema: salesforce_integrations_tests_4
+    salesforce_schema: zz_dbt_catherine #salesforce_integrations_tests_4
+    salesforce_history_schema: zz_dbt_catherine #salesforce_integrations_tests_4
 
     # Staging table identifiers now come from salesforce__column_payload's __identifier__
     # field (see get_source_identifier), not per-table vars -- see the payload below.
@@ -37,7 +37,7 @@ vars:
     ## spelling (Description__c, see sf_opportunity_data.csv) to prove the rename-without-
     ## introspection path, not just the identity-mapping path.
     salesforce__column_payload:
-      salesforce_integrations_tests_4:
+      zz_dbt_catherine:
         account:
           __identifier__: sf_account_data
           _fivetran_synced: _fivetran_synced
