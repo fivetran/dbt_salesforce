@@ -5,15 +5,8 @@ sources:
     schema: "{{ var('salesforce_schema', 'salesforce') }}" # you will need to customize if your schema name is not salesforce
     database: "{% if target.type != 'spark'%}{{ var('salesforce_database', target.database) }}{% endif %}"
     loader: fivetran
-    config:
-      loaded_at_field: _fivetran_synced
-      freshness:
-        warn_after: {count: 24, period: hour}
-        error_after: {count: 48, period: hour}
-
     tables:
       - name: account
-        identifier: "{{ var('salesforce_account_identifier', 'account')}}"
         description: Represents an individual account, which is an organization or person involved with your business (such as customers, competitors, and partners).
         columns:
         - name: id
@@ -118,7 +111,6 @@ sources:
           description: The website of this account.
 
       - name: opportunity
-        identifier: "{{ var('salesforce_opportunity_identifier', 'opportunity')}}"
         description: Represents an opportunity, which is a sale or pending deal.
         columns:
         - name: id
@@ -197,9 +189,6 @@ sources:
           description: Type of opportunity. For example, Existing Business or New Business.
 
       - name: user
-        identifier: "{{ var('salesforce_user_identifier', 'user')}}"
-        config:
-          freshness: null
         description: Represents a user in your organization.
         columns:
         - name: id
@@ -336,9 +325,6 @@ sources:
           description: The category of user license.
 
       - name: user_role
-        identifier: "{{ var('salesforce_user_role_identifier', 'user_role')}}"
-        config:
-          freshness: null
         description: Represents a user role in your organization.
         columns:
         - name: id
@@ -372,9 +358,6 @@ sources:
 
 
       - name: contact
-        identifier: "{{ var('salesforce_contact_identifier', 'contact')}}"
-        config:
-          freshness: null
         description: Represents a contact, which is a person associated with an account.
         columns:
         - name: id
@@ -514,9 +497,6 @@ sources:
           description: Title
 
       - name: event
-        identifier: "{{ var('salesforce_event_identifier', 'event')}}"
-        config:
-          freshness: null
         description: Represents an event in the calendar. In the user interface, event and task records are collectively referred to as activities.
         columns:
         - name: id
@@ -663,9 +643,6 @@ sources:
             The WhoId represents a human such as a lead or a contact. WhoIds are polymorphic. Polymorphic means a WhoId is equivalent to a contact’s ID or a lead’s ID. The label is Name ID.
         
       - name: lead
-        identifier: "{{ var('salesforce_lead_identifier', 'lead')}}"
-        config:
-          freshness: null
         description: Represents a prospect or lead.
         columns:
         - name: id
@@ -778,9 +755,6 @@ sources:
           description: Website for the lead.
         
       - name: opportunity_line_item
-        identifier: "{{ var('salesforce_opportunity_line_item_identifier', 'opportunity_line_item')}}"
-        config:
-          freshness: null
         description: Represents an opportunity line item, which is a member of the list of Product2 products associated with an Opportunity.
         columns:
         - name: id
@@ -859,11 +833,6 @@ sources:
             If you specify Discount and Quantity, this field or TotalPrice is required.
         
       - name: order
-        identifier: >
-          {% if target.type == 'snowflake' %}{{ var('salesforce_order_identifier', '"ORDER"') }}
-          {% else %}{{ var('salesforce_order_identifier', 'order') }}{% endif %}
-        config:
-          freshness: null
         description: Represents an order associated with a contract or an account.
         columns:
         - name: id
@@ -968,9 +937,6 @@ sources:
           description: If you want to show more information about your order, you can add custom values to the Type picklist. By default, the Type field doesn't perform any actions or show any values.
         
       - name: product_2
-        identifier: "{{ var('salesforce_product_2_identifier', 'product_2')}}"
-        config:
-          freshness: null
         description: Represents a product that your company sells.
         columns:
         - name: id
@@ -1033,9 +999,6 @@ sources:
           description: System Modstamp 
         
       - name: task
-        identifier: "{{ var('salesforce_task_identifier', 'task')}}"
-        config:
-          freshness: null
         description: Represents a business activity such as making a phone call or other to-do items. In the user interface, Task and Event records are collectively referred to as activities.
         columns:
         - name: id
@@ -1130,7 +1093,6 @@ sources:
           description: The WhoId represents a human such as a lead or a contact. WhoIds are polymorphic. Polymorphic means a WhoId is equivalent to a contact’s ID or a lead’s ID. The label is Name ID. If Shared Activities is enabled, the value of this field is the ID of the related lead or primary contact. If you add, update, or remove the WhoId field, you might encounter problems with triggers, workflows, and data validation rules that are associated with the record. The label is Name ID. Beginning in API version 37.0, if the contact or lead ID in the WhoId field is not in the TaskWhoIds list, no error occurs and the ID is added to the TaskWhoIds as the primary WhoId. If WhoId is set to null, an arbitrary ID from the existing TaskWhoIds list is promoted to the primary position. 
 
       - name: campaign
-        identifier: "{{ var('salesforce_campaign_identifier', 'campaign')}}"
         description: Represents a marketing campaign, such as a direct mail promotion, webinar, or trade show.
         columns:
         - name: id
@@ -1179,7 +1141,6 @@ sources:
           description: Type of campaign, such as Direct Mail, Email, or Webinar.
 
       - name: campaign_member
-        identifier: "{{ var('salesforce_campaign_member_identifier', 'campaign_member')}}"
         description: Represents the relationship between a campaign and either a lead or a contact.
         columns:
         - name: id
@@ -1218,9 +1179,6 @@ sources:
           description: The status of the campaign member, such as Sent or Responded.
 
       - name: record_type
-        identifier: "{{ var('salesforce_record_type_identifier', 'record_type')}}"
-        config:
-          freshness: null
         description: Represents a record type, which allows you to offer different business processes, picklist values, and page layouts to different users.
         columns:
         - name: id
