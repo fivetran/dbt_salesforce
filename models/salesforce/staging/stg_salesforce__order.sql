@@ -2,8 +2,9 @@
 {{ config(enabled=var('salesforce__order_enabled', True)) }}
 
 {% set order_column_list = get_order_columns() -%}
-{% set order_relation = source('salesforce','order') %}
-{% set order_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), order_relation.schema, order_relation.identifier) %}
+{% set order_source = source('salesforce','order') %}
+{% set order_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), order_source.schema, 'order') %}
+{% set order_relation = api.Relation.create(database=order_source.database, schema=order_source.schema, identifier=order_column_payload.get('__identifier__', 'order')) %}
 
 with fields as (
 

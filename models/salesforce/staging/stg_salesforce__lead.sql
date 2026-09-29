@@ -2,8 +2,9 @@
 {{ config(enabled=var('salesforce__lead_enabled', True)) }}
 
 {% set lead_column_list = get_lead_columns() -%}
-{% set lead_relation = source('salesforce','lead') %}
-{% set lead_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), lead_relation.schema, lead_relation.identifier) %}
+{% set lead_source = source('salesforce','lead') %}
+{% set lead_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), lead_source.schema, 'lead') %}
+{% set lead_relation = api.Relation.create(database=lead_source.database, schema=lead_source.schema, identifier=lead_column_payload.get('__identifier__', 'lead')) %}
 
 with fields as (
 

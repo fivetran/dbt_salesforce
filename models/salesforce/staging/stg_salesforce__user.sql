@@ -1,6 +1,7 @@
 {% set user_column_list = get_user_columns() -%}
-{% set user_relation = source('salesforce','user') %}
-{% set user_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), user_relation.schema, user_relation.identifier) %}
+{% set user_source = source('salesforce','user') %}
+{% set user_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), user_source.schema, 'user') %}
+{% set user_relation = api.Relation.create(database=user_source.database, schema=user_source.schema, identifier=user_column_payload.get('__identifier__', 'user')) %}
 
 with fields as (
 

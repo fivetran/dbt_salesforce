@@ -2,8 +2,9 @@
 {{ config(enabled=var('salesforce__product_2_enabled', True)) }}
 
 {% set product_2_column_list = get_product_2_columns() -%}
-{% set product_2_relation = source('salesforce','product_2') %}
-{% set product_2_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), product_2_relation.schema, product_2_relation.identifier) %}
+{% set product_2_source = source('salesforce','product_2') %}
+{% set product_2_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), product_2_source.schema, 'product_2') %}
+{% set product_2_relation = api.Relation.create(database=product_2_source.database, schema=product_2_source.schema, identifier=product_2_column_payload.get('__identifier__', 'product_2')) %}
 
 with fields as (
 

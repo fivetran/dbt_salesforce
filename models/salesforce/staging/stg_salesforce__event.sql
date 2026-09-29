@@ -2,8 +2,9 @@
 {{ config(enabled=var('salesforce__event_enabled', True)) }}
 
 {% set event_column_list = get_event_columns() -%}
-{% set event_relation = source('salesforce','event') %}
-{% set event_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), event_relation.schema, event_relation.identifier) %}
+{% set event_source = source('salesforce','event') %}
+{% set event_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), event_source.schema, 'event') %}
+{% set event_relation = api.Relation.create(database=event_source.database, schema=event_source.schema, identifier=event_column_payload.get('__identifier__', 'event')) %}
 
 with fields as (
 

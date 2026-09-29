@@ -2,8 +2,9 @@
 {{ config(enabled=var('salesforce__task_enabled', True)) }}
 
 {% set task_column_list = get_task_columns() -%}
-{% set task_relation = source('salesforce','task') %}
-{% set task_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), task_relation.schema, task_relation.identifier) %}
+{% set task_source = source('salesforce','task') %}
+{% set task_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), task_source.schema, 'task') %}
+{% set task_relation = api.Relation.create(database=task_source.database, schema=task_source.schema, identifier=task_column_payload.get('__identifier__', 'task')) %}
 
 with fields as (
 

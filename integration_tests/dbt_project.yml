@@ -50,7 +50,8 @@ vars:
     ## introspection path, not just the identity-mapping path.
     salesforce__column_payload:
       salesforce_integrations_tests_4:
-        sf_account_data:
+        account:
+          __identifier__: sf_account_data
           _fivetran_synced: _fivetran_synced
           _fivetran_active: _fivetran_active
           account_number: account_number
@@ -86,7 +87,8 @@ vars:
           shipping_street: shipping_street
           type: type
           website: website
-        sf_campaign_data:
+        campaign:
+          __identifier__: sf_campaign_data
           _fivetran_active: _fivetran_active
           _fivetran_synced: _fivetran_synced
           actual_cost: actual_cost
@@ -109,7 +111,8 @@ vars:
           start_date: start_date
           status: status
           type: type
-        sf_campaign_member_data:
+        campaign_member:
+          __identifier__: sf_campaign_member_data
           _fivetran_active: _fivetran_active
           _fivetran_synced: _fivetran_synced
           account_id: account_id
@@ -127,7 +130,8 @@ vars:
           lead_or_contact_id: lead_or_contact_id
           lead_or_contact_owner_id: lead_or_contact_owner_id
           status: status
-        sf_contact_data:
+        contact:
+          __identifier__: sf_contact_data
           _fivetran_synced: _fivetran_synced
           _fivetran_active: _fivetran_active
           account_id: account_id
@@ -160,7 +164,8 @@ vars:
           phone: phone
           reports_to_id: reports_to_id
           title: title
-        sf_event_data:
+        event:
+          __identifier__: sf_event_data
           _fivetran_synced: _fivetran_synced
           _fivetran_active: _fivetran_active
           account_id: account_id
@@ -190,7 +195,8 @@ vars:
           what_id: what_id
           who_count: who_count
           who_id: who_id
-        sf_lead_data:
+        lead:
+          __identifier__: sf_lead_data
           _fivetran_synced: _fivetran_synced
           _fivetran_active: _fivetran_active
           annual_revenue: annual_revenue
@@ -236,7 +242,8 @@ vars:
           street: street
           title: title
           website: website
-        sf_opportunity_data:
+        opportunity:
+          __identifier__: sf_opportunity_data
           _fivetran_synced: _fivetran_synced
           _fivetran_active: _fivetran_active
           account_id: account_id
@@ -270,7 +277,8 @@ vars:
           stage_name: stage_name
           synced_quote_id: synced_quote_id
           type: type
-        sf_opportunity_line_item_data:
+        opportunity_line_item:
+          __identifier__: sf_opportunity_line_item_data
           _fivetran_synced: _fivetran_synced
           _fivetran_active: _fivetran_active
           created_by_id: created_by_id
@@ -297,7 +305,8 @@ vars:
           sort_order: sort_order
           total_price: total_price
           unit_price: unit_price
-        sf_order_data:
+        order:
+          __identifier__: sf_order_data
           _fivetran_synced: _fivetran_synced
           _fivetran_active: _fivetran_active
           account_id: account_id
@@ -336,7 +345,8 @@ vars:
           status: status
           total_amount: total_amount
           type: type
-        sf_product_2_data:
+        product_2:
+          __identifier__: sf_product_2_data
           _fivetran_synced: _fivetran_synced
           _fivetran_active: _fivetran_active
           created_by_id: created_by_id
@@ -363,7 +373,8 @@ vars:
           record_type_id: record_type_id
           revenue_installment_period: revenue_installment_period
           revenue_schedule_type: revenue_schedule_type
-        sf_record_type_data:
+        record_type:
+          __identifier__: sf_record_type_data
           _fivetran_deleted: _fivetran_deleted
           _fivetran_synced: _fivetran_synced
           description: description
@@ -373,7 +384,8 @@ vars:
           name: name
           namespace_prefix: namespace_prefix
           sobject_type: sobject_type
-        sf_task_data:
+        task:
+          __identifier__: sf_task_data
           _fivetran_synced: _fivetran_synced
           _fivetran_active: _fivetran_active
           account_id: account_id
@@ -404,7 +416,8 @@ vars:
           what_id: what_id
           who_count: who_count
           who_id: who_id
-        sf_user_data:
+        user:
+          __identifier__: sf_user_data
           _fivetran_deleted: _fivetran_deleted
           _fivetran_active: _fivetran_active
           _fivetran_synced: _fivetran_synced
@@ -436,7 +449,8 @@ vars:
           user_role_id: user_role_id
           user_type: user_type
           username: username
-        sf_user_role_data:
+        user_role:
+          __identifier__: sf_user_role_data
           _fivetran_deleted: _fivetran_deleted
           _fivetran_active: _fivetran_active
           _fivetran_synced: _fivetran_synced

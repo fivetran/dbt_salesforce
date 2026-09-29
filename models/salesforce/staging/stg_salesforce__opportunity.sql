@@ -1,6 +1,7 @@
 {% set opportunity_column_list = get_opportunity_columns() -%}
-{% set opportunity_relation = source('salesforce','opportunity') %}
-{% set opportunity_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), opportunity_relation.schema, opportunity_relation.identifier) %}
+{% set opportunity_source = source('salesforce','opportunity') %}
+{% set opportunity_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), opportunity_source.schema, 'opportunity') %}
+{% set opportunity_relation = api.Relation.create(database=opportunity_source.database, schema=opportunity_source.schema, identifier=opportunity_column_payload.get('__identifier__', 'opportunity')) %}
 
 with fields as (
 

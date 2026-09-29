@@ -2,8 +2,9 @@
 {{ config(enabled=var('salesforce__user_role_enabled', True)) }}
 
 {% set user_role_column_list = get_user_role_columns() -%}
-{% set user_role_relation = source('salesforce','user_role') %}
-{% set user_role_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), user_role_relation.schema, user_role_relation.identifier) %}
+{% set user_role_source = source('salesforce','user_role') %}
+{% set user_role_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), user_role_source.schema, 'user_role') %}
+{% set user_role_relation = api.Relation.create(database=user_role_source.database, schema=user_role_source.schema, identifier=user_role_column_payload.get('__identifier__', 'user_role')) %}
 
 with fields as (
 

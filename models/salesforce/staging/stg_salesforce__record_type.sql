@@ -2,8 +2,9 @@
 {{ config(enabled=var('salesforce__record_type_enabled', True)) }}
 
 {% set record_type_column_list = get_record_type_columns() -%}
-{% set record_type_relation = source('salesforce','record_type') %}
-{% set record_type_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), record_type_relation.schema, record_type_relation.identifier) %}
+{% set record_type_source = source('salesforce','record_type') %}
+{% set record_type_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), record_type_source.schema, 'record_type') %}
+{% set record_type_relation = api.Relation.create(database=record_type_source.database, schema=record_type_source.schema, identifier=record_type_column_payload.get('__identifier__', 'record_type')) %}
 
 with fields as (
 

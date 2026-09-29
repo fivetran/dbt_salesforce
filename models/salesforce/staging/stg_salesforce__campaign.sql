@@ -2,8 +2,9 @@
 {{ config(enabled=var('salesforce__campaign_enabled', True)) }}
 
 {% set campaign_column_list = get_campaign_columns() -%}
-{% set campaign_relation = source('salesforce','campaign') %}
-{% set campaign_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), campaign_relation.schema, campaign_relation.identifier) %}
+{% set campaign_source = source('salesforce','campaign') %}
+{% set campaign_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), campaign_source.schema, 'campaign') %}
+{% set campaign_relation = api.Relation.create(database=campaign_source.database, schema=campaign_source.schema, identifier=campaign_column_payload.get('__identifier__', 'campaign')) %}
 
 with fields as (
 

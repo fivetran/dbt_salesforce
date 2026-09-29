@@ -1,6 +1,7 @@
 {% set account_column_list = get_account_columns() -%}
-{% set account_relation = source('salesforce','account') %}
-{% set account_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), account_relation.schema, account_relation.identifier) %}
+{% set account_source = source('salesforce','account') %}
+{% set account_column_payload = normalize_column_payload(var('salesforce__column_payload', {}), account_source.schema, 'account') %}
+{% set account_relation = api.Relation.create(database=account_source.database, schema=account_source.schema, identifier=account_column_payload.get('__identifier__', 'account')) %}
 
 with fields as (
 
