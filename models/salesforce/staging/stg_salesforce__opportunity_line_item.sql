@@ -1,55 +1,20 @@
 --To disable this model, set the salesforce__opportunity_line_item_enabled variable within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__opportunity_line_item_enabled', True)) }}
 
-{% set opportunity_line_item_column_list = get_opportunity_line_item_columns() -%}
-{% set opportunity_line_item_dict = column_list_to_dict(opportunity_line_item_column_list) -%}
+{% set opportunity_line_item_column_list = get_opportunity_line_item_columns() %}
+{% set opportunity_line_item_column_payload = normalize_column_payload(var('salesforce__opportunity_line_item_column_payload', {})) %}
 
-with fields as (
+with final as (
 
     select
-        {{
-            fivetran_utils.fill_staging_columns(
-                source_columns=adapter.get_columns_in_relation(source('salesforce','opportunity_line_item')),
-                staging_columns=opportunity_line_item_column_list
-            )
-        }}
-        
-    from {{ source('salesforce','opportunity_line_item') }}
-), 
-
-final as (
-    
-    select 
         cast(_fivetran_synced as {{ dbt.type_timestamp() }}) as _fivetran_synced,
-        {{ salesforce.coalesce_rename("id", opportunity_line_item_dict, alias="opportunity_line_item_id") }},
-        {{ salesforce.coalesce_rename("created_by_id", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("created_date", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("description", opportunity_line_item_dict, alias="opportunity_line_item_description") }},
-        {{ salesforce.coalesce_rename("discount", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("has_quantity_schedule", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("has_revenue_schedule", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("has_schedule", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("is_deleted", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("last_modified_by_id", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("last_modified_date", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("last_referenced_date", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("last_viewed_date", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("list_price", opportunity_line_item_dict, datatype=dbt.type_numeric()) }},
-        {{ salesforce.coalesce_rename("name", opportunity_line_item_dict, alias="opportunity_line_item_name") }},
-        {{ salesforce.coalesce_rename("opportunity_id", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("pricebook_entry_id", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("product_2_id", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("product_code", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("quantity", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("service_date", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("sort_order", opportunity_line_item_dict) }},
-        {{ salesforce.coalesce_rename("total_price", opportunity_line_item_dict, datatype=dbt.type_numeric()) }},
-        {{ salesforce.coalesce_rename("unit_price", opportunity_line_item_dict, datatype=dbt.type_numeric()) }}
-        
+        {{ apply_column_payload(opportunity_line_item_column_list, opportunity_line_item_column_payload) }}
+
         {{ fivetran_utils.fill_pass_through_columns('salesforce__opportunity_line_item_pass_through_columns') }}
-        
-    from fields
+
+    from {{ source('salesforce','opportunity_line_item') }}
     where coalesce(_fivetran_active, true)
+
 )
 
 select *

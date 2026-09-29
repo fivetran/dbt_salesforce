@@ -1,65 +1,23 @@
-{% set opportunity_column_list = get_opportunity_columns() -%}
-{% set opportunity_dict = column_list_to_dict(opportunity_column_list) -%}
+{% set opportunity_column_list = get_opportunity_columns() %}
+{% set opportunity_column_payload = normalize_column_payload(var('salesforce__opportunity_column_payload', {})) %}
 
-with fields as (
+with final as (
 
     select
 
-        {{
-            fivetran_utils.fill_staging_columns(
-                source_columns=adapter.get_columns_in_relation(source('salesforce','opportunity')),
-                staging_columns=opportunity_column_list
-            )
-        }}
-
-    from {{ source('salesforce','opportunity') }}
-), 
-
-final as (
-    
-    select 
         cast(_fivetran_synced as {{ dbt.type_timestamp() }}) as _fivetran_synced,
-        {{ salesforce.coalesce_rename("account_id", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("amount", opportunity_dict, datatype=dbt.type_numeric()) }},
-        {{ salesforce.coalesce_rename("campaign_id", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("close_date", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("created_date", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("description", opportunity_dict, alias="opportunity_description") }},
-        {{ salesforce.coalesce_rename("expected_revenue", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("fiscal", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("fiscal_quarter", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("fiscal_year", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("forecast_category", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("forecast_category_name", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("has_open_activity", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("has_opportunity_line_item", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("has_overdue_task", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("id", opportunity_dict, alias="opportunity_id") }},
-        {{ salesforce.coalesce_rename("is_closed", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("is_deleted", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("is_won", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("last_activity_date", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("last_referenced_date", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("last_viewed_date", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("lead_source", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("name", opportunity_dict, alias="opportunity_name") }},
-        {{ salesforce.coalesce_rename("next_step", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("owner_id", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("probability", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("record_type_id", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("stage_name", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("synced_quote_id", opportunity_dict) }},
-        {{ salesforce.coalesce_rename("type", opportunity_dict) }}
-        
+        {{ apply_column_payload(opportunity_column_list, opportunity_column_payload) }}
+
         {{ fivetran_utils.fill_pass_through_columns('salesforce__opportunity_pass_through_columns') }}
 
-    from fields
+    from {{ source('salesforce','opportunity') }}
     where coalesce(_fivetran_active, true)
-), 
+
+),
 
 calculated as (
-        
-    select 
+
+    select
         *,
         created_date >= {{ dbt.date_trunc('month', dbt.current_timestamp_backcompat()) }} as is_created_this_month,
         created_date >= {{ dbt.date_trunc('quarter', dbt.current_timestamp_backcompat()) }} as is_created_this_quarter,
@@ -70,6 +28,6 @@ calculated as (
     from final
 )
 
-select * 
+select *
 from calculated
 where not coalesce(is_deleted, false)
