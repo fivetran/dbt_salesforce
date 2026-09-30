@@ -174,10 +174,13 @@ table. Re-verified: all 24 models build clean against DuckDB, and specifically
 
 **This also means the DuckDB-only verification used throughout this POC has a real blind
 spot**: DuckDB's type inference is more permissive than BigQuery's, so a bug like this one
-compiles and runs fine there and only surfaces on a stricter warehouse. This targeted-casting
-list was derived by reading every downstream model's joins/coalesces by hand, not by
-re-running against BigQuery — a genuinely new join or coalesce added later (or one this audit
-missed) would reintroduce the same class of bug silently. See Open questions.
+compiles and runs fine there and only surfaces on a stricter warehouse. See Open questions.
+
+This targeted-casting list was derived once, by hand, reading every downstream model's
+joins/coalesces — it isn't enforced, so a new downstream join added later needs its join
+column added here too, the same way the old `coalesce_rename` pattern already required
+per-column setup for every new field. Treated as ordinary package maintenance (keep the cast
+list in sync when adding a join), not a gap to close.
 
 ## What got deleted
 
@@ -249,11 +252,6 @@ nothing reads them anymore. The payload's `__identifier__` for each table (e.g.
 
 - **How the real quickstart runtime supplies this var per customer** — this POC hand-authors
   it in `integration_tests/dbt_project.yml`; production wiring is undesigned.
-- **The join/coalesce cast list is a manual, point-in-time audit, not an enforced invariant** —
-  it was derived by reading every downstream model's `join`/`coalesce` calls once. A new
-  downstream join added later, or an existing one this audit missed, would silently reintroduce
-  the same class of bug that broke `salesforce__campaign_performance` on BigQuery. There's
-  nothing here that would catch that automatically.
 - **`get_source_identifier` in `identifier:` only works on dbt 2.0 (the Fusion-era engine,
   tested here as `dbt-oss 2.0.5`), not real dbt-core.** Confirmed directly: real dbt-core
   1.11.12 fails `identifier: "{{ salesforce.get_source_identifier('account') }}"` with
