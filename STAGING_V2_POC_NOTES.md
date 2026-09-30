@@ -285,9 +285,14 @@ this fixture's history seeds; removed from the payload so they null-fill instead
   `Description__c`, mapped via the payload — resolves correctly
   (`fields`: `Description__c as description`; `final`: `description as opportunity_description`).
 - **Rename, camelCase (the actual historical case)**: `sf_account_data.csv`'s `account_number`
-  renamed to `AccountNumber` — same result.
+  renamed to `AccountNumber` — same result. The seed's first row (`account_name = 'Acme Test
+  Corp'`) carries a real, visible value (`ACC-100234`) in the renamed field rather than blank,
+  and a few realistic peer values (`industry`, `type`, `annual_revenue`, `description`) so the
+  rename is actually visible in query output, not just confirmable by reading compiled SQL.
 - **Missing column**: `website` dropped entirely from `sf_account_data.csv` and its payload
-  entry — null-fills correctly (`cast(null as TEXT) as website`).
+  entry — null-fills correctly (`cast(null as TEXT) as website`). Against that same fully-
+  populated demo row, `website` comes back `NULL` while every other field has a real value —
+  visibly, not just theoretically, the missing-column column.
 - **Isolated macro unit test** (via `dbt run-operation`): confirmed null-fill and
   case-insensitive payload-key matching independent of any seed data.
 - **Identifier resolution**: confirmed `source('salesforce','account')` itself (not a
