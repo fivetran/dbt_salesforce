@@ -93,9 +93,9 @@ final as (
 
     select
         cast(_fivetran_synced as {{ dbt.type_timestamp() }}) as _fivetran_synced,
-        cast(account_number as {{ dbt.type_string() }}) as account_number,
+        account_number,
         cast(annual_revenue as {{ dbt.type_numeric() }}) as annual_revenue,
-        cast(description as {{ dbt.type_string() }}) as account_description,
+        description as account_description,
         cast(id as {{ dbt.type_string() }}) as account_id,
         ...
         {{ fivetran_utils.fill_pass_through_columns('salesforce__account_pass_through_columns') }}
@@ -109,48 +109,75 @@ from final
 where not coalesce(is_deleted, false)
 ```
 
-`final` is hand-written SQL, not a macro call per column, but **every column is explicitly
-cast** — not just the ones with a real type override. See "A real bug this caught" below for
-why that's load-bearing, not just defensive style. `get_*_columns()` macros are unchanged from
-`main` except for the removed `add_renamed_columns()` call — they're still
-the single source of truth for datatypes used to null-fill absent columns.
+`final` is hand-written SQL, not a macro call per column, and only casts a column when it has
+to: a genuine `datatype=` override from the original code (e.g. money fields cast to numeric,
+`annual_revenue` above), or the column is used downstream in a join or a `coalesce()` against
+another table (`account_id` above — see "A real bug this caught" for why that specific case is
+load-bearing). Everything else is a bare reference or `col as alias`. `get_*_columns()` macros
+are unchanged from `main` except for the removed `add_renamed_columns()` call and switching
+every literal `"boolean"` datatype to `dbt.type_boolean()` for consistency — they're still the
+single source of truth for datatypes used to null-fill absent columns.
 
 `opportunity` keeps its extra `calculated` CTE (date-diff logic) unchanged, sourced from
 `final` as before.
 
-## A real bug this caught: `final` must cast every column, not just overridden ones
+## A real bug this caught: `final` must cast join/coalesce columns, not just overridden ones
 
 An earlier version of this POC only cast a column in `final` when the original code had an
-explicit `datatype=` override (e.g. money fields cast to numeric), leaving everything else as
-a bare, uncast reference — reasoning it looked like `stg_google_ads__campaign_stats`'s `final`.
-That was wrong, and it broke on BigQuery, not DuckDB: `salesforce__campaign_performance`
-failed with `No matching signature for operator = for argument types: STRING, INT64` joining
-`stg_salesforce__campaign.campaign_id` (aliased from `id`, always a string) against
-`stg_salesforce__opportunity.campaign_id`.
+explicit `datatype=` override, leaving everything else as a bare, uncast reference — reasoning
+it looked like `stg_google_ads__campaign_stats`'s `final`. That was wrong, and it broke on
+BigQuery, not DuckDB: `salesforce__campaign_performance` failed with `No matching signature for
+operator = for argument types: STRING, INT64` joining `stg_salesforce__campaign.campaign_id`
+(aliased from `id`, always a string) against `stg_salesforce__opportunity.campaign_id`.
 
 The old `coalesce_rename` macro this POC replaces **always** cast every column to its declared
-`get_*_columns()` datatype, override or not — that was never just style. `fields`
-(`apply_column_payload`, like `fill_staging_columns` before it) never casts a *present* column,
-only a null-filled *absent* one, so a present column's actual type is whatever the warehouse
-infers for the raw source column. BigQuery in particular will happily infer `INT64` for an
-all-null/all-blank column with no explicit schema (exactly what `sf_opportunity_data.csv`'s
-`campaign_id` column is in this seed) — silently swapped out from under a supposedly-`string`
-column the moment nothing casts it. The old code's unconditional per-column cast was a real
-safety net against this, not just defensive verbosity, and dropping it for "only cast where
-overridden" broke real data on real warehouse type-inference behavior that DuckDB's own
-(more permissive) inference didn't happen to reproduce.
+`get_*_columns()` datatype, override or not. `fields` (`apply_column_payload`, like
+`fill_staging_columns` before it) never casts a *present* column, only a null-filled *absent*
+one, so a present column's actual type is whatever the warehouse infers for the raw source
+column. BigQuery in particular will happily infer `INT64` for an all-null/all-blank column with
+no explicit schema (exactly what `sf_opportunity_data.csv`'s `campaign_id` column is in this
+seed) — silently swapped out from under a supposedly-`string` column the moment nothing casts
+it. The old code's unconditional per-column cast was a real safety net against this, and
+dropping it for "only cast where overridden" broke real data on real warehouse type-inference
+behavior DuckDB's own (more permissive) inference didn't happen to reproduce.
 
-Fixed by making every column in every `final` an explicit `cast(col as {{ datatype }}) as
-alias_or_col` line, still hand-written plain SQL (no macro/dict lookup — that part of the
-"look like other packages" goal holds), just with no column skipped. Re-verified: all 24
-models (staging + downstream) build clean against DuckDB, and specifically
-`salesforce__campaign_performance` (the model that surfaced this) succeeds.
+First fix cast *every* column unconditionally, matching the old behavior exactly. Correct but
+more than necessary: the actual risk is narrower than "any column, any time" — it's specifically
+columns whose value gets compared to another table's value (a join key) or combined with one
+(inside a `coalesce()`), since that's the only place a silently-wrong inferred type causes a
+real failure. Audited every downstream model (`models/salesforce/*.sql`,
+`models/salesforce/intermediate/*.sql`) for `join ... on` and `coalesce(...)` referencing a raw
+staging column, and now only those columns (plus the pre-existing `datatype=` overrides) stay
+cast:
+
+| Table | Cast for join/coalesce use | Reason |
+| --- | --- | --- |
+| account | `id` → `account_id` | joined in `contact_enhanced`, `opportunity_enhanced` |
+| campaign | `id` → `campaign_id`, `campaign_member_record_type_id` | joined in `campaign_performance` |
+| campaign_member | `campaign_id` | joined in `campaign_performance` |
+| contact | `account_id`, `owner_id` | joined in `contact_enhanced` |
+| event | `activity_date` | joined/`date_trunc`'d in `daily_activity` |
+| lead | `created_date`, `converted_date` | joined/`date_trunc`'d in `daily_activity` |
+| opportunity | `campaign_id`, `account_id`, `owner_id`, `record_type_id`, `created_date`, `close_date` | joined in `campaign_performance`, `opportunity_enhanced`, `daily_activity` |
+| opportunity_line_item | `product_2_id` | joined in `opportunity_line_item_enhanced` |
+| product_2 | `id` → `product_2_id` | joined in `opportunity_line_item_enhanced` |
+| record_type | `id` → `record_type_id` | joined in `campaign_performance`, `opportunity_enhanced` |
+| task | `activity_date` | joined/`date_trunc`'d in `daily_activity` |
+| user | `id` → `user_id`, `manager_id`, `user_role_id`, `name` → `user_name` | joined throughout; `user_name` via `coalesce()` in `manager_performance` |
+| user_role | `id` → `user_role_id` | joined in `manager_performance`, `opportunity_enhanced` |
+| order | *(none)* | no downstream join/coalesce found |
+
+`order` and most of the tables above went from every-column-cast back down to 1-7 cast lines
+(matching only the table above plus pre-existing overrides), out of 6-43 total columns per
+table. Re-verified: all 24 models build clean against DuckDB, and specifically
+`salesforce__campaign_performance` still succeeds with the narrower cast set.
 
 **This also means the DuckDB-only verification used throughout this POC has a real blind
 spot**: DuckDB's type inference is more permissive than BigQuery's, so a bug like this one
-compiles and runs fine there and only surfaces on a stricter warehouse. Nothing else here was
-re-checked against BigQuery/Snowflake/Postgres before this was caught by chance during manual
-testing — see Open questions.
+compiles and runs fine there and only surfaces on a stricter warehouse. This targeted-casting
+list was derived by reading every downstream model's joins/coalesces by hand, not by
+re-running against BigQuery — a genuinely new join or coalesce added later (or one this audit
+missed) would reintroduce the same class of bug silently. See Open questions.
 
 ## What got deleted
 
@@ -222,6 +249,11 @@ nothing reads them anymore. The payload's `__identifier__` for each table (e.g.
 
 - **How the real quickstart runtime supplies this var per customer** — this POC hand-authors
   it in `integration_tests/dbt_project.yml`; production wiring is undesigned.
+- **The join/coalesce cast list is a manual, point-in-time audit, not an enforced invariant** —
+  it was derived by reading every downstream model's `join`/`coalesce` calls once. A new
+  downstream join added later, or an existing one this audit missed, would silently reintroduce
+  the same class of bug that broke `salesforce__campaign_performance` on BigQuery. There's
+  nothing here that would catch that automatically.
 - **`get_source_identifier` in `identifier:` only works on dbt 2.0 (the Fusion-era engine,
   tested here as `dbt-oss 2.0.5`), not real dbt-core.** Confirmed directly: real dbt-core
   1.11.12 fails `identifier: "{{ salesforce.get_source_identifier('account') }}"` with

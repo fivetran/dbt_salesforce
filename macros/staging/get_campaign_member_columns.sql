@@ -2,7 +2,7 @@
 {% macro get_campaign_member_columns() %}
 
 {% set columns = [
-    {"name": "_fivetran_active", "datatype": "boolean"},
+    {"name": "_fivetran_active", "datatype": dbt.type_boolean()},
     {"name": "_fivetran_synced", "datatype": dbt.type_timestamp()},
     {"name": "account_id", "datatype": dbt.type_string()},
     {"name": "campaign_id", "datatype": dbt.type_string()},
@@ -10,10 +10,10 @@
     {"name": "created_by_id", "datatype": dbt.type_string()},
     {"name": "created_date", "datatype": dbt.type_timestamp()},
     {"name": "first_responded_date", "datatype": dbt.type_timestamp()},
-    {"name": "has_opted_out_of_email", "datatype": "boolean"},
-    {"name": "has_responded", "datatype": "boolean"},
+    {"name": "has_opted_out_of_email", "datatype": dbt.type_boolean()},
+    {"name": "has_responded", "datatype": dbt.type_boolean()},
     {"name": "id", "datatype": dbt.type_string()},
-    {"name": "is_deleted", "datatype": "boolean"},
+    {"name": "is_deleted", "datatype": dbt.type_boolean()},
     {"name": "last_modified_by_id", "datatype": dbt.type_string()},
     {"name": "lead_id", "datatype": dbt.type_string()},
     {"name": "lead_or_contact_id", "datatype": dbt.type_string()},

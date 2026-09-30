@@ -11,7 +11,7 @@
     {"name": "home_phone", "datatype": dbt.type_string()},
     {"name": "id", "datatype": dbt.type_string()},
     {"name": "individual_id", "datatype": dbt.type_string()},
-    {"name": "is_deleted", "datatype": "boolean"},
+    {"name": "is_deleted", "datatype": dbt.type_boolean()},
     {"name": "last_activity_date", "datatype": dbt.type_timestamp()},
     {"name": "last_modified_by_id", "datatype": dbt.type_string()},
     {"name": "last_modified_date", "datatype": dbt.type_timestamp()},
