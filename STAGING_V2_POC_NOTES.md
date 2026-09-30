@@ -308,6 +308,47 @@ source yml's documented list, which turned out to be incomplete in 2 of 4 cases 
 "Proof it works" below) surfaced 4 columns declared in `get_*_columns()` that don't exist in
 this fixture's history seeds; removed from the payload so they null-fill instead of erroring.
 
+### A third real bug, this time caught by this package's own Buildkite CI
+
+Real CI (`bigquery v1`, i.e. real dbt-core against BigQuery) failed after the identifier fix
+above, in a spot local testing (DuckDB and real Postgres both) never exercised:
+
+```
+No matching signature for operator <= for argument types: DATETIME, TIMESTAMP
+Signature: T1 <= T1
+```
+
+in `daily_history`'s `join spine on get_latest_daily_value._fivetran_start <= cast(spine.date_day
+as {{ dbt.type_timestamp() }})`. The original pre-POC code explicitly cast `_fivetran_start`/
+`_fivetran_end` to `dbt.type_timestamp()` the moment they were read out of `dbt_utils.star()`'s
+exclusion, guaranteeing a consistent type before any later comparison. This POC's `fields` CTE
+(`select_payload_fields`) never casts a *present* column by design (see the account/opportunity
+cast audit above) — `_fivetran_start`/`_fivetran_end` pass straight through from the raw source
+column, whatever BigQuery happens to have stored them as (`DATETIME`, not `TIMESTAMP`, in this
+seed), and nothing re-cast them before the join that needed them to match.
+
+Missed in the earlier join/coalesce cast audit because that audit was done against the 14 core
+staging models before the history models existed in their payload-driven form — exactly the
+"a new join needs its columns added to the cast list" maintenance case flagged as accepted
+above, just one step removed (a *new model*, not a new join in an existing one). Fixed the same
+way as the `campaign_id` bug: cast both join operands explicitly at the comparison
+(`cast(get_latest_daily_value._fivetran_start as {{ dbt.type_timestamp() }}) <= cast(spine.date_day
+as {{ dbt.type_timestamp() }})`) in all 4 history models, rather than restructuring their
+`select *` (portably excluding two columns from a wildcard isn't supported the same way across
+all 6 warehouses this package targets). Re-verified against real Postgres and DuckDB (no
+BigQuery credentials available for interactive testing) — real CI is the actual confirmation
+for the BigQuery-specific case this fix targets.
+
+**This package's own CI (`fivetran/dbt-salesforce` on Buildkite) runs each of 6 warehouses
+twice — once under real dbt-core (`v1`) and once under the newer engine (`v2`, i.e. `dbt-oss`)
+— so it's a strictly stronger check than anything done locally in this POC.** Every fix in this
+document that came from "real CI failed" was caught by the `v1` lane specifically; the `v2`
+lane consistently passed throughout (including on the commit that first introduced
+`get_source_identifier` in `identifier:`), which is exactly why local testing under `dbt-oss`
+never caught what `v1` did. An earlier commit in this same PR (build #272) also had every `v2`
+job failing, from the schema-key-drift bug fixed a few commits before this — so "run under v2"
+is not by itself a substitute for "run under v1," and both lanes matter.
+
 ## Proof it works (all verified against a local DuckDB target, no warehouse creds needed)
 
 - Zero `adapter.get_columns_in_relation` / `information_schema` / `dbt_utils.star` anywhere in

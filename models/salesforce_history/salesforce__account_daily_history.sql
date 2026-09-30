@@ -77,8 +77,8 @@ daily_history as (
         cast(spine.date_day as date) as date_day,
         get_latest_daily_value.*
     from get_latest_daily_value
-    join spine on get_latest_daily_value._fivetran_start <= cast(spine.date_day as {{ dbt.type_timestamp() }})
-        and get_latest_daily_value._fivetran_end >= cast(spine.date_day as {{ dbt.type_timestamp() }})
+    join spine on cast(get_latest_daily_value._fivetran_start as {{ dbt.type_timestamp() }}) <= cast(spine.date_day as {{ dbt.type_timestamp() }})
+        and cast(get_latest_daily_value._fivetran_end as {{ dbt.type_timestamp() }}) >= cast(spine.date_day as {{ dbt.type_timestamp() }})
 )
 
 select *
