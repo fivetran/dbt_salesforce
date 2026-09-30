@@ -3,7 +3,7 @@
 
 with fields as (
 
-    {{ salesforce.select_payload_fields('user_role', get_user_role_columns()) }}
+    {{ salesforce.select_payload_fields('salesforce', 'user_role', get_user_role_columns()) }}
 ), 
 
 final as (

@@ -3,7 +3,7 @@
 
 with fields as (
 
-    {{ salesforce.select_payload_fields('task', get_task_columns()) }}
+    {{ salesforce.select_payload_fields('salesforce', 'task', get_task_columns()) }}
 ), 
 
 final as (

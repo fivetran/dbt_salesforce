@@ -3,7 +3,7 @@
 
 with fields as (
 
-    {{ salesforce.select_payload_fields('campaign_member', get_campaign_member_columns()) }}
+    {{ salesforce.select_payload_fields('salesforce', 'campaign_member', get_campaign_member_columns()) }}
 ),
 
 final as (

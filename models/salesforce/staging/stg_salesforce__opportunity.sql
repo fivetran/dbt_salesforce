@@ -1,6 +1,6 @@
 with fields as (
 
-    {{ salesforce.select_payload_fields('opportunity', get_opportunity_columns()) }}
+    {{ salesforce.select_payload_fields('salesforce', 'opportunity', get_opportunity_columns()) }}
 ), 
 
 final as (
