@@ -21,14 +21,10 @@ vars:
     salesforce_schema: zz_dbt_catherine #salesforce_integrations_tests_4
     salesforce_history_schema: zz_dbt_catherine #salesforce_integrations_tests_4
 
-    # Staging table identifiers now come from salesforce__column_payload's __identifier__
-    # field (see get_source_identifier), not per-table vars -- see the payload below.
-
-    ##history mode identifiers
-    salesforce_campaign_history_identifier: "sf_campaign_history_data"
-    salesforce_account_history_identifier: "sf_account_history_data"
-    salesforce_contact_history_identifier: "sf_contact_history_data"
-    salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
+    # Staging and history table identifiers now come from salesforce__column_payload's
+    # __identifier__ field (see get_source_identifier), not per-table vars -- see the
+    # payload below (history tables keyed by <table>_history to avoid colliding with the
+    # core tables' own entries, since both sources share this schema in this fixture).
 
     ## Staging v2 POC: exhaustive column payloads simulating what the quickstart runtime
     ## would supply per table (canonical_name: current_name_in_source), replacing
@@ -447,6 +443,140 @@ vars:
           opportunity_access_for_account_owner: opportunity_access_for_account_owner
           parent_role_id: parent_role_id
           rollup_description: rollup_description
+
+        account_history:
+          __identifier__: sf_account_history_data
+          _fivetran_synced: _fivetran_synced
+          _fivetran_active: _fivetran_active
+          account_number: account_number
+          account_source: account_source
+          annual_revenue: annual_revenue
+          billing_city: billing_city
+          billing_country: billing_country
+          billing_postal_code: billing_postal_code
+          billing_state: billing_state
+          billing_street: billing_street
+          description: description
+          id: id
+          industry: industry
+          is_deleted: is_deleted
+          last_activity_date: last_activity_date
+          last_referenced_date: last_referenced_date
+          last_viewed_date: last_viewed_date
+          master_record_id: master_record_id
+          name: name
+          number_of_employees: number_of_employees
+          owner_id: owner_id
+          ownership: ownership
+          parent_id: parent_id
+          rating: rating
+          record_type_id: record_type_id
+          shipping_city: shipping_city
+          shipping_country: shipping_country
+          shipping_postal_code: shipping_postal_code
+          shipping_state: shipping_state
+          shipping_street: shipping_street
+          type: type
+          website: website
+          _fivetran_start: _fivetran_start
+          _fivetran_end: _fivetran_end
+        campaign_history:
+          __identifier__: sf_campaign_history_data
+          _fivetran_active: _fivetran_active
+          _fivetran_synced: _fivetran_synced
+          actual_cost: actual_cost
+          amount_all_opportunities: amount_all_opportunities
+          budgeted_cost: budgeted_cost
+          description: description
+          end_date: end_date
+          id: id
+          is_active: is_active
+          is_deleted: is_deleted
+          name: name
+          number_of_contacts: number_of_contacts
+          number_of_converted_leads: number_of_converted_leads
+          number_of_leads: number_of_leads
+          number_of_opportunities: number_of_opportunities
+          number_of_responses: number_of_responses
+          number_of_won_opportunities: number_of_won_opportunities
+          campaign_member_record_type_id: campaign_member_record_type_id
+          parent_id: parent_id
+          start_date: start_date
+          status: status
+          type: type
+          _fivetran_start: _fivetran_start
+          _fivetran_end: _fivetran_end
+        contact_history:
+          __identifier__: sf_contact_history_data
+          _fivetran_synced: _fivetran_synced
+          _fivetran_active: _fivetran_active
+          account_id: account_id
+          description: description
+          email: email
+          first_name: first_name
+          home_phone: home_phone
+          id: id
+          individual_id: individual_id
+          is_deleted: is_deleted
+          last_activity_date: last_activity_date
+          last_modified_by_id: last_modified_by_id
+          last_modified_date: last_modified_date
+          last_name: last_name
+          last_referenced_date: last_referenced_date
+          last_viewed_date: last_viewed_date
+          lead_source: lead_source
+          mailing_city: mailing_city
+          mailing_country: mailing_country
+          mailing_country_code: mailing_country_code
+          mailing_postal_code: mailing_postal_code
+          mailing_state: mailing_state
+          mailing_street: mailing_street
+          master_record_id: master_record_id
+          mobile_phone: mobile_phone
+          name: name
+          owner_id: owner_id
+          phone: phone
+          reports_to_id: reports_to_id
+          title: title
+          _fivetran_start: _fivetran_start
+          _fivetran_end: _fivetran_end
+        opportunity_history:
+          __identifier__: sf_opportunity_history_data
+          _fivetran_synced: _fivetran_synced
+          _fivetran_active: _fivetran_active
+          account_id: account_id
+          amount: amount
+          campaign_id: campaign_id
+          close_date: close_date
+          created_date: created_date
+          description: description
+          expected_revenue: expected_revenue
+          fiscal: fiscal
+          fiscal_quarter: fiscal_quarter
+          fiscal_year: fiscal_year
+          forecast_category: forecast_category
+          forecast_category_name: forecast_category_name
+          has_open_activity: has_open_activity
+          has_opportunity_line_item: has_opportunity_line_item
+          has_overdue_task: has_overdue_task
+          id: id
+          is_closed: is_closed
+          is_deleted: is_deleted
+          is_won: is_won
+          last_activity_date: last_activity_date
+          last_referenced_date: last_referenced_date
+          last_viewed_date: last_viewed_date
+          lead_source: lead_source
+          name: name
+          next_step: next_step
+          owner_id: owner_id
+          probability: probability
+          record_type_id: record_type_id
+          stage_name: stage_name
+          synced_quote_id: synced_quote_id
+          type: type
+          _fivetran_start: _fivetran_start
+          _fivetran_end: _fivetran_end
 
 seeds:
   +docs:

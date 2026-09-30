@@ -57,24 +57,29 @@ Schema-then-table nesting (rather than one flat var per table) is the shape a fu
 multi-org/union implementation can extend by indexing on `source_relation` without another
 payload format change.
 
-## New macros (`macros/staging/`)
+## New macros
 
-- **`normalize_column_payload(full_payload, schema_name, table_name)`** — drills into
-  `payload[schema][table]` and lowercases keys for case-insensitive lookup. Returns `{}` (and
-  therefore null-fills everything) if the schema or table isn't in the payload.
-- **`apply_column_payload(staging_columns, column_payload)`** — the introspection-free
-  replacement for `fivetran_utils.fill_staging_columns` (fed previously by
-  `adapter.get_columns_in_relation`). Mirrors its exact branching and `alias` support: present
-  columns pass through raw/uncast under their current name; absent columns get
-  `cast(null as datatype)`.
-- **`get_source_identifier(table_name, default=table_name)`** — resolves a table's physical
-  identifier from the payload's `__identifier__`, falling back to `default` (the standard
-  table name, or a caller-supplied literal for reserved-word cases). Used directly in
-  `src_salesforce.yml`'s `identifier:` config (see below), not from a model.
-- **`select_payload_fields(table_name, staging_columns)`** — the single call each model's
-  `fields` CTE makes. Calls `source('salesforce', table_name)` and `normalize_column_payload`
-  for this table's payload, then emits the complete `select ... from ...` body using
-  `apply_column_payload` for the column list.
+- **`select_payload_fields(source_name, table_name, staging_columns, payload_key=none)`**
+  (`macros/staging/`) — the single call each model's `fields` CTE makes. Resolves
+  `source(source_name, table_name)`, drills `salesforce__column_payload` down to
+  `payload[schema][payload_key or table_name]`, and emits the complete `select ... from ...`
+  body: present columns pass through raw/uncast under their current name (mirroring
+  `fivetran_utils.fill_staging_columns`'s own branching and `alias` support), absent columns
+  get `cast(null as datatype)`. Originally three macros (`normalize_column_payload` +
+  `apply_column_payload` + `select_payload_fields`) — folded into one, since the other two
+  were never called from anywhere else. `source_name` and the optional `payload_key` exist to
+  let the same macro serve the `salesforce_history` source too (see below), not just
+  `salesforce`.
+- **`get_source_identifier(schema_name, payload_key, default=payload_key)`** (`macros/staging/`)
+  — resolves a table's physical identifier from the same payload's `__identifier__`, falling
+  back to `default` (the standard table name, or a caller-supplied literal for reserved-word
+  cases). Used directly in a source yml's `identifier:` config (`schema_name` passed in
+  explicitly, since this runs before `source()` itself can resolve it), never from a model.
+- **`get_history_columns(base_columns, id_alias)`** (`macros/`, alongside the existing
+  `history_spine_start_date`) — takes a core table's own `get_*_columns()` list and adds
+  `_fivetran_start`/`_fivetran_end`, aliasing `id` to the history model's day-grain id column
+  (e.g. `account_id`). Lets the 4 history models reuse the core `get_*_columns()` macros
+  directly instead of near-duplicate `get_*_history_columns()` ones.
 
 ## Model shape
 
@@ -221,17 +226,61 @@ tooling (docs, lineage, `dbt source freshness`) sees the same one this package a
 queries, instead of the two independently-configured values silently drifting apart.
 
 The order table keeps its Snowflake-reserved-word handling, just calling
-`get_source_identifier('order', default='"ORDER"')` for the Snowflake branch instead of
+`get_source_identifier(schema, 'order', default='"ORDER"')` for the Snowflake branch instead of
 `var('salesforce_order_identifier', '"ORDER"')`.
 
 The 14 `salesforce_<table>_identifier` vars in `integration_tests/dbt_project.yml` are gone —
 nothing reads them anymore. The payload's `__identifier__` for each table (e.g.
 `sf_account_data`) is now the only place that mapping is configured.
 
+## History models now use the same payload-driven pattern
+
+The 4 `salesforce__*_daily_history` models (`models/salesforce_history/`) had their own,
+separate introspection mechanism: `dbt_utils.star(from=source('salesforce_history', table),
+except=["id", "_fivetran_start", "_fivetran_end"])`, which under the hood is the same
+`adapter.get_columns_in_relation` call this whole POC removes everywhere else — it was just
+finding it through a different macro.
+
+Replaced `dbt_utils.star(...)` with a `fields` CTE (`select_payload_fields('salesforce_history',
+'account', salesforce.get_history_columns(get_account_columns(), 'account_id'),
+payload_key='account_history')`), reusing the core table's own `get_*_columns()` macro instead
+of writing 4 new near-duplicate ones (`get_history_columns` just adds
+`_fivetran_start`/`_fivetran_end` and re-aliases `id`). The `_fivetran_date`/
+`history_unique_key` computed columns and the rest of the spine/dedup logic are unchanged,
+just now selecting from `fields` instead of `source(...)` directly.
+
+`payload_key='account_history'` (not `'account'`) matters here: this fixture's
+`salesforce_history_schema` is set to the same value as `salesforce_schema`
+(`zz_dbt_catherine`), so the core `account` table and the history `account` table would
+otherwise collide on the same `payload[schema]['account']` entry. `select_payload_fields` and
+`get_source_identifier` both take an explicit `payload_key` (defaulting to `table_name`) for
+exactly this — the core 14 calls didn't need to change.
+
+**Behavior change worth flagging**: `dbt_utils.star()` exposed *every* column the introspected
+table actually had, including undeclared/custom ones no `get_*_columns()` macro or
+pass-through-columns var ever mentioned. Reusing `get_*_columns()` means a history model now
+only outputs what the core staging model would also output (declared columns +
+pass-through-columns var) — any raw column that only ever showed up via blanket introspection
+disappears. Auditing all 4 history seeds against their actual physical columns (not just the
+source yml's documented list, which turned out to be incomplete in 2 of 4 cases — see
+"Proof it works" below) surfaced 4 columns declared in `get_*_columns()` that don't exist in
+this fixture's history seeds; removed from the payload so they null-fill instead of erroring.
+
 ## Proof it works (all verified against a local DuckDB target, no warehouse creds needed)
 
-- Zero `adapter.get_columns_in_relation` / `information_schema` anywhere in compiled SQL
-  across all 14 staging models.
+- Zero `adapter.get_columns_in_relation` / `information_schema` / `dbt_utils.star` anywhere in
+  compiled SQL across all 14 staging models and all 4 history models.
+- **All 28 models build clean**: 14 staging + 10 downstream (intermediate/enhanced/performance)
+  + 4 history, `--full-refresh`, with only the same pre-existing docs-mismatch warnings seen
+  throughout this POC — none new.
+- **History payload audit found real gaps twice**: querying each history seed's actual
+  physical columns (via `describe`, not the source yml's documented list) turned up 3 columns
+  on `account_history` (`billing_state_code`, `shipping_country_code`, `shipping_state_code`)
+  and 1 on `contact_history` (`department`, then later `mailing_state_code`) that `main`'s
+  `src_salesforce_history.yml` never documented and that don't exist in this fixture's seeds,
+  even though the corresponding core `get_*_columns()` macro declares them. Removed from the
+  payload so they null-fill instead of throwing "column not found" / a confusing DuckDB binder
+  error. A reminder that this payload has to reflect the real table, not the declared list.
 - **Rename, no introspection**: `sf_opportunity_data.csv`'s `description` column renamed to
   `Description__c`, mapped via the payload — resolves correctly
   (`fields`: `Description__c as description`; `final`: `description as opportunity_description`).

@@ -27,19 +27,23 @@ with spine as (
     }}
 ),
 
+fields as (
+
+    {{ salesforce.select_payload_fields('salesforce_history', 'campaign', salesforce.get_history_columns(get_campaign_columns(), 'campaign_id'), payload_key='campaign_history') }}
+
+),
+
 campaign_history as (
 
     select
-        id as campaign_id,
-        cast(_fivetran_start as {{ dbt.type_timestamp() }}) as _fivetran_start,
-        cast(_fivetran_end as {{ dbt.type_timestamp() }}) as _fivetran_end,
+        *,
         cast(_fivetran_start as date) as _fivetran_date,
-        {{ dbt_utils.generate_surrogate_key(['id', '_fivetran_start']) }} as history_unique_key,
-        {{ dbt_utils.star(from=source('salesforce_history','campaign'),
-                        except=["id", "_fivetran_start", "_fivetran_end"]) }}
+        {{ dbt_utils.generate_surrogate_key(['campaign_id', '_fivetran_start']) }} as history_unique_key
+    from fields
 
-    from {{ source('salesforce_history','campaign') }}
-
+    -- The shared boundary below drives both which spine dates get (re)generated and which source
+    -- history records are pulled: any record still open or closed on/after that boundary could
+    -- apply to a newly generated spine date, regardless of when it last changed.
     {% if is_incremental() %}
     where cast(_fivetran_end as date) >= {{ spine_start_date }}
     {% else %}
