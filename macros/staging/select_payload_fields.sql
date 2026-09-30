@@ -2,17 +2,25 @@
 {#
     Everything a `fields` CTE needs, in one call: resolves source(source_name, table_name),
     drills the exhaustive salesforce__column_payload var down to this table
-    (payload[schema][payload_key], case-insensitive), and emits the full `select ... from ...`
-    body -- present columns pass through raw/uncast under their current name, absent columns
-    get `cast(null as datatype)`, mirroring fivetran_utils.fill_staging_columns' own branching
-    (and its `alias` support) but driven by the payload instead of
-    adapter.get_columns_in_relation, so no introspection is needed.
+    (payload[payload_key], case-insensitive), and emits the full `select ... from ...` body --
+    present columns pass through raw/uncast under their current name, absent columns get
+    `cast(null as datatype)`, mirroring fivetran_utils.fill_staging_columns' own branching (and
+    its `alias` support) but driven by the payload instead of adapter.get_columns_in_relation,
+    so no introspection is needed.
 
-    payload_key defaults to table_name -- pass it explicitly only when a source shares a
-    schema with another source that already uses table_name as its own payload key (e.g. the
-    salesforce_history source's `account` table living in the same schema as the core
-    `salesforce` source's `account` table): pass a distinct key like 'account_history' so the
-    two don't collide in the payload dict.
+    payload_key defaults to table_name -- pass it explicitly only when two different sources'
+    tables would otherwise share the same key (e.g. the salesforce_history source's `account`
+    table vs. the core `salesforce` source's own `account` table): pass a distinct key like
+    'account_history' so the two don't collide in the payload dict.
+
+    The payload is flat (payload[table]), not schema-keyed: Salesforce doesn't union across
+    multiple source schemas/orgs in staging, so a schema level here was pure overhead -- worse,
+    it was a real, recurring source of failures whenever a schema var (salesforce_schema /
+    salesforce_history_schema) was pointed at a different environment (e.g. switching from
+    DuckDB to BigQuery) without also updating the payload's top-level key to match. A package
+    that *does* union across schemas/orgs should reintroduce a schema (or source_relation) level
+    here when porting this pattern -- this macro's shape (resolve source, drill the payload by
+    a single key, apply_column_payload-style column loop) is the reusable part.
 
     source(source_name, table_name) is the only tie back to the source yml dbt itself
     understands -- it's what makes docs, lineage, and `dbt source freshness` work. Its
@@ -28,9 +36,8 @@
 #}
 {%- set payload_key = payload_key or table_name -%}
 {%- set table_source = source(source_name, table_name) -%}
-{%- set schema_payload = (var('salesforce__column_payload', {}) or {}).get(table_source.schema | lower, {}) -%}
 {%- set column_payload = {} -%}
-{%- for original_name, current_name in (schema_payload.get(payload_key | lower, {}) or {}).items() -%}
+{%- for original_name, current_name in ((var('salesforce__column_payload', {}) or {}).get(payload_key | lower, {}) or {}).items() -%}
     {%- do column_payload.update({original_name | lower: current_name}) -%}
 {%- endfor -%}
 

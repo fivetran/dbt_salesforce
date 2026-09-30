@@ -24,23 +24,22 @@ upfront, so no SQL introspection is needed, and there's no more guessing.
 
 ## Payload format
 
-One var for the whole package, `salesforce__column_payload`, keyed by schema, then by the
-package's **standard** table name (the literal already passed to `source()`, e.g. `account` —
-not the customer's physical table name):
+One var for the whole package, `salesforce__column_payload`, keyed flat by the package's
+**standard** table name (the literal already passed to `source()`, e.g. `account` — not the
+customer's physical table name). No schema level:
 
 ```yaml
 vars:
   salesforce:
     salesforce__column_payload:
-      <schema>:
-        account:
-          __identifier__: sf_account_data   # the customer's actual physical table name
-          account_number: AccountNumber     # renamed
-          website: <absent — column doesn't exist for this customer>
-          # ...every other column get_account_columns() declares
-        campaign:
-          __identifier__: sf_campaign_data
-          ...
+      account:
+        __identifier__: sf_account_data   # the customer's actual physical table name
+        account_number: AccountNumber     # renamed
+        website: <absent — column doesn't exist for this customer>
+        # ...every other column get_account_columns() declares
+      campaign:
+        __identifier__: sf_campaign_data
+        ...
 ```
 
 - Key present, value differs from key → renamed; select the value's spelling, alias back to
@@ -53,28 +52,33 @@ vars:
   (see below), falling back to the standard table name if a table has no entry.
 - No fallback to introspection: an unset/empty payload treats every column as absent.
 
-Schema-then-table nesting (rather than one flat var per table) is the shape a future
-multi-org/union implementation can extend by indexing on `source_relation` without another
-payload format change.
+**This was originally schema-then-table nested** (`payload[schema][table]`), reasoning that a
+future multi-org/union implementation could extend it by indexing on `source_relation`.
+Flattened after it caused two separate real failures: switching `salesforce_schema` for
+BigQuery testing without also updating the payload's schema key broke every identifier lookup
+(silently fell back to the literal table name — see the BigQuery run in the conversation), and
+the same class of bug showed up again in a different form later. Salesforce doesn't union
+across schemas/orgs in staging, so the schema level was pure risk with no payoff here. A
+package that *does* need multi-org/union support should reintroduce a schema or
+`source_relation` level when porting this pattern — see Open questions.
 
 ## New macros
 
 - **`select_payload_fields(source_name, table_name, staging_columns, payload_key=none)`**
   (`macros/staging/`) — the single call each model's `fields` CTE makes. Resolves
   `source(source_name, table_name)`, drills `salesforce__column_payload` down to
-  `payload[schema][payload_key or table_name]`, and emits the complete `select ... from ...`
-  body: present columns pass through raw/uncast under their current name (mirroring
+  `payload[payload_key or table_name]`, and emits the complete `select ... from ...` body:
+  present columns pass through raw/uncast under their current name (mirroring
   `fivetran_utils.fill_staging_columns`'s own branching and `alias` support), absent columns
   get `cast(null as datatype)`. Originally three macros (`normalize_column_payload` +
   `apply_column_payload` + `select_payload_fields`) — folded into one, since the other two
   were never called from anywhere else. `source_name` and the optional `payload_key` exist to
   let the same macro serve the `salesforce_history` source too (see below), not just
   `salesforce`.
-- **`get_source_identifier(schema_name, payload_key, default=payload_key)`** (`macros/staging/`)
-  — resolves a table's physical identifier from the same payload's `__identifier__`, falling
-  back to `default` (the standard table name, or a caller-supplied literal for reserved-word
-  cases). Used directly in a source yml's `identifier:` config (`schema_name` passed in
-  explicitly, since this runs before `source()` itself can resolve it), never from a model.
+- **`get_source_identifier(payload_key, default=payload_key)`** (`macros/staging/`) — resolves
+  a table's physical identifier from the same payload's `__identifier__`, falling back to
+  `default` (the standard table name, or a caller-supplied literal for reserved-word cases).
+  Used directly in a source yml's `identifier:` config, never from a model.
 - **`get_history_columns(base_columns, id_alias)`** (`macros/`, alongside the existing
   `history_spine_start_date`) — takes a core table's own `get_*_columns()` list and adds
   `_fivetran_start`/`_fivetran_end`, aliasing `id` to the history model's day-grain id column
@@ -90,7 +94,7 @@ called inline in the macro call, since nothing else in the model needs the colum
 ```sql
 with fields as (
 
-    {{ salesforce.select_payload_fields('account', get_account_columns()) }}
+    {{ salesforce.select_payload_fields('salesforce', 'account', get_account_columns()) }}
 
 ),
 
@@ -226,7 +230,7 @@ tooling (docs, lineage, `dbt source freshness`) sees the same one this package a
 queries, instead of the two independently-configured values silently drifting apart.
 
 The order table keeps its Snowflake-reserved-word handling, just calling
-`get_source_identifier(schema, 'order', default='"ORDER"')` for the Snowflake branch instead of
+`get_source_identifier('order', default='"ORDER"')` for the Snowflake branch instead of
 `var('salesforce_order_identifier', '"ORDER"')`.
 
 The 14 `salesforce_<table>_identifier` vars in `integration_tests/dbt_project.yml` are gone —
@@ -249,12 +253,12 @@ of writing 4 new near-duplicate ones (`get_history_columns` just adds
 `history_unique_key` computed columns and the rest of the spine/dedup logic are unchanged,
 just now selecting from `fields` instead of `source(...)` directly.
 
-`payload_key='account_history'` (not `'account'`) matters here: this fixture's
-`salesforce_history_schema` is set to the same value as `salesforce_schema`
-(`zz_dbt_catherine`), so the core `account` table and the history `account` table would
-otherwise collide on the same `payload[schema]['account']` entry. `select_payload_fields` and
-`get_source_identifier` both take an explicit `payload_key` (defaulting to `table_name`) for
-exactly this — the core 14 calls didn't need to change.
+`payload_key='account_history'` (not `'account'`) matters here: the payload is a single flat
+namespace across the *whole package*, not scoped per source, so the core `salesforce.account`
+table and the history `salesforce_history.account` table would otherwise collide on the same
+`payload['account']` entry regardless of what schema either one lives in. `select_payload_fields`
+and `get_source_identifier` both take an explicit `payload_key` (defaulting to `table_name`)
+for exactly this — the core 14 calls didn't need to change.
 
 **Behavior change worth flagging**: `dbt_utils.star()` exposed *every* column the introspected
 table actually had, including undeclared/custom ones no `get_*_columns()` macro or
@@ -319,18 +323,18 @@ this fixture's history seeds; removed from the payload so they null-fill instead
   target), `identifier:` needs to go back to a plain `var()`-based per-table default (as it was
   before this POC), with the payload's `__identifier__` handled as a runtime override inside
   `select_payload_fields` (via `api.Relation.create()`) instead of at the yml level.
-- **The payload's top-level schema key is a manual sync point.** Hit this directly switching
-  the integration_tests target from DuckDB to BigQuery: `salesforce_schema` was changed to
-  `zz_dbt_catherine` without updating `salesforce__column_payload`'s outer key (still
-  `salesforce_integrations_tests_4`), so every lookup missed and every identifier silently fell
-  back to the literal table name — the exact same `Table ... was not found` failure as the
-  dbt-core/dbt-2.0 issue above, but from stale config instead of a rendering limitation. Not a
-  bug in the resolution logic, but a real footgun for a hand-maintained fixture; a real
-  quickstart-supplied payload wouldn't have this problem since it would always be keyed to
-  wherever it's actually deploying.
-- **Multi-org/union** — the schema-keyed structure should extend to per-`source_relation`
-  payloads, but no union model was built or tested here (this package doesn't currently union
-  multiple Salesforce orgs in staging).
+- **Resolved, not open**: the payload was originally schema-then-table nested, which meant its
+  top-level schema key had to be kept in sync by hand with `salesforce_schema`/
+  `salesforce_history_schema` — hit this directly switching the integration_tests target from
+  DuckDB to BigQuery, where `salesforce_schema` changed but the payload's outer key didn't,
+  silently falling back every identifier to the literal table name. Flattened the payload (see
+  "Payload format") so schema and the payload lookup are fully decoupled; verified by compiling
+  with `salesforce_schema` overridden to an arbitrary value and confirming the identifier still
+  resolves correctly. Left here as a record of what broke and why, not as something still open.
+- **Multi-org/union** — a package that unions across schemas/orgs needs to reintroduce a schema
+  (or `source_relation`) level this flat payload deliberately dropped, keyed carefully enough
+  not to reintroduce the same manual-sync footgun. No union model was built or tested here
+  (this package doesn't currently union multiple Salesforce orgs in staging).
 - **Upstreaming** — `apply_column_payload`/`normalize_column_payload` are Salesforce-local for
   now. If this pattern proves out, `fivetran_utils` is the natural home (same precedent as the
   existing `add_pass_through_columns` trio), so other packages could adopt it.
