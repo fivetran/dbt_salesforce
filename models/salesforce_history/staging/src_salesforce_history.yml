@@ -13,7 +13,7 @@ sources:
 
     tables:
       - name: campaign
-        identifier: "{{ salesforce.get_source_identifier(var('salesforce_history_schema', 'salesforce_history'), 'campaign_history', default='campaign') }}"
+        identifier: "{{ var('salesforce_campaign_history_identifier', 'campaign') }}"
         description: Represents historical records of campaigns, which are outreach initiatives designed to generate leads and track revenue.
         config:
           enabled: "{{ var('salesforce__campaign_history_enabled', False) }}"
@@ -68,7 +68,7 @@ sources:
             description: Type of campaign, such as Direct Mail, Email, or Webinar.
 
       - name: account
-        identifier: "{{ salesforce.get_source_identifier(var('salesforce_history_schema', 'salesforce_history'), 'account_history', default='account') }}"
+        identifier: "{{ var('salesforce_account_history_identifier', 'account') }}"
         description: Represents historical records of individual accounts, which are organizations or people involved with your business (such as customers, competitors, and partners).
         config:
           enabled: "{{ var('salesforce__account_history_enabled', False) }}"
@@ -143,7 +143,7 @@ sources:
             description: The website of this account.
 
       - name: contact
-        identifier: "{{ salesforce.get_source_identifier(var('salesforce_history_schema', 'salesforce_history'), 'contact_history', default='contact') }}"
+        identifier: "{{ var('salesforce_contact_history_identifier', 'contact') }}"
         description: Represents the historical record of contacts, which are people associated with an account.
         config:
           enabled: "{{ var('salesforce__contact_history_enabled', False) }}"
@@ -221,7 +221,7 @@ sources:
             description: Title
 
       - name: opportunity
-        identifier: "{{ salesforce.get_source_identifier(var('salesforce_history_schema', 'salesforce_history'), 'opportunity_history', default='opportunity') }}"
+        identifier: "{{ var('salesforce_opportunity_history_identifier', 'opportunity') }}"
         description: Represents historical records of opportunities, which are sales or pending deals.
         config:
           enabled: "{{ var('salesforce__opportunity_history_enabled', False) }}"

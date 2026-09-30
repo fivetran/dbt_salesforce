@@ -48,9 +48,9 @@ vars:
 - Key present, value equals key → not renamed.
 - Key absent → doesn't exist for this customer; null-fill using the datatype from
   `get_*_columns()`.
-- `__identifier__` is a sibling key in the same table dict, not a column — it's what
-  `src_salesforce.yml`'s `identifier:` config reads to know which physical table to read from
-  (see below), falling back to the standard table name if a table has no entry.
+- `__identifier__` is a sibling key in the same table dict, not a column — `select_payload_fields`
+  reads it (via `get_source_identifier`) to know which physical table to actually read from
+  (see below), falling back to the yml/var-configured identifier if a table has no entry.
 - No fallback to introspection: an unset/empty payload treats every column as absent.
 
 **The schema level is looked up leniently, not by exact match, whenever there's only one.**
@@ -76,21 +76,21 @@ there's real ambiguity to resolve).
 
 - **`select_payload_fields(source_name, table_name, staging_columns, payload_key=none)`**
   (`macros/staging/`) — the single call each model's `fields` CTE makes. Resolves
-  `source(source_name, table_name)`, drills `salesforce__column_payload` down to
-  `payload[schema][payload_key or table_name]` (using the single-schema shortcut described
-  above), and emits the complete `select ... from ...` body: present columns pass through
-  raw/uncast under their current name (mirroring `fivetran_utils.fill_staging_columns`'s own
-  branching and `alias` support), absent columns get `cast(null as datatype)`. Originally three
-  macros (`normalize_column_payload` + `apply_column_payload` + `select_payload_fields`) —
-  folded into one, since the other two were never called from anywhere else. `source_name` and
-  the optional `payload_key` exist to let the same macro serve the `salesforce_history` source
-  too (see below), not just `salesforce`.
+  `source(source_name, table_name)`, calls `get_source_identifier` to build an *overriding*
+  relation via `api.Relation.create()` (see below for why this override lives here and not in
+  the source yml), drills `salesforce__column_payload` down to `payload[schema][payload_key or
+  table_name]` (using the single-schema shortcut described above), and emits the complete
+  `select ... from ...` body: present columns pass through, quoted, under their current name
+  (mirroring `fivetran_utils.fill_staging_columns`'s own branching and `alias` support), absent
+  columns get `cast(null as datatype)`. Originally three macros (`normalize_column_payload` +
+  `apply_column_payload` + `select_payload_fields`) — folded into one, since the other two were
+  never called from anywhere else. `source_name` and the optional `payload_key` exist to let
+  the same macro serve the `salesforce_history` source too (see below), not just `salesforce`.
 - **`get_source_identifier(schema_name, payload_key, default=payload_key)`** (`macros/staging/`)
   — resolves a table's physical identifier from the same payload's `__identifier__`, falling
-  back to `default` (the standard table name, or a caller-supplied literal for reserved-word
-  cases). Used directly in a source yml's `identifier:` config (`schema_name` passed in
-  explicitly, since this runs before `source()` itself can resolve it), never from a model.
-  Same single-schema shortcut as `select_payload_fields`.
+  back to `default`. Called from `select_payload_fields` (a model-context macro call), *not*
+  from a source yml's `identifier:` config — see below for why that distinction matters. Same
+  single-schema shortcut as `select_payload_fields`.
 - **`get_history_columns(base_columns, id_alias)`** (`macros/`, alongside the existing
   `history_spine_start_date`) — takes a core table's own `get_*_columns()` list and adds
   `_fivetran_start`/`_fivetran_end`, aliasing `id` to the history model's day-grain id column
@@ -207,47 +207,72 @@ list in sync when adding a join), not a gap to close.
 
 - `macros/staging/add_renamed_columns.sql`, `coalesce_rename.sql`, `column_list_to_dict.sql` —
   the camelCase-guessing/coalescing machinery this POC replaces. Nothing calls them anymore.
-- The 14 per-table `salesforce_<table>_identifier` vars in `integration_tests/dbt_project.yml`
-  — see below, they're superseded by the payload's `__identifier__`.
 
-An earlier pass through this POC also deleted the 14 `identifier:` overrides and the freshness
-config in `src_salesforce.yml` outright, reasoning the FROM relation didn't need them since it
-was built from the payload directly via `api.Relation.create()`. That broke the only tie
-dbt's own tooling (docs, lineage, `dbt source freshness`) has to the real physical table, so
-both came back — but pointed at the payload instead of the old per-table vars, closing that
-gap for good instead of just patching around it.
+That's it, in the end. Two earlier passes through this POC also deleted (then partially
+restored, then fully restored) the 14 per-table `identifier:` overrides, the freshness config,
+and the `salesforce_<table>_identifier` vars — see the next section for why they're back to
+looking exactly like `main`, unchanged.
 
-## The identifier now comes from the payload at the `src_salesforce.yml` level
+## The identifier override lives in `select_payload_fields`, not in `identifier:` — confirmed by real CI, not just reasoning
 
-Each table's `identifier:` config went from:
+This went through three designs before landing. First: delete the yml `identifier:` overrides
+entirely, since the FROM relation was built straight from the payload via
+`api.Relation.create()` — broke dbt's only tie to the real physical table (docs, lineage,
+`dbt source freshness`). Second: point `identifier:` itself at a new `get_source_identifier(...)`
+macro, so `source(...)` resolved to the payload's `__identifier__` directly — this compiled
+fine under `dbt-oss 2.0.5` (the engine used for most of this POC's local verification) and
+seemed like a clean unification, until **this package's own Buildkite CI failed identically on
+all three of its targets** (postgres, snowflake, duckdb) at `dbt seed`, before any actual data
+testing even started:
 
-```yaml
-identifier: "{{ var('salesforce_account_identifier', 'account')}}"
+```
+Compilation Error
+Could not render {{ salesforce.get_source_identifier(var('salesforce_schema', 'salesforce'), 'account') }}: 'salesforce' is undefined
 ```
 
-to:
+Real dbt-core's YAML property-file Jinja rendering only exposes built-in globals (`var`,
+`env_var`, `target`, ...) — never custom package macros, even self-namespaced ones. `dbt-oss
+2.0.5` evidently renders source config with the full macro context available, which is why
+local testing never caught this; CI, running real `dbt-core 1.11.15`, did. Confirmed
+independently and interactively too, against a real `dbt-core==1.11.12` install, before this
+was even pushed.
 
-```yaml
-identifier: "{{ salesforce.get_source_identifier(var('salesforce_schema', 'salesforce'), 'account') }}"
-```
+**Final design**: `src_salesforce.yml`'s 14 `identifier:` configs (and `src_salesforce_history.yml`'s
+4) are back to exactly what they were on `main` — plain `var('salesforce_<table>_identifier',
+'<table>')`, including the `salesforce_<table>_identifier` vars in
+`integration_tests/dbt_project.yml` and order's Snowflake-reserved-word branch. `source(...)`
+itself is untouched by any of this POC's payload machinery. `select_payload_fields`
+(a normal macro, called from a model, where custom macros always work) calls
+`get_source_identifier` internally and builds an *overriding* relation with
+`api.Relation.create()`, falling back to `source(...)`'s own plain-var identifier (not a bare
+literal) when the payload has no entry. `get_source_identifier`'s own implementation didn't
+need to change at all — only who calls it, and from where.
 
-`get_source_identifier` reads the same `salesforce__column_payload` var everything else uses,
-falling back to the literal standard name (`account`) if the payload has no entry — the same
-default dbt itself would use with no `identifier:` at all. Since this is evaluated wherever
-`source('salesforce', 'account')` is, `source(...)` now resolves to the payload's
-`__identifier__` *directly* — no separate override needed in `select_payload_fields` anymore
-(the earlier `api.Relation.create()` step is gone). This closes the gap flagged after the
-previous pass: there's now exactly one source of truth for the identifier, and dbt's own
-tooling (docs, lineage, `dbt source freshness`) sees the same one this package actually
-queries, instead of the two independently-configured values silently drifting apart.
+Re-verified end to end against **real dbt-core** (not `dbt-oss`) this time: `dbt parse` against
+a real `dbt-core==1.11.12` install succeeds (the exact command that used to fail), and all 28
+models build clean against a real Postgres instance (the same kind of warehouse Buildkite CI
+itself uses) with real `dbt-core 1.11.12`.
 
-The order table keeps its Snowflake-reserved-word handling, just calling
-`get_source_identifier(schema, 'order', default='"ORDER"')` for the Snowflake branch instead of
-`var('salesforce_order_identifier', '"ORDER"')`.
+### A second, distinct bug this same real-Postgres run caught
 
-The 14 `salesforce_<table>_identifier` vars in `integration_tests/dbt_project.yml` are gone —
-nothing reads them anymore. The payload's `__identifier__` for each table (e.g.
-`sf_account_data`) is now the only place that mapping is configured.
+`stg_salesforce__account`/`stg_salesforce__opportunity` failed against real Postgres with
+`column "accountnumber" does not exist` / `column "description__c" does not exist` — Postgres
+folds an *unquoted* identifier to lowercase, so the compiled `AccountNumber as account_number`
+(bare, unquoted) resolved to a column literally named `accountnumber`, which doesn't exist —
+the actual column, created by `dbt seed`, is case-preserved as `AccountNumber`. `select_payload_fields`
+now always quotes a resolved current-name reference (`quote_column({"name": current_name,
+"quote": true})`), reusing the same per-warehouse quoting `quote_column` already had (including
+Snowflake's uppercase-folding special case). Quoting a plain lowercase/underscore name this way
+is a no-op on every warehouse, so the common (unrenamed) case is unaffected. Re-verified: both
+models build clean against real Postgres afterward, and querying the account demo row directly
+confirms `account_number = 'ACC-100234'` (rename resolved, correctly quoted) and `website =
+NULL` (missing column) — on a real warehouse, under real dbt-core, not just DuckDB under
+`dbt-oss`.
+
+**This is the second time in this POC that DuckDB-only (or `dbt-oss`-only) verification missed
+something a real target caught** — first the BigQuery type-inference/casting bug, now this
+identifier-in-yml limitation and the Postgres case-folding bug. Neither DuckDB nor `dbt-oss`
+are a substitute for testing against what CI (and customers) actually run.
 
 ## History models now use the same payload-driven pattern
 
@@ -312,35 +337,37 @@ this fixture's history seeds; removed from the payload so they null-fill instead
   visibly, not just theoretically, the missing-column column.
 - **Isolated macro unit test** (via `dbt run-operation`): confirmed null-fill and
   case-insensitive payload-key matching independent of any seed data.
-- **Identifier resolution**: confirmed `source('salesforce','account')` itself (not a
-  separately-built relation) resolves to `sf_account_data`, the payload's `__identifier__`.
-  With the payload emptied out entirely, confirmed the fallback correctly resolves to the
-  literal `account` (a real "table not found" error against this project's `sf_`-prefixed
-  seeds, not a crash or a silent wrong-table query) — proving the fallback chain works even
-  though it doesn't happen to match this particular project's seed naming.
+- **Identifier resolution**: confirmed the *overriding* relation `select_payload_fields` builds
+  via `api.Relation.create()` resolves to `sf_account_data`, the payload's `__identifier__` —
+  `source('salesforce','account')` itself keeps its own plain-var identifier, unaffected. With
+  the payload emptied out entirely, confirmed the fallback correctly resolves to that
+  plain-var identifier rather than a bare literal or a crash.
 - **Schema shortcut/exact-match, both directions**: with `salesforce_schema` overridden to an
   arbitrary, unrelated value against this fixture's single-schema payload, the identifier still
   resolved correctly (shortcut). With a synthetic two-schema payload, querying the schema that's
   actually present returned that schema's identifier, and querying a schema present in neither
   entry fell back to the literal default rather than picking either schema's data (exact match).
+- **Real dbt-core, real Postgres, real CI** (see the dedicated section above for the full
+  story): `dbt parse` against a real `dbt-core==1.11.12` install succeeds — the exact command
+  that used to fail. All 28 models build clean against a real Postgres instance under real
+  dbt-core, and querying the account demo row directly on that real warehouse confirms
+  `account_number = 'ACC-100234'` (rename, correctly quoted) and `website = NULL` (missing
+  column) — matching what DuckDB/`dbt-oss` had already shown, but now on infrastructure that
+  actually reflects what customers and CI run.
 
 ## Open questions / follow-ups (not resolved by this POC)
 
 - **How the real quickstart runtime supplies this var per customer** — this POC hand-authors
   it in `integration_tests/dbt_project.yml`; production wiring is undesigned.
-- **`get_source_identifier` in `identifier:` only works on dbt 2.0 (the Fusion-era engine,
-  tested here as `dbt-oss 2.0.5`), not real dbt-core.** Confirmed directly: real dbt-core
-  1.11.12 fails `identifier: "{{ salesforce.get_source_identifier('account') }}"` with
-  `Compilation Error: Could not render ...: 'salesforce' is undefined` — reproduced with the
-  actual `dbt-core==1.11.12` package, not just inferred. dbt-core's YAML property-file Jinja
-  rendering only exposes built-in globals (`var`, `env_var`, `target`, ...), never custom
-  package macros, even self-namespaced ones; dbt 2.0 evidently renders source config with the
-  full macro context available. **This POC's `identifier:` design is dbt-2.0-only by explicit
-  choice** (see conversation) — it will not work as-is on any dbt-core 1.x project, which is
-  what real customers run today. If this ships before dbt-core parity (or for a dbt-core
-  target), `identifier:` needs to go back to a plain `var()`-based per-table default (as it was
-  before this POC), with the payload's `__identifier__` handled as a runtime override inside
-  `select_payload_fields` (via `api.Relation.create()`) instead of at the yml level.
+- **Resolved, not open**: an earlier design called `get_source_identifier` directly from
+  `identifier:` in the source yml, on the assumption it would work like `dbt-oss 2.0.5` (used
+  for most of this POC's local verification) rendered it. This package's real Buildkite CI,
+  running real `dbt-core 1.11.15`, failed identically on all three targets at `dbt seed` —
+  real dbt-core's YAML property-file Jinja never exposes custom macros, only built-ins. Fixed
+  by moving the identifier override into `select_payload_fields` (a model-context macro call,
+  where custom macros always work) and restoring `identifier:` to plain `var()` calls
+  identical to `main`. Re-verified against a real `dbt-core==1.11.12` install and a real
+  Postgres instance. Left here as a record of what broke and why, not as something still open.
 - **Resolved, not open**: the payload's top-level schema key originally had to be kept in sync
   by hand with `salesforce_schema`/`salesforce_history_schema` — hit this directly switching
   the integration_tests target from DuckDB to BigQuery, where `salesforce_schema` changed but
@@ -355,6 +382,7 @@ this fixture's history seeds; removed from the payload so they null-fill instead
   union model was built or tested here (this package doesn't currently union multiple
   Salesforce orgs in staging) — only the two-schema shortcut/exact-match behavior itself was
   verified in isolation, not against a real union model's actual join/union logic.
-- **Upstreaming** — `apply_column_payload`/`normalize_column_payload` are Salesforce-local for
-  now. If this pattern proves out, `fivetran_utils` is the natural home (same precedent as the
-  existing `add_pass_through_columns` trio), so other packages could adopt it.
+- **Upstreaming** — `select_payload_fields`/`get_source_identifier`/`get_history_columns` are
+  Salesforce-local for now. If this pattern proves out, `fivetran_utils` is the natural home
+  (same precedent as the existing `add_pass_through_columns` trio), so other packages could
+  adopt it.
