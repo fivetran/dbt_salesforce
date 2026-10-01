@@ -274,6 +274,34 @@ something a real target caught** — first the BigQuery type-inference/casting b
 identifier-in-yml limitation and the Postgres case-folding bug. Neither DuckDB nor `dbt-oss`
 are a substitute for testing against what CI (and customers) actually run.
 
+### Reversed again: this package targets v2 (`dbt-oss`/Fusion) only, not v1 compatibility
+
+The "move the override into `select_payload_fields`" fix above made both `[dbt v1]` (real
+dbt-core) and `[dbt v2]` (`dbt-oss`/Fusion) CI lanes pass. That was the right call *while it
+looked like a real-dbt-core compatibility bug was the only open question*. It wasn't the actual
+goal: this POC is deliberately v2-only, and the earlier confusion about "v2 failures" (build
+#272) was a separate, unrelated bug — the schema-key drift bug, fixed by the single-schema
+shortcut — not evidence that the yml-based identifier design itself was broken under v2. Once
+that was untangled, there was no remaining reason to carry the `api.Relation.create()`
+override-in-macro design just to keep real dbt-core working.
+
+So this reverses back to the second design above: `identifier:` in both source ymls calls
+`salesforce.get_source_identifier(...)` directly again, `select_payload_fields` reads straight
+from `source(source_name, table_name)` with no override relation, and the 18 now-redundant
+`salesforce_<table>[_history]_identifier` vars are gone from `integration_tests/dbt_project.yml`
+again (the payload's own `__identifier__` field is the only source of truth). The Postgres
+case-folding quoting fix is unrelated to identifier placement and was kept as-is.
+
+**Consequence, accepted deliberately**: real dbt-core (`[dbt v1]` in this package's CI) will
+fail again at `dbt seed`/parse with `Could not render {{ salesforce.get_source_identifier(...)
+}}: 'salesforce' is undefined` — reproduced directly against a real `dbt-core==1.11.12` install
+to confirm it's the same failure mode CI hit before, not a new one. `[dbt v2]` (`dbt-oss 2.0.5`)
+is unaffected: full `dbt seed` + `dbt run` (all 28 models, history included) succeeds with zero
+errors, `dbt parse` succeeds, the identifier resolves to the payload's `__identifier__` (e.g.
+`from "postgres"."zz_dbt_catherine"."sf_opportunity_data"` in compiled SQL, confirmed against a
+real DuckDB build), and both the account rename/null-fill demo and the opportunity
+`description` → `Description__c` rename demo still resolve correctly.
+
 ## History models now use the same payload-driven pattern
 
 The 4 `salesforce__*_daily_history` models (`models/salesforce_history/`) had their own,

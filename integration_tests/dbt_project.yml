@@ -21,37 +21,14 @@ vars:
     salesforce_schema: zz_dbt_catherine #salesforce_integrations_tests_4
     salesforce_history_schema: zz_dbt_catherine #salesforce_integrations_tests_4
 
-    # These per-table identifier vars are what src_salesforce(_history).yml's identifier:
-    # config reads directly (real dbt-core can't render custom macros in yml Jinja, so that
-    # config has to stay plain var()-based). select_payload_fields builds its own overriding
-    # relation on top of this default, from salesforce__column_payload's __identifier__ field
-    # (see get_source_identifier) -- see the payload below. It's schema-then-table nested
-    # (payload[schema][table]), prepared for a future multi-org/union package -- but
-    # select_payload_fields/get_source_identifier use the single schema entry directly
-    # whenever there's only one (true for Salesforce today), rather than requiring it to
-    # exactly match salesforce_schema/salesforce_history_schema. History tables use
-    # <table>_history as their payload key to avoid colliding with the core tables' own
-    # entries within that one schema.
-    salesforce_account_identifier: "sf_account_data"
-    salesforce_campaign_identifier: "sf_campaign_data"
-    salesforce_campaign_member_identifier: "sf_campaign_member_data"
-    salesforce_opportunity_identifier: "sf_opportunity_data"
-    salesforce_record_type_identifier: "sf_record_type_data"
-    salesforce_user_identifier: "sf_user_data"
-    salesforce_user_role_identifier: "sf_user_role_data"
-    salesforce_contact_identifier: "sf_contact_data"
-    salesforce_lead_identifier: "sf_lead_data"
-    salesforce_task_identifier: "sf_task_data"
-    salesforce_event_identifier: "sf_event_data"
-    salesforce_product_2_identifier: "sf_product_2_data"
-    salesforce_order_identifier: "sf_order_data"
-    salesforce_opportunity_line_item_identifier: "sf_opportunity_line_item_data"
-
-    ##history mode identifiers
-    salesforce_campaign_history_identifier: "sf_campaign_history_data"
-    salesforce_account_history_identifier: "sf_account_history_data"
-    salesforce_contact_history_identifier: "sf_contact_history_data"
-    salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
+    # Staging and history table identifiers now come from salesforce__column_payload's
+    # __identifier__ field (see get_source_identifier), not per-table vars -- see the
+    # payload below. It's schema-then-table nested (payload[schema][table]), prepared for a
+    # future multi-org/union package -- but select_payload_fields/get_source_identifier use
+    # the single schema entry directly whenever there's only one (true for Salesforce today),
+    # rather than requiring it to exactly match salesforce_schema/salesforce_history_schema.
+    # History tables use <table>_history as their key to avoid colliding with the core
+    # tables' own entries within that one schema.
 
     ## Staging v2 POC: exhaustive column payloads simulating what the quickstart runtime
     ## would supply per table (canonical_name: current_name_in_source), replacing

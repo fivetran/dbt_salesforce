@@ -1,8 +1,8 @@
 {% macro select_payload_fields(source_name, table_name, staging_columns, payload_key=none) %}
 {#
-    Everything a `fields` CTE needs, in one call: resolves source(source_name, table_name),
-    rebuilds the relation with the payload's __identifier__ (via get_source_identifier),
-    drills the exhaustive salesforce__column_payload var down to this table
+    Everything a `fields` CTE needs, in one call: resolves source(source_name, table_name) --
+    whose `identifier:` is itself payload-driven, via get_source_identifier called directly in
+    the source yml -- drills the exhaustive salesforce__column_payload var down to this table
     (payload[schema][payload_key], case-insensitive), and emits the full `select ... from ...`
     body -- present columns pass through, quoted, under their current name; absent columns
     get `cast(null as datatype)`. Mirrors fivetran_utils.fill_staging_columns' own branching
@@ -24,21 +24,19 @@
     table vs. the core `salesforce` source's own `account` table): pass a distinct key like
     'account_history' so the two don't collide in the payload dict.
 
-    The identifier override happens here, in a normal macro context, not in the source yml's
-    `identifier:` config -- real dbt-core cannot render custom macros (even self-namespaced
-    ones) inside a source config's Jinja, only built-in globals like var()/env_var()/target.
-    Confirmed directly against real dbt-core 1.11 (both interactively and via this package's
-    own Buildkite CI, which failed identically across postgres/snowflake/duckdb with
-    "'salesforce' is undefined" the one time this was tried from the yml). So
-    source(source_name, table_name)'s own `identifier:` stays a plain var()-based default (as
-    it always was), and this macro builds an *overriding* relation from the payload's
-    __identifier__ on top of it via api.Relation.create(), falling back to that plain
-    var()-based identifier (not a bare literal) when the payload has no entry for this table.
+    This package is v2 (dbt-oss/Fusion) only going forward: get_source_identifier is called
+    directly from the source yml's `identifier:` config, which real dbt-core cannot render
+    (confirmed via this package's own Buildkite CI -- build #273 failed identically across
+    postgres/snowflake/duckdb with "'salesforce' is undefined" the one time this was tried).
+    An earlier revision moved that call into this macro instead, building an overriding
+    relation via api.Relation.create() so real dbt-core would keep working too -- reverted
+    deliberately, since the goal is the v2-only yml-based design, not v1 compatibility.
 
-    source(source_name, table_name) is still the tie back to the source yml dbt itself
-    understands -- it's what makes docs, lineage, and `dbt source freshness` work, using
-    whatever plain var()-based identifier is configured there. This macro's FROM clause reads
-    from the payload-driven override instead, which usually matches but isn't required to.
+    source(source_name, table_name) is the only tie back to the source yml dbt itself
+    understands -- it's what makes docs, lineage, and `dbt source freshness` work, and its
+    `identifier:` already resolves to the payload's __identifier__ (falling back to the
+    standard table name) via get_source_identifier. This macro's FROM clause just reads from
+    it directly -- no separate override needed.
 
     Usage in a model's `fields` CTE:
         with fields as (
@@ -47,8 +45,6 @@
 #}
 {%- set payload_key = payload_key or table_name -%}
 {%- set table_source = source(source_name, table_name) -%}
-{%- set identifier = salesforce.get_source_identifier(table_source.schema, payload_key, default=table_source.identifier) -%}
-{%- set table_relation = api.Relation.create(database=table_source.database, schema=table_source.schema, identifier=identifier) -%}
 {%- set full_payload = var('salesforce__column_payload', {}) or {} -%}
 {%- if full_payload | length == 1 -%}
     {%- set schema_payload = full_payload.values() | first -%}
@@ -72,6 +68,6 @@
         {%- endif %}{{ ',' if not loop.last }}
         {%- endfor %}
 
-    from {{ table_relation }}
+    from {{ table_source }}
 
 {%- endmacro %}
