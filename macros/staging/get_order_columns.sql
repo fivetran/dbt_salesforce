@@ -19,7 +19,7 @@
     {"name": "description", "datatype": dbt.type_string()},
     {"name": "end_date", "datatype": dbt.type_timestamp()},
     {"name": "id", "datatype": dbt.type_string()},
-    {"name": "is_deleted", "datatype": dbt.type_boolean()},
+    {"name": "is_deleted", "datatype": "boolean"},
     {"name": "last_modified_by_id", "datatype": dbt.type_string()},
     {"name": "last_modified_date", "datatype": dbt.type_timestamp()},
     {"name": "last_referenced_date", "datatype": dbt.type_timestamp()},
