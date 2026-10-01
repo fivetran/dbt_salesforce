@@ -13,7 +13,6 @@
     {"name": "sobject_type", "datatype": dbt.type_string()}
 ] %}
 
-{{ salesforce.add_renamed_columns(columns) }}
 
 {{ return(columns) }}
 

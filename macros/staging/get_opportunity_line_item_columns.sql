@@ -29,7 +29,6 @@
     {"name": "unit_price", "datatype": dbt.type_float()}
 ] %}
 
-{{ salesforce.add_renamed_columns(columns) }}
 
 {{ fivetran_utils.add_pass_through_columns(columns, var('salesforce__opportunity_line_item_pass_through_columns')) }}
 

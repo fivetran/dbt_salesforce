@@ -1,55 +1,44 @@
-{% set account_column_list = get_account_columns() -%}
-{% set account_dict = column_list_to_dict(account_column_list) -%}
-
 with fields as (
 
-    select
-        {{
-            fivetran_utils.fill_staging_columns(
-                source_columns=adapter.get_columns_in_relation(source('salesforce','account')),
-                staging_columns=account_column_list
-            )
-        }}
-
-    from {{ source('salesforce','account') }}
+    {{ salesforce.select_payload_fields('salesforce', 'account', get_account_columns()) }}
 ), 
 
 final as (
     select
         cast(_fivetran_synced as {{ dbt.type_timestamp() }}) as _fivetran_synced,
-        {{ salesforce.coalesce_rename("account_number", account_dict) }},
-        {{ salesforce.coalesce_rename("account_source", account_dict) }},
-        {{ salesforce.coalesce_rename("annual_revenue", account_dict, datatype=dbt.type_numeric()) }},
-        {{ salesforce.coalesce_rename("billing_city", account_dict) }},
-        {{ salesforce.coalesce_rename("billing_country", account_dict) }},
-        {{ salesforce.coalesce_rename("billing_postal_code", account_dict) }},
-        {{ salesforce.coalesce_rename("billing_state", account_dict) }},
-        {{ salesforce.coalesce_rename("billing_state_code", account_dict) }},
-        {{ salesforce.coalesce_rename("billing_street", account_dict) }},
-        {{ salesforce.coalesce_rename("description", account_dict, alias="account_description" ) }},
-        {{ salesforce.coalesce_rename("id", account_dict, alias="account_id") }},
-        {{ salesforce.coalesce_rename("industry", account_dict) }},
-        {{ salesforce.coalesce_rename("is_deleted", account_dict) }},
-        {{ salesforce.coalesce_rename("last_activity_date", account_dict) }},
-        {{ salesforce.coalesce_rename("last_referenced_date", account_dict) }},
-        {{ salesforce.coalesce_rename("last_viewed_date", account_dict) }},
-        {{ salesforce.coalesce_rename("master_record_id", account_dict) }},
-        {{ salesforce.coalesce_rename("name", account_dict, alias="account_name" ) }},
-        {{ salesforce.coalesce_rename("number_of_employees", account_dict) }},
-        {{ salesforce.coalesce_rename("owner_id", account_dict) }},
-        {{ salesforce.coalesce_rename("ownership", account_dict) }},
-        {{ salesforce.coalesce_rename("parent_id", account_dict) }},
-        {{ salesforce.coalesce_rename("rating", account_dict) }},
-        {{ salesforce.coalesce_rename("record_type_id", account_dict) }},
-        {{ salesforce.coalesce_rename("shipping_city", account_dict) }},
-        {{ salesforce.coalesce_rename("shipping_country", account_dict) }},
-        {{ salesforce.coalesce_rename("shipping_country_code", account_dict) }},
-        {{ salesforce.coalesce_rename("shipping_postal_code", account_dict) }},
-        {{ salesforce.coalesce_rename("shipping_state", account_dict) }},
-        {{ salesforce.coalesce_rename("shipping_state_code", account_dict) }},
-        {{ salesforce.coalesce_rename("shipping_street", account_dict) }},
-        {{ salesforce.coalesce_rename("type", account_dict) }},
-        {{ salesforce.coalesce_rename("website", account_dict) }}
+        account_number,
+        account_source,
+        cast(annual_revenue as {{ dbt.type_numeric() }}) as annual_revenue,
+        billing_city,
+        billing_country,
+        billing_postal_code,
+        billing_state,
+        billing_state_code,
+        billing_street,
+        description as account_description,
+        cast(id as {{ dbt.type_string() }}) as account_id,
+        industry,
+        is_deleted,
+        last_activity_date,
+        last_referenced_date,
+        last_viewed_date,
+        master_record_id,
+        name as account_name,
+        number_of_employees,
+        owner_id,
+        ownership,
+        parent_id,
+        rating,
+        record_type_id,
+        shipping_city,
+        shipping_country,
+        shipping_country_code,
+        shipping_postal_code,
+        shipping_state,
+        shipping_state_code,
+        shipping_street,
+        type,
+        website
 
         {{ fivetran_utils.fill_pass_through_columns('salesforce__account_pass_through_columns') }}
 

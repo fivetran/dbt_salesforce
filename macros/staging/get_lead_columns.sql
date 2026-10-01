@@ -48,7 +48,6 @@
     {"name": "website", "datatype": dbt.type_string()},
 ] %}
 
-{{ salesforce.add_renamed_columns(columns) }}
 
 {{ fivetran_utils.add_pass_through_columns(columns, var('salesforce__lead_pass_through_columns')) }}
 
