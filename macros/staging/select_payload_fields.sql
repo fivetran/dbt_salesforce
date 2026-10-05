@@ -1,8 +1,9 @@
 {% macro select_payload_fields(source_name, table_name, staging_columns, payload_key=none) %}
 {#
     Everything a `fields` CTE needs, in one call: resolves source(source_name, table_name) --
-    whose `identifier:` is itself payload-driven, via get_source_identifier called directly in
-    the source yml -- drills the exhaustive salesforce__column_payload var down to this table
+    whose `identifier:` config is the original, unmodified main logic (plain
+    var('salesforce_<table>_identifier', '<table>')), untouched by this POC -- drills the
+    exhaustive salesforce__column_payload var down to this table
     (payload[schema][payload_key], case-insensitive), and emits the full `select ... from ...`
     body -- present columns pass through, quoted, under their current name; absent columns
     get `cast(null as datatype)`. Mirrors fivetran_utils.fill_staging_columns' own branching
@@ -24,19 +25,22 @@
     table vs. the core `salesforce` source's own `account` table): pass a distinct key like
     'account_history' so the two don't collide in the payload dict.
 
-    This package is v2 (dbt-oss/Fusion) only going forward: get_source_identifier is called
-    directly from the source yml's `identifier:` config, which real dbt-core cannot render
-    (confirmed via this package's own Buildkite CI -- build #273 failed identically across
-    postgres/snowflake/duckdb with "'salesforce' is undefined" the one time this was tried).
-    An earlier revision moved that call into this macro instead, building an overriding
-    relation via api.Relation.create() so real dbt-core would keep working too -- reverted
-    deliberately, since the goal is the v2-only yml-based design, not v1 compatibility.
+    This POC went through two other identifier designs before landing back here: first calling
+    a new get_source_identifier() macro directly from the yml's `identifier:` config (broke
+    real dbt-core -- it can't render custom package macros in source-yml Jinja, confirmed via
+    this package's own Buildkite CI, build #273, failing identically across
+    postgres/snowflake/duckdb with "'salesforce' is undefined"), then moving that same macro
+    call into this macro instead, building an overriding relation via api.Relation.create().
+    Both were solving a problem the payload doesn't actually need to solve: physical table
+    naming is an existing, working convention (the per-table `_identifier` vars), and
+    reinventing it as a payload field only added a second source of truth. Reverted back to
+    the original main behavior entirely -- the payload now only ever supplies column rename
+    info, never identifiers.
 
     source(source_name, table_name) is the only tie back to the source yml dbt itself
     understands -- it's what makes docs, lineage, and `dbt source freshness` work, and its
-    `identifier:` already resolves to the payload's __identifier__ (falling back to the
-    standard table name) via get_source_identifier. This macro's FROM clause just reads from
-    it directly -- no separate override needed.
+    `identifier:` is the plain var()-based config main has always had. This macro's FROM
+    clause just reads from it directly -- no override of any kind.
 
     Usage in a model's `fields` CTE:
         with fields as (

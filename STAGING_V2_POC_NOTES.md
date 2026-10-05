@@ -455,3 +455,39 @@ is not by itself a substitute for "run under v1," and both lanes matter.
   Salesforce-local for now. If this pattern proves out, `fivetran_utils` is the natural home
   (same precedent as the existing `add_pass_through_columns` trio), so other packages could
   adopt it.
+
+## Final reversal: identifiers are back to 100% original main logic, no payload involvement at all
+
+After settling on the v2-only yml-based `get_source_identifier()` design (above), the decision
+changed again: drop the whole identifier-via-payload concept, not just the macro-in-yml part of
+it. `get_source_identifier.sql` is deleted. `src_salesforce.yml`'s 14 `identifier:` configs and
+`src_salesforce_history.yml`'s 4 are byte-identical to `main` again — plain
+`var('salesforce_<table>_identifier', '<table>')`, nothing payload-driven. The payload's
+`__identifier__` field is gone from every one of its 18 table entries; it now only ever carries
+column rename info (canonical name → current name), never physical table names.
+
+Rationale: physical table naming already has a working, existing convention (the per-table
+`_identifier` vars) — there was never a real problem for the payload to solve here, and every
+identifier design this POC tried (payload-schema-matching, yml-macro, macro-in-select_payload_fields)
+was solving a problem invented by trying to unify two concerns that don't actually need to be
+unified. `select_payload_fields` keeps its payload-driven column-presence/rename logic (the
+actual point of this POC) and otherwise just reads from `source(source_name, table_name)`
+directly, no override of any kind.
+
+Verified against `dbt-oss 2.0.5`: `dbt parse` succeeds, all 28 models build clean against
+DuckDB, the account rename/null-fill demo (`account_number = 'ACC-100234'`, `website = NULL`)
+and the opportunity `description` → `Description__c` rename both still resolve correctly, and
+compiled SQL's `from` clause resolves to the same `sf_<table>_data` physical tables as before —
+now via the restored plain vars, not the payload.
+
+## Vars moved to `integration_tests/vars.yml`
+
+Per https://docs.getdbt.com/docs/build/project-variables?version=2 (dbt v1.12+/Fusion): a
+project can define its `vars:` block in a dedicated `vars.yml` file instead of inline in
+`dbt_project.yml`, parsed before `dbt_project.yml` itself. `integration_tests/vars.yml` now
+holds the entire `vars:` block (the 18 per-table identifier vars, `salesforce_schema`/
+`salesforce_history_schema`, and `salesforce__column_payload`) that used to live in
+`integration_tests/dbt_project.yml`. `dbt_project.yml` keeps everything else (`seeds:`,
+`dispatch:`, `clean-targets:`, `flags:`) and no longer has a `vars:` key of its own — a project
+can't define `vars:` in both files at once. Verified: `dbt parse` and a full 28-model build
+against DuckDB both succeed unchanged under `dbt-oss 2.0.5`.
