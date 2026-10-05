@@ -1,3 +1,8 @@
+# This package's v1 (real dbt-core) track needs dbt-core 1.12+: integration_tests/vars.yml
+# requires it (https://docs.getdbt.com/docs/build/project-variables?version=2). The default
+# v1 range is ">=1.3.0,<1.12.0", which excludes 1.12+ entirely, so this must be overridden.
+dbt_core_version: ">=1.12.0,<2.0.0"
+
 # Only set if not using default adapter ranges
 # dbt_adapter_versions:
 #   snowflake: ">=1.3.0,<2.0.0"

@@ -10,37 +10,9 @@ models:
     columns: "{{ false if target.type in ('databricks') else true }}"
   +schema: "salesforce_{{ var('directed_schema','dev') }}"
 
-vars:
-  # enable history models when generating docs!
-  # salesforce__campaign_history_enabled: true # @docs-include
-  # salesforce__contact_history_enabled: true # @docs-include
-  # salesforce__account_history_enabled: true # @docs-include
-  # salesforce__opportunity_history_enabled: true # @docs-include
-
-  salesforce:
-    salesforce_schema: salesforce_integrations_tests_4
-    salesforce_history_schema: salesforce_integrations_tests_4
-
-    salesforce_account_identifier: "sf_account_data"
-    salesforce_campaign_identifier: "sf_campaign_data"
-    salesforce_campaign_member_identifier: "sf_campaign_member_data"
-    salesforce_opportunity_identifier: "sf_opportunity_data"
-    salesforce_record_type_identifier: "sf_record_type_data"
-    salesforce_user_identifier: "sf_user_data"
-    salesforce_user_role_identifier: "sf_user_role_data"
-    salesforce_contact_identifier: "sf_contact_data"
-    salesforce_lead_identifier: "sf_lead_data"
-    salesforce_task_identifier: "sf_task_data"
-    salesforce_event_identifier: "sf_event_data"
-    salesforce_product_2_identifier: "sf_product_2_data"
-    salesforce_order_identifier: "sf_order_data"
-    salesforce_opportunity_line_item_identifier: "sf_opportunity_line_item_data"
-
-    ##history mode identifiers
-    salesforce_campaign_history_identifier: "sf_campaign_history_data"
-    salesforce_account_history_identifier: "sf_account_history_data"
-    salesforce_contact_history_identifier: "sf_contact_history_data"
-    salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
+# Vars live in vars.yml (parsed before this file, so its values are available for reference
+# here) rather than inline -- see https://docs.getdbt.com/docs/build/project-variables?version=2.
+# A vars: block can't be defined in both files, so don't add one back here.
 
 seeds:
   +docs:

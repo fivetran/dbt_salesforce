@@ -29,7 +29,6 @@
     {"name": "revenue_schedule_type", "datatype": dbt.type_string()},
 ] %}
 
-{{ salesforce.add_renamed_columns(columns) }}
 
 {{ fivetran_utils.add_pass_through_columns(columns, var('salesforce__product_2_pass_through_columns')) }}
 

@@ -1,55 +1,44 @@
 --To disable this model, set the salesforce__task_enabled variable within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__task_enabled', True)) }}
 
-{% set task_column_list = get_task_columns() -%}
-{% set task_dict = column_list_to_dict(task_column_list) -%}
-
 with fields as (
 
-    select
-        {{
-            fivetran_utils.fill_staging_columns(
-                source_columns=adapter.get_columns_in_relation(source('salesforce','task')),
-                staging_columns=task_column_list
-            )
-        }}
-        
-    from {{ source('salesforce','task') }}
+    {{ salesforce.select_payload_fields('salesforce', 'task', get_task_columns()) }}
 ), 
 
 final as (
     
     select 
         cast(_fivetran_synced as {{ dbt.type_timestamp() }}) as _fivetran_synced,
-        {{ salesforce.coalesce_rename("id", task_dict, alias="task_id") }},
-        {{ salesforce.coalesce_rename("account_id", task_dict) }},
-        {{ salesforce.coalesce_rename("activity_date", task_dict) }},
-        {{ salesforce.coalesce_rename("call_disposition", task_dict) }},
-        {{ salesforce.coalesce_rename("call_duration_in_seconds", task_dict) }},
-        {{ salesforce.coalesce_rename("call_object", task_dict) }},
-        {{ salesforce.coalesce_rename("call_type", task_dict) }},
-        {{ salesforce.coalesce_rename("completed_date_time", task_dict) }},
-        {{ salesforce.coalesce_rename("created_by_id", task_dict) }},
-        {{ salesforce.coalesce_rename("created_date", task_dict) }},
-        {{ salesforce.coalesce_rename("description", task_dict, alias="task_description") }},
-        {{ salesforce.coalesce_rename("is_archived", task_dict) }},
-        {{ salesforce.coalesce_rename("is_closed", task_dict) }},
-        {{ salesforce.coalesce_rename("is_deleted", task_dict) }},
-        {{ salesforce.coalesce_rename("is_high_priority", task_dict) }},
-        {{ salesforce.coalesce_rename("last_modified_by_id", task_dict) }},
-        {{ salesforce.coalesce_rename("last_modified_date", task_dict) }},
-        {{ salesforce.coalesce_rename("owner_id", task_dict) }},
-        {{ salesforce.coalesce_rename("priority", task_dict) }},
-        {{ salesforce.coalesce_rename("record_type_id", task_dict) }},
-        {{ salesforce.coalesce_rename("status", task_dict) }},
-        {{ salesforce.coalesce_rename("subject", task_dict) }},
-        {{ salesforce.coalesce_rename("task_subtype", task_dict) }},
-        {{ salesforce.coalesce_rename("type", task_dict) }},
-        {{ salesforce.coalesce_rename("what_count", task_dict) }},
-        {{ salesforce.coalesce_rename("what_id", task_dict) }},
-        {{ salesforce.coalesce_rename("who_count", task_dict) }},
-        {{ salesforce.coalesce_rename("who_id", task_dict) }}
-        
+        id as task_id,
+        account_id,
+        cast(activity_date as {{ dbt.type_timestamp() }}) as activity_date,
+        call_disposition,
+        call_duration_in_seconds,
+        call_object,
+        call_type,
+        completed_date_time,
+        created_by_id,
+        created_date,
+        description as task_description,
+        is_archived,
+        is_closed,
+        is_deleted,
+        is_high_priority,
+        last_modified_by_id,
+        last_modified_date,
+        owner_id,
+        priority,
+        record_type_id,
+        status,
+        subject,
+        task_subtype,
+        type,
+        what_count,
+        what_id,
+        who_count,
+        who_id
+
         {{ fivetran_utils.fill_pass_through_columns('salesforce__task_pass_through_columns') }}
         
     from fields
