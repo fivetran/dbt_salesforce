@@ -22,7 +22,7 @@
     Every non-metadata column dict in staging_columns must carry an explicit `source_name`
     (set alongside `name`/`datatype` in the get_*_columns macro) naming its real Salesforce
     API field -- not guessed or computed here. Fivetran metadata columns (any `name`
-    containing `fivetran`) skip the lookup entirely -- always present, never renamed, no
+    containing `_fivetran`) skip the lookup entirely -- always present, never renamed, no
     `source_name` needed.
 
     payload_key is required and must match the key this table's entry uses in
@@ -57,8 +57,9 @@
 
     select
         {%- for column in staging_columns %}
-        {%- if 'fivetran' in column.name %}
-            {{ fivetran_utils.quote_column({"name": column.name, "quote": true}) }} as {{ fivetran_utils.quote_column(column) }}
+        {%- if '_fivetran' in column.name %}
+            {{ fivetran_utils.quote_column({"name": column.name, "quote": true}) }} as
+            {{ fivetran_utils.quote_column(column) }}
         {%- else %}
         {%- set current_name = column.name if column_config is none else column_config.get(column.source_name) %}
         {%- if current_name is not none %}
