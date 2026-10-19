@@ -12,6 +12,13 @@
     {name: ..., columns: {SourceFieldName: current_destination_name}}`. The `name` key is not
     read here; table identifiers come from the separate `identifier:` vars.
 
+    If this table has no entry in salesforce__source_config at all (e.g. the var is unset
+    entirely, or a customer only configured other tables), every column is assumed present
+    under its own canonical name -- the connector's documented default (unrenamed) behavior --
+    with no null-filling. A customer only needs to add an entry here for a table they're
+    actually customizing (a rename, or a field genuinely missing for them), not for every
+    table up front.
+
     Every non-metadata column dict in staging_columns must carry an explicit `source_name`
     (set alongside `name`/`datatype` in the get_*_columns macro) naming its real Salesforce
     API field -- not guessed or computed here. Fivetran metadata columns (any `name`
@@ -40,14 +47,15 @@
 {%- else -%}
     {%- set schema_config = full_source_config.get(table_source.schema | lower, {}) -%}
 {%- endif -%}
-{%- set column_config = ((schema_config or {}).get(payload_key, {}) or {}).get('columns', {}) or {} -%}
+{%- set table_config = (schema_config or {}).get(payload_key) -%}
+{%- set column_config = table_config.get('columns', {}) or {} if table_config is not none else none -%}
 
     select
         {%- for column in staging_columns %}
         {%- if 'fivetran' in column.name %}
             {{ fivetran_utils.quote_column({"name": column.name, "quote": true}) }} as {{ fivetran_utils.quote_column(column) }}
         {%- else %}
-        {%- set current_name = column_config.get(column.source_name) %}
+        {%- set current_name = column.name if column_config is none else column_config.get(column.source_name) %}
         {%- if current_name is not none %}
             {{ fivetran_utils.quote_column({"name": current_name, "quote": true}) }} as
             {%- if 'alias' in column %} {{ column.alias }}{% else %} {{ fivetran_utils.quote_column(column) }}{% endif %}
