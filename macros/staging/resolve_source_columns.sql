@@ -41,13 +41,18 @@
         ),
 #}
 {%- set table_source = source(source_name, table_name) -%}
+{# the whole payload var, defaulting to {} if the customer never set it #}
 {%- set full_source_config = var('salesforce__source_config', {}) or {} -%}
+{# only one schema configured? use it directly, skipping the exact-match lookup below #}
 {%- if full_source_config | length == 1 -%}
     {%- set schema_config = full_source_config.values() | first -%}
 {%- else -%}
+    {# multiple schemas configured: find the one matching this table's actual schema #}
     {%- set schema_config = full_source_config.get(table_source.schema | lower, {}) -%}
 {%- endif -%}
+{# this table's own entry, or None if the customer never configured this table at all #}
 {%- set table_config = (schema_config or {}).get(payload_key) -%}
+{# None (not {}) signals "no entry for this table" so the loop below can tell that apart from "entry with no columns" #}
 {%- set column_config = table_config.get('columns', {}) or {} if table_config is not none else none -%}
 
     select
