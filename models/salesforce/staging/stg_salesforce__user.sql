@@ -1,6 +1,6 @@
 with fields as (
 
-    {{ salesforce.select_payload_fields('salesforce', 'user', get_user_columns()) }}
+    {{ salesforce.select_payload_fields('salesforce', 'user', get_user_columns(), payload_key='User') }}
 ), 
 
 final as (

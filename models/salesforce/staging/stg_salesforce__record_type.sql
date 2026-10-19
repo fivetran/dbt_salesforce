@@ -3,7 +3,7 @@
 
 with fields as (
 
-    {{ salesforce.select_payload_fields('salesforce', 'record_type', get_record_type_columns()) }}
+    {{ salesforce.select_payload_fields('salesforce', 'record_type', get_record_type_columns(), payload_key='RecordType') }}
 ),
 
 final as (

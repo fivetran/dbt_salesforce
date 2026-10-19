@@ -1,4 +1,4 @@
-{% macro select_payload_fields(source_name, table_name, staging_columns, payload_key=none) %}
+{% macro select_payload_fields(source_name, table_name, staging_columns, payload_key) %}
 {#
     Builds the full `select ... from ...` body for a model's `fields` CTE: present columns
     pass through, quoted, under their current name; absent columns get `cast(null as
@@ -12,29 +12,27 @@
     {name: ..., columns: {SourceFieldName: current_destination_name}}`. The `name` key is not
     read here; table identifiers come from the separate `identifier:` vars.
 
-    A column's source field name is computed from its canonical `name` via
-    `name.split('_') | map('capitalize') | join('')` (e.g. `account_number` ->
-    `AccountNumber`). Pass `source_name` on a column dict (alongside `name`/`datatype`) to
-    override this for a column whose real API name doesn't follow that pattern. Fivetran
-    metadata columns (any `name` containing `fivetran`) skip the lookup entirely -- always
-    present, never renamed.
+    Every non-metadata column dict in staging_columns must carry an explicit `source_name`
+    (set alongside `name`/`datatype` in the get_*_columns macro) naming its real Salesforce
+    API field -- not guessed or computed here. Fivetran metadata columns (any `name`
+    containing `fivetran`) skip the lookup entirely -- always present, never renamed, no
+    `source_name` needed.
+
+    payload_key is required and must match the key this table's entry uses in
+    salesforce__source_config (its Salesforce API SObject name, e.g. `OpportunityLineItem`,
+    or a distinct variant like `AccountHistory` when two sources' tables would otherwise
+    share a key, e.g. `account` in both `salesforce` and `salesforce_history`).
 
     A present column's current name is always quoted (quote_column with quote=true): most
     warehouses fold an unquoted identifier to their own default case, which can mismatch
     whatever case the connector actually produced. A no-op for plain lowercase/underscore
     names.
 
-    payload_key defaults to the PascalCase form of table_name (e.g.
-    `opportunity_line_item` -> `OpportunityLineItem`); pass it explicitly when two sources'
-    tables would otherwise share a key (e.g. `account` in both `salesforce` and
-    `salesforce_history`) -- pass a distinct key like `AccountHistory`.
-
     Usage in a model's `fields` CTE:
         with fields as (
-            {{ salesforce.select_payload_fields('salesforce', 'campaign_member', get_campaign_member_columns()) }}
+            {{ salesforce.select_payload_fields('salesforce', 'campaign_member', get_campaign_member_columns(), payload_key='CampaignMember') }}
         ),
 #}
-{%- set payload_key = payload_key or (table_name.split('_') | map('capitalize') | join('')) -%}
 {%- set table_source = source(source_name, table_name) -%}
 {%- set full_source_config = var('salesforce__source_config', {}) or {} -%}
 {%- if full_source_config | length == 1 -%}
@@ -49,8 +47,7 @@
         {%- if 'fivetran' in column.name %}
             {{ fivetran_utils.quote_column({"name": column.name, "quote": true}) }} as {{ fivetran_utils.quote_column(column) }}
         {%- else %}
-        {%- set source_field = column.source_name | default(column.name.split('_') | map('capitalize') | join('')) %}
-        {%- set current_name = column_config.get(source_field) %}
+        {%- set current_name = column_config.get(column.source_name) %}
         {%- if current_name is not none %}
             {{ fivetran_utils.quote_column({"name": current_name, "quote": true}) }} as
             {%- if 'alias' in column %} {{ column.alias }}{% else %} {{ fivetran_utils.quote_column(column) }}{% endif %}

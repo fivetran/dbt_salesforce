@@ -547,3 +547,15 @@ DuckDB, and both demos still resolve correctly post-migration. Also re-verified 
 `dbt-core==1.12.0` install (not just `dbt-oss`): `dbt compile` on `stg_salesforce__account`/
 `stg_salesforce__opportunity` against real Postgres produces the identical compiled SQL
 (`"AccountNumber" as account_number`, `"Description__c" as description`).
+
+## source_name and payload_key are now explicit, not computed
+
+Both were initially computed at render time (`name.split('_') | map('capitalize') | join('')`
+for source_name, same transform applied to `table_name` for payload_key's default). Reverted
+to explicit, hardcoded input instead: every column in every `get_*_columns` macro now carries
+a literal `source_name` (its real Salesforce API field name, e.g. `account_number` ->
+`AccountNumber`), and every `select_payload_fields` call site passes `payload_key` explicitly
+(e.g. `payload_key='OpportunityLineItem'`) -- the macro no longer computes either one. Same
+values as the computed version would have produced (that transform's own track record is why
+these particular values are trustworthy), just written down rather than inferred, so a future
+column with an irregular API name is a one-line addition instead of a silent mismatch.

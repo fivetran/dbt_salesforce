@@ -3,7 +3,7 @@
 
 with fields as (
 
-    {{ salesforce.select_payload_fields('salesforce', 'product_2', get_product_2_columns()) }}
+    {{ salesforce.select_payload_fields('salesforce', 'product_2', get_product_2_columns(), payload_key='Product2') }}
 ), 
 
 final as (
