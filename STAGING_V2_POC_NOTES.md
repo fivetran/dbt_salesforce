@@ -491,3 +491,59 @@ holds the entire `vars:` block (the 18 per-table identifier vars, `salesforce_sc
 `dispatch:`, `clean-targets:`, `flags:`) and no longer has a `vars:` key of its own — a project
 can't define `vars:` in both files at once. Verified: `dbt parse` and a full 28-model build
 against DuckDB both succeed unchanged under `dbt-oss 2.0.5`.
+
+## Keyed by source names instead of destination names (GA-1038188)
+
+Per https://fivetran.atlassian.net/browse/GA-1038188 and the Slack thread linked from it
+(#C0C0E3C79KR, Catherine/Fedor Safronov/Joe Markiewicz): destination/canonical column names
+are a bad lookup key, because they aren't stable -- the physical spelling in the destination
+shifts with feature flags, connection settings, and customer renames, so a payload keyed by
+*our* names forces the quickstart runtime to track that drift too. The connector's own
+*source* field name (the immutable name shown in the connection's schema tab, matching the API)
+never changes, so that's the key instead.
+
+`salesforce__column_payload` is renamed to **`salesforce__source_config`**, and its shape
+changes from `schema -> table -> {canonical_name: current_name}` to
+`schema -> SourceTableName -> {name: ..., columns: {SourceFieldName: current_name}}` (Joe's
+agreed structure, 10/13 Slack message). `SourceTableName` and `SourceFieldName` are the
+Salesforce API's own names (e.g. `Account`, `AccountNumber`), not this package's snake_case
+canonical ones. The per-table `name` field is reserved for a *future* identifier migration
+(same Jira issue) and is deliberately **not read** by this package yet -- Joe explicitly
+deferred folding table identifiers into this struct ("a large change that should roll out
+across all packages... save that for a later release"), so `identifier:` configs and the
+`salesforce_<table>[_history]_identifier` vars are untouched.
+
+`select_payload_fields` computes each column's source field name from its canonical name via
+`name.split('_') | map('capitalize') | join('')` -- e.g. `account_number` -> `AccountNumber` --
+the exact same guess the now-deleted `add_renamed_columns` macro used to make. That macro's
+own history is why this is low-risk: across every table in this package, in years of
+production use, it never once needed an explicit override for this guess (confirmed by
+grepping every `get_*_columns` macro on `main` for a `renamed_column_name` override -- there
+are none). An explicit override is still supported (`source_name` on a column dict) for any
+future column that breaks the pattern, but none of the 14 existing macros needed one, so none
+of them changed.
+
+Fivetran metadata columns (`_fivetran_synced`, `_fivetran_active`, etc.) skip the lookup
+entirely -- they're synthetic, not real Salesforce fields, always present, never renamed.
+
+Table-level keys for the 14 core tables are each table's real Salesforce API SObject name
+(`Account`, `OpportunityLineItem`, `Product2`, `RecordType`, ...). History tables use the same
+base name with a `History` suffix (`AccountHistory`, etc.) -- not a real Salesforce concept,
+but a necessary package-local convention: `salesforce_history_schema` and `salesforce_schema`
+are deliberately the *same* literal schema value in this integration_tests environment (for
+convenience), so the core `Account` entry and the history variant need distinct keys to avoid
+colliding in the same schema dict. In a real deployment the two sources normally live in
+different schemas, so this collision is a test-environment artifact, not a production concern
+-- but the disambiguation is kept either way since `payload_key` already supported it.
+
+The existing two demos transposed directly, just re-keyed: `Account.columns.AccountNumber:
+AccountNumber` (the connector left this field un-snake_cased -- still proves the "spelling the
+package can't guess from naming convention alone" case) and `Opportunity.columns.Description:
+Description__c` (a genuine customer rename). `Account.columns` has no `Website` entry at all,
+continuing to demonstrate the null-fill path.
+
+Verified against `dbt-oss 2.0.5`: `dbt parse` succeeds, all 28 models build clean against
+DuckDB, and both demos still resolve correctly post-migration. Also re-verified against a real
+`dbt-core==1.12.0` install (not just `dbt-oss`): `dbt compile` on `stg_salesforce__account`/
+`stg_salesforce__opportunity` against real Postgres produces the identical compiled SQL
+(`"AccountNumber" as account_number`, `"Description__c" as description`).
