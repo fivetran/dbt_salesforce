@@ -3,7 +3,7 @@
 
 with fields as (
 
-    {{ salesforce.resolve_source_columns('salesforce', 'lead', salesforce.get_lead_columns(), payload_key='Lead') }}
+    {{ salesforce.resolve_source_columns(source_name='salesforce', table_name='lead', staging_columns=salesforce.get_lead_columns(), payload_key='Lead') }}
 ), 
 
 final as (

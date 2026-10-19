@@ -1,6 +1,6 @@
 with fields as (
 
-    {{ salesforce.resolve_source_columns('salesforce', 'user', salesforce.get_user_columns(), payload_key='User') }}
+    {{ salesforce.resolve_source_columns(source_name='salesforce', table_name='user', staging_columns=salesforce.get_user_columns(), payload_key='User') }}
 ), 
 
 final as (

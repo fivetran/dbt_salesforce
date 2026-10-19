@@ -37,7 +37,7 @@
 
     Usage in a model's `fields` CTE:
         with fields as (
-            {{ salesforce.resolve_source_columns('salesforce', 'campaign_member', salesforce.get_campaign_member_columns(), payload_key='CampaignMember') }}
+            {{ salesforce.resolve_source_columns(source_name='salesforce', table_name='campaign_member', staging_columns=salesforce.get_campaign_member_columns(), payload_key='CampaignMember') }}
         ),
 #}
 {%- set table_source = source(source_name, table_name) -%}

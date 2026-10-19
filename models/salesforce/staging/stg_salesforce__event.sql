@@ -3,7 +3,7 @@
 
 with fields as (
 
-    {{ salesforce.resolve_source_columns('salesforce', 'event', salesforce.get_event_columns(), payload_key='Event') }}
+    {{ salesforce.resolve_source_columns(source_name='salesforce', table_name='event', staging_columns=salesforce.get_event_columns(), payload_key='Event') }}
 ), 
 
 final as (

@@ -3,7 +3,7 @@
 
 with fields as (
 
-    {{ salesforce.resolve_source_columns('salesforce', 'product_2', salesforce.get_product_2_columns(), payload_key='Product2') }}
+    {{ salesforce.resolve_source_columns(source_name='salesforce', table_name='product_2', staging_columns=salesforce.get_product_2_columns(), payload_key='Product2') }}
 ), 
 
 final as (
