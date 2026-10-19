@@ -29,7 +29,7 @@ with spine as (
 
 fields as (
 
-    {{ salesforce.select_payload_fields('salesforce_history', 'account', salesforce.get_history_columns(get_account_columns(), 'account_id'), payload_key='AccountHistory') }}
+    {{ salesforce.resolve_source_columns('salesforce_history', 'account', salesforce.get_history_columns(salesforce.get_account_columns(), 'account_id'), payload_key='AccountHistory') }}
 
 ),
 

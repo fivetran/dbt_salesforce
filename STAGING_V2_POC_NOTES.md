@@ -559,3 +559,15 @@ a literal `source_name` (its real Salesforce API field name, e.g. `account_numbe
 values as the computed version would have produced (that transform's own track record is why
 these particular values are trustworthy), just written down rather than inferred, so a future
 column with an irregular API name is a one-line addition instead of a silent mismatch.
+
+## Renamed select_payload_fields to resolve_source_columns
+
+"select_payload_fields" didn't say what the macro actually does. Renamed to
+`resolve_source_columns` (file: `macros/staging/resolve_source_columns.sql`) and updated all
+18 call sites (14 core staging models, 4 inside the history models' inner
+`get_history_columns(...)` call). Earlier mentions of `select_payload_fields` above refer to
+the same macro under its old name -- left as-is since this file is a chronological log, not
+current documentation.
+
+Also namespaced every `get_*_columns()` call site as `salesforce.get_*_columns()` for
+consistency with `salesforce.resolve_source_columns(...)` and `salesforce.get_history_columns(...)`.

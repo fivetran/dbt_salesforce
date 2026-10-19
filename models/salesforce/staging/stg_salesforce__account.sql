@@ -1,6 +1,6 @@
 with fields as (
 
-    {{ salesforce.select_payload_fields('salesforce', 'account', get_account_columns(), payload_key='Account') }}
+    {{ salesforce.resolve_source_columns('salesforce', 'account', salesforce.get_account_columns(), payload_key='Account') }}
 ), 
 
 final as (

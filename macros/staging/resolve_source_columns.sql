@@ -1,4 +1,4 @@
-{% macro select_payload_fields(source_name, table_name, staging_columns, payload_key) %}
+{% macro resolve_source_columns(source_name, table_name, staging_columns, payload_key) %}
 {#
     Builds the full `select ... from ...` body for a model's `fields` CTE: present columns
     pass through, quoted, under their current name; absent columns get `cast(null as
@@ -30,7 +30,7 @@
 
     Usage in a model's `fields` CTE:
         with fields as (
-            {{ salesforce.select_payload_fields('salesforce', 'campaign_member', get_campaign_member_columns(), payload_key='CampaignMember') }}
+            {{ salesforce.resolve_source_columns('salesforce', 'campaign_member', salesforce.get_campaign_member_columns(), payload_key='CampaignMember') }}
         ),
 #}
 {%- set table_source = source(source_name, table_name) -%}

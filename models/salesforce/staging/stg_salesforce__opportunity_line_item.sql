@@ -3,7 +3,7 @@
 
 with fields as (
 
-    {{ salesforce.select_payload_fields('salesforce', 'opportunity_line_item', get_opportunity_line_item_columns(), payload_key='OpportunityLineItem') }}
+    {{ salesforce.resolve_source_columns('salesforce', 'opportunity_line_item', salesforce.get_opportunity_line_item_columns(), payload_key='OpportunityLineItem') }}
 ), 
 
 final as (

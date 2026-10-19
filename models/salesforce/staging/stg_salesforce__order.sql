@@ -3,7 +3,7 @@
 
 with fields as (
 
-    {{ salesforce.select_payload_fields('salesforce', 'order', get_order_columns(), payload_key='Order') }}
+    {{ salesforce.resolve_source_columns('salesforce', 'order', salesforce.get_order_columns(), payload_key='Order') }}
 ), 
 
 final as (
