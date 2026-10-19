@@ -30,26 +30,14 @@ vars:
     salesforce_contact_history_identifier: "sf_contact_history_data"
     salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
 
-    ## Staging v2 POC: exhaustive source-config payloads simulating what the quickstart runtime
-    ## would supply per table (Salesforce API source field name -> current name in the
-    ## destination), replacing adapter.get_columns_in_relation introspection in staging.
-    ## Keyed by the connector's own immutable source names (not our destination/canonical
-    ## names), per the agreed design in GA-1038188 -- destination names aren't stable (they
-    ## shift with feature flags/settings/renames), but source names are. Each table's `name`
-    ## field is reserved for a future identifier migration (GA-1038188) and is NOT consumed by
-    ## this package yet -- table identifiers still come from the plain
-    ## salesforce_<table>[_history]_identifier vars above. Identity-mapped for every column
-    ## except Account's AccountNumber (demonstrates a source field the connector did NOT
-    ## snake_case -- it's still literally "AccountNumber" in the destination) and Opportunity's
-    ## Description (mapped to a custom renamed spelling, Description__c, see
-    ## sf_opportunity_data.csv) -- together proving both the "connector left it alone" and the
-    ## "customer renamed it" paths, not just pure identity-mapping. select_payload_fields
-    ## computes each column's source field name from its canonical name via the same
-    ## name.split('_') | map('capitalize') | join('') transform the now-retired
-    ## add_renamed_columns macro used to guess spellings with -- this package's own column list
-    ## never needed an explicit override for it historically, across every table. Fivetran
-    ## metadata columns (_fivetran_*) are never looked up here; they're synthetic, not real
-    ## Salesforce fields, and always pass through under their own name.
+    ## Exhaustive payload simulating what the quickstart runtime supplies per table, keyed by
+    ## the connector's own source field/table names (e.g. Salesforce API names), mapped to the
+    ## current destination name. The `name` field is not yet consumed; table identifiers come
+    ## from the salesforce_<table>[_history]_identifier vars above. _fivetran_* columns aren't
+    ## listed -- select_payload_fields always passes those through directly. Account.AccountNumber
+    ## and Opportunity.Description show the two real cases: unrenamed-but-not-snake_cased, and
+    ## a genuine customer rename (Description__c, see sf_opportunity_data.csv). Account has no
+    ## Website entry, demonstrating the null-fill path.
     salesforce__source_config:
       zz_dbt_catherine:
         Account:
