@@ -1,3 +1,14 @@
+# dbt_salesforce v2.5.0-a1
+
+## Feature Updates
+- Adds the `salesforce__source_config` variable. Use it to declare column renames and fields your connector doesn't sync, on a per-table basis. A table you haven't configured keeps working as before — every column is assumed present under its standard name. Add an entry only for a table where a field has been renamed or is missing. See the [README](https://github.com/fivetran/dbt_salesforce/blob/main/README.md) for configuration details.
+
+> If your connection has a field your connector never renamed to snake_case (uncommon, but possible on older connections), add an entry for it under `salesforce__source_config`. Without one, the build now fails with a column-not-found error instead of resolving it automatically.
+
+## Under the Hood
+- Removes the live-schema check (`adapter.get_columns_in_relation`) that staging and daily history models ran at every `dbt run` and `dbt compile`. Replaced with the `salesforce__source_config`-driven `resolve_source_columns` macro.
+
+
 # dbt_salesforce v2.4.1
 
 [PR #88](https://github.com/fivetran/dbt_salesforce/pull/88) includes the following updates:
