@@ -16,9 +16,9 @@
     all, or has an entry but just doesn't list this particular field -- is assumed present
     under its own canonical name, the connector's documented default (unrenamed) behavior.
     A customer only needs to add an entry for a column they're actually renaming, or
-    explicitly flag one as missing with `SourceFieldName: false` (not omission -- omission
-    means "present, default name"). This keeps a one-field customization a one-line change,
-    not a requirement to exhaustively list every column in that table.
+    explicitly flag one as missing with `SourceFieldName: not_synced` (not omission --
+    omission means "present, default name"). This keeps a one-field customization a one-line
+    change, not a requirement to exhaustively list every column in that table.
 
     Every non-metadata column dict in staging_columns must carry an explicit `source_name`
     (set alongside `name`/`datatype` in the get_*_columns macro) naming its real Salesforce
@@ -60,9 +60,9 @@
             {{ fivetran_utils.quote_column({"name": column.name, "quote": true}) }} as
             {{ fivetran_utils.quote_column(column) }}
         {%- else %}
-        {# unmentioned columns default to their own canonical name; `false` is the explicit missing-field flag #}
+        {# unmentioned columns default to their own canonical name; `not_synced` is the explicit missing-field flag #}
         {%- set current_name = column_config.get(column.source_name, column.name) %}
-        {%- if current_name is sameas false %}
+        {%- if current_name == 'not_synced' %}
             cast(null as {{ column.datatype }}) as
             {%- if 'alias' in column %} {{ column.alias }}{% else %} {{ fivetran_utils.quote_column(column) }}{% endif %}
         {%- else %}

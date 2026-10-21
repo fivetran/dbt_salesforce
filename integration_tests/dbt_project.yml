@@ -10,9 +10,70 @@ models:
     columns: "{{ false if target.type in ('databricks') else true }}"
   +schema: "salesforce_{{ var('directed_schema','dev') }}"
 
-# Vars live in vars.yml (parsed before this file, so its values are available for reference
-# here) rather than inline -- see https://docs.getdbt.com/docs/build/project-variables?version=2.
-# A vars: block can't be defined in both files, so don't add one back here.
+vars:
+  # enable history models when generating docs!
+  # salesforce__campaign_history_enabled: true # @docs-include
+  # salesforce__contact_history_enabled: true # @docs-include
+  # salesforce__account_history_enabled: true # @docs-include
+  # salesforce__opportunity_history_enabled: true # @docs-include
+
+  salesforce:
+    salesforce_schema: zz_dbt_catherine #salesforce_integrations_tests_4
+    salesforce_history_schema: zz_dbt_catherine #salesforce_integrations_tests_4
+
+    salesforce_account_identifier: "sf_account_data"
+    salesforce_campaign_identifier: "sf_campaign_data"
+    salesforce_campaign_member_identifier: "sf_campaign_member_data"
+    salesforce_opportunity_identifier: "sf_opportunity_data"
+    salesforce_record_type_identifier: "sf_record_type_data"
+    salesforce_user_identifier: "sf_user_data"
+    salesforce_user_role_identifier: "sf_user_role_data"
+    salesforce_contact_identifier: "sf_contact_data"
+    salesforce_lead_identifier: "sf_lead_data"
+    salesforce_task_identifier: "sf_task_data"
+    salesforce_event_identifier: "sf_event_data"
+    salesforce_product_2_identifier: "sf_product_2_data"
+    salesforce_order_identifier: "sf_order_data"
+    salesforce_opportunity_line_item_identifier: "sf_opportunity_line_item_data"
+
+    ##history mode identifiers
+    salesforce_campaign_history_identifier: "sf_campaign_history_data"
+    salesforce_account_history_identifier: "sf_account_history_data"
+    salesforce_contact_history_identifier: "sf_contact_history_data"
+    salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
+
+    ## Keyed by the connector's own source field/table names (e.g. Salesforce API names),
+    ## mapped to the current destination name. The `name` field is not yet consumed; table
+    ## identifiers come from the salesforce_<table>[_history]_identifier vars above. Only
+    ## columns that are actually customized need an entry -- everything else defaults to
+    ## present under its own canonical name, so this payload only lists the real cases:
+    ## Account.AccountNumber (unrenamed-but-not-snake_cased), Account.Website (explicitly
+    ## flagged `not_synced` -- genuinely missing from this seed), Opportunity.Description (a
+    ## genuine customer rename, Description__c, see sf_opportunity_data.csv), and a handful of
+    ## columns the history seeds don't actually carry -- flagged `not_synced` so they
+    ## null-fill instead of erroring.
+    salesforce__source_config:
+      zz_dbt_catherine:
+        Account:
+          name: sf_account_data
+          columns:
+            AccountNumber: AccountNumber
+            Website: not_synced
+        Opportunity:
+          name: sf_opportunity_data
+          columns:
+            Description: Description__c
+        AccountHistory:
+          name: sf_account_history_data
+          columns:
+            BillingStateCode: not_synced
+            ShippingCountryCode: not_synced
+            ShippingStateCode: not_synced
+        ContactHistory:
+          name: sf_contact_history_data
+          columns:
+            Department: not_synced
+            MailingStateCode: not_synced
 
 seeds:
   +docs:
