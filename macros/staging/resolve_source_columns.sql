@@ -16,8 +16,10 @@
     all, or has an entry but just doesn't list this particular field -- is assumed present
     under its own canonical name, the connector's documented default (unrenamed) behavior.
     A customer only needs to add an entry for a column they're actually renaming, or
-    explicitly flag one as missing with `SourceFieldName: not_synced` (not omission --
-    omission means "present, default name"). This keeps a one-field customization a one-line
+    explicitly flag one as missing with `SourceFieldName: <fivetran_not_synced>` (not
+    omission -- omission means "present, default name"). The angle-bracket, `fivetran_`-
+    prefixed spelling is deliberate: it's not a string any real destination column would
+    plausibly be named, so it can't collide. This keeps a one-field customization a one-line
     change, not a requirement to exhaustively list every column in that table.
 
     Every non-metadata column dict in staging_columns must carry an explicit `source_name`
@@ -60,9 +62,9 @@
             {{ fivetran_utils.quote_column({"name": column.name, "quote": true}) }} as
             {{ fivetran_utils.quote_column(column) }}
         {%- else %}
-        {# unmentioned columns default to their own canonical name; `not_synced` is the explicit missing-field flag #}
+        {# unmentioned columns default to their own canonical name; <fivetran_not_synced> is the explicit missing-field flag #}
         {%- set current_name = column_config.get(column.source_name, column.name) %}
-        {%- if current_name == 'not_synced' %}
+        {%- if current_name == '<fivetran_not_synced>' %}
             cast(null as {{ column.datatype }}) as
             {%- if 'alias' in column %} {{ column.alias }}{% else %} {{ fivetran_utils.quote_column(column) }}{% endif %}
         {%- else %}

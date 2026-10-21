@@ -48,9 +48,9 @@ vars:
     ## columns that are actually customized need an entry -- everything else defaults to
     ## present under its own canonical name, so this payload only lists the real cases:
     ## Account.AccountNumber (unrenamed-but-not-snake_cased), Account.Website (explicitly
-    ## flagged `not_synced` -- genuinely missing from this seed), Opportunity.Description (a
+    ## flagged `<fivetran_not_synced>` -- genuinely missing from this seed), Opportunity.Description (a
     ## genuine customer rename, Description__c, see sf_opportunity_data.csv), and a handful of
-    ## columns the history seeds don't actually carry -- flagged `not_synced` so they
+    ## columns the history seeds don't actually carry -- flagged `<fivetran_not_synced>` so they
     ## null-fill instead of erroring.
     salesforce__source_config:
       zz_dbt_catherine:
@@ -58,7 +58,7 @@ vars:
           name: sf_account_data
           columns:
             AccountNumber: AccountNumber
-            Website: not_synced
+            Website: "<fivetran_not_synced>"
         Opportunity:
           name: sf_opportunity_data
           columns:
@@ -66,14 +66,14 @@ vars:
         AccountHistory:
           name: sf_account_history_data
           columns:
-            BillingStateCode: not_synced
-            ShippingCountryCode: not_synced
-            ShippingStateCode: not_synced
+            BillingStateCode: "<fivetran_not_synced>"
+            ShippingCountryCode: "<fivetran_not_synced>"
+            ShippingStateCode: "<fivetran_not_synced>"
         ContactHistory:
           name: sf_contact_history_data
           columns:
-            Department: not_synced
-            MailingStateCode: not_synced
+            Department: "<fivetran_not_synced>"
+            MailingStateCode: "<fivetran_not_synced>"
 
 seeds:
   +docs:
