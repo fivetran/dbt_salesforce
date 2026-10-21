@@ -15,7 +15,7 @@
     Any column not mentioned in a table's `columns` map -- whether the table has no entry at
     all, or has an entry but just doesn't list this particular field -- is assumed present
     under its own canonical name, the connector's documented default (unrenamed) behavior.
-    A customer only needs to add an entry for a column they're actually renaming, or
+    A connection only needs an entry for a column that's actually renamed, or to
     explicitly flag one as missing with `SourceFieldName: <fivetran_not_synced>` (not
     omission -- omission means "present, default name"). The angle-bracket, `fivetran_`-
     prefixed spelling is deliberate: it's not a string any real destination column would
@@ -44,7 +44,7 @@
         ),
 #}
 {%- set table_source = source(source_name, table_name) -%}
-{# the whole payload var, defaulting to {} if the customer never set it #}
+{# the whole payload var, defaulting to {} if the connection never set it #}
 {%- set full_source_config = var('salesforce__source_config', {}) or {} -%}
 {# only one schema configured? use it directly, skipping the exact-match lookup below #}
 {%- if full_source_config | length == 1 -%}

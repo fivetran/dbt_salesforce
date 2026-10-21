@@ -49,7 +49,7 @@ vars:
     ## present under its own canonical name, so this payload only lists the real cases:
     ## Account.AccountNumber (unrenamed-but-not-snake_cased), Account.Website (explicitly
     ## flagged `<fivetran_not_synced>` -- genuinely missing from this seed), Opportunity.Description (a
-    ## genuine customer rename, Description__c, see sf_opportunity_data.csv), and a handful of
+    ## genuine connection rename, Description__c, see sf_opportunity_data.csv), and a handful of
     ## columns the history seeds don't actually carry -- flagged `<fivetran_not_synced>` so they
     ## null-fill instead of erroring.
     salesforce__source_config:
