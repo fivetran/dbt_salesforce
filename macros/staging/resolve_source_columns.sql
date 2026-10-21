@@ -12,12 +12,13 @@
     {name: ..., columns: {SourceFieldName: current_destination_name}}`. The `name` key is not
     read here; table identifiers come from the separate `identifier:` vars.
 
-    If this table has no entry in salesforce__source_config at all (e.g. the var is unset
-    entirely, or a customer only configured other tables), every column is assumed present
-    under its own canonical name -- the connector's documented default (unrenamed) behavior --
-    with no null-filling. A customer only needs to add an entry here for a table they're
-    actually customizing (a rename, or a field genuinely missing for them), not for every
-    table up front.
+    Any column not mentioned in a table's `columns` map -- whether the table has no entry at
+    all, or has an entry but just doesn't list this particular field -- is assumed present
+    under its own canonical name, the connector's documented default (unrenamed) behavior.
+    A customer only needs to add an entry for a column they're actually renaming, or
+    explicitly flag one as missing with `SourceFieldName: false` (not omission -- omission
+    means "present, default name"). This keeps a one-field customization a one-line change,
+    not a requirement to exhaustively list every column in that table.
 
     Every non-metadata column dict in staging_columns must carry an explicit `source_name`
     (set alongside `name`/`datatype` in the get_*_columns macro) naming its real Salesforce
@@ -50,10 +51,8 @@
     {# multiple schemas configured: find the one matching this table's actual schema #}
     {%- set schema_config = full_source_config.get(table_source.schema | lower, {}) -%}
 {%- endif -%}
-{# this table's own entry, or None if the customer never configured this table at all #}
-{%- set table_config = (schema_config or {}).get(payload_key) -%}
-{# None (not {}) signals "no entry for this table" so the loop below can tell that apart from "entry with no columns" #}
-{%- set column_config = table_config.get('columns', {}) or {} if table_config is not none else none -%}
+{# this table's own entry, defaulting to {} whether it's missing entirely or just has no columns map #}
+{%- set column_config = ((schema_config or {}).get(payload_key, {}) or {}).get('columns', {}) or {} -%}
 
     select
         {%- for column in staging_columns %}
@@ -61,12 +60,13 @@
             {{ fivetran_utils.quote_column({"name": column.name, "quote": true}) }} as
             {{ fivetran_utils.quote_column(column) }}
         {%- else %}
-        {%- set current_name = column.name if column_config is none else column_config.get(column.source_name) %}
-        {%- if current_name is not none %}
-            {{ fivetran_utils.quote_column({"name": current_name, "quote": true}) }} as
+        {# unmentioned columns default to their own canonical name; `false` is the explicit missing-field flag #}
+        {%- set current_name = column_config.get(column.source_name, column.name) %}
+        {%- if current_name is sameas false %}
+            cast(null as {{ column.datatype }}) as
             {%- if 'alias' in column %} {{ column.alias }}{% else %} {{ fivetran_utils.quote_column(column) }}{% endif %}
         {%- else %}
-            cast(null as {{ column.datatype }}) as
+            {{ fivetran_utils.quote_column({"name": current_name, "quote": true}) }} as
             {%- if 'alias' in column %} {{ column.alias }}{% else %} {{ fivetran_utils.quote_column(column) }}{% endif %}
         {%- endif %}
         {%- endif %}{{ ',' if not loop.last }}
