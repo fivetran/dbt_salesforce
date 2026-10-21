@@ -19,7 +19,7 @@ vars:
 
   salesforce:
     salesforce_schema: zz_dbt_catherine #salesforce_integrations_tests_4
-    salesforce_history_schema: zz_dbt_catherine #salesforce_integrations_tests_4
+    salesforce_history_schema: zz_dbt_catherine_history # deliberately a different schema than salesforce_schema, to test salesforce__source_config's multi-schema lookup path
 
     salesforce_account_identifier: "sf_account_data"
     salesforce_campaign_identifier: "sf_campaign_data"
@@ -51,7 +51,11 @@ vars:
     ## flagged `<fivetran_not_synced>` -- genuinely missing from this seed), Opportunity.Description (a
     ## genuine connection rename, Description__c, see sf_opportunity_data.csv), and a handful of
     ## columns the history seeds don't actually carry -- flagged `<fivetran_not_synced>` so they
-    ## null-fill instead of erroring.
+    ## null-fill instead of erroring. zz_dbt_catherine and zz_dbt_catherine_history are
+    ## deliberately two different top-level schema keys (matching salesforce_schema and
+    ## salesforce_history_schema above), to exercise resolve_source_columns' multi-schema
+    ## lookup path (the schema-matching branch, not the single-schema shortcut) -- this is the
+    ## realistic production shape, where the two sources normally live in different schemas.
     salesforce__source_config:
       zz_dbt_catherine:
         Account:
@@ -63,6 +67,7 @@ vars:
           name: sf_opportunity_data
           columns:
             Description: Description__c
+      zz_dbt_catherine_history:
         AccountHistory:
           name: sf_account_history_data
           columns:
@@ -235,6 +240,7 @@ seeds:
         is_deleted: boolean
 
     sf_campaign_history_data:
+      +schema: "history"
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
@@ -254,6 +260,7 @@ seeds:
         number_of_won_opportunities: integer
         amount_all_opportunities: float
     sf_account_history_data:
+      +schema: "history"
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
@@ -263,6 +270,7 @@ seeds:
         last_viewed_date: timestamp
         is_deleted: boolean
     sf_contact_history_data:
+      +schema: "history"
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
@@ -271,6 +279,7 @@ seeds:
         last_viewed_date: timestamp
         is_deleted: boolean
     sf_opportunity_history_data:
+      +schema: "history"
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
