@@ -14,11 +14,22 @@
     name) and resolved_columns (staging_columns with `name` replaced by the current name and
     an explicit `alias` so the canonical name is always what's output, never the renamed one).
 
-    salesforce__source_config is keyed by the connector's own source field/table names (e.g.
-    Salesforce API names like `AccountNumber`), not this package's destination/canonical
-    names, since those can be renamed per connection. Shape: `schema -> TableKey ->
-    {name: ..., columns: {SourceFieldName: current_destination_name}}`. The `name` key is not
-    read here; table identifiers come from the separate `identifier:` vars.
+    salesforce__source_config is keyed by source_name (the dbt source() this table belongs to,
+    e.g. `salesforce`/`salesforce_history` -- always one of the hardcoded literals every model
+    already passes, never derived from a schema name or any other runtime-resolved value), then
+    by TableKey using the connector's own source field/table names (e.g. Salesforce API names
+    like `AccountNumber`), not this package's destination/canonical names, since those can be
+    renamed per connection. Shape: `source_name -> TableKey -> {name: ..., columns:
+    {SourceFieldName: current_destination_name}}`. The `name` key is not read here; table
+    identifiers come from the separate `identifier:` vars.
+
+    Keying by source_name rather than physical schema is deliberate: the two sources' schemas
+    (salesforce_schema/salesforce_history_schema) are themselves just vars, so a schema-keyed
+    config would need its own keys to track whatever those vars resolve to at runtime --
+    fragile, and actively wrong in environments (like CI) that override both schema vars to the
+    same dynamically-generated value. source_name has none of that: it's the same fixed string
+    at every call site regardless of what schema that source happens to point at, so one source
+    being customized never depends on knowing or matching the other's physical location.
 
     Any column not mentioned in a table's `columns` map -- whether the table has no entry at
     all, or has an entry but just doesn't list this particular field -- is assumed present
@@ -54,15 +65,10 @@
 {%- set table_source = source(source_name, table_name) -%}
 {# the whole payload var, defaulting to {} if the connection never set it #}
 {%- set full_source_config = var('salesforce__source_config', {}) or {} -%}
-{# only one schema configured? use it directly, skipping the exact-match lookup below #}
-{%- if full_source_config | length == 1 -%}
-    {%- set schema_config = full_source_config.values() | first -%}
-{%- else -%}
-    {# multiple schemas configured: find the one matching this table's actual schema #}
-    {%- set schema_config = full_source_config.get(table_source.schema | lower, {}) -%}
-{%- endif -%}
+{# this source's own config, defaulting to {} if it's missing entirely #}
+{%- set source_config = full_source_config.get(source_name, {}) or {} -%}
 {# this table's own entry, defaulting to {} whether it's missing entirely or just has no columns map #}
-{%- set column_config = ((schema_config or {}).get(payload_key, {}) or {}).get('columns', {}) or {} -%}
+{%- set column_config = ((source_config or {}).get(payload_key, {}) or {}).get('columns', {}) or {} -%}
 
 {# build what fill_staging_columns expects: a list of columns that are actually "present"
    (keyed by their current name, so its own name|lower membership check matches), and the

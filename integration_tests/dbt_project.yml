@@ -19,7 +19,7 @@ vars:
 
   salesforce:
     salesforce_schema: zz_dbt_catherine #salesforce_integrations_tests_4
-    salesforce_history_schema: zz_dbt_catherine_history # deliberately a different schema than salesforce_schema, to test salesforce__source_config's multi-schema lookup path
+    salesforce_history_schema: zz_dbt_catherine_history # deliberately a different schema than salesforce_schema -- salesforce__source_config is keyed by source_name, not by schema, so this has no bearing on it; it's just the realistic shape (the two sources are commonly in different physical schemas)
 
     salesforce_account_identifier: "sf_account_data"
     salesforce_campaign_identifier: "sf_campaign_data"
@@ -42,9 +42,11 @@ vars:
     salesforce_contact_history_identifier: "sf_contact_history_data"
     salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
 
-    ## Keyed by the connector's own source field/table names (e.g. Salesforce API names),
-    ## mapped to the current destination name. The `name` field is not yet consumed; table
-    ## identifiers come from the salesforce_<table>[_history]_identifier vars above. Only
+    ## Keyed by source_name (the dbt source() each table belongs to -- always one of the
+    ## hardcoded literals 'salesforce'/'salesforce_history' every model already passes, never a
+    ## schema name), then by the connector's own source field/table names (e.g. Salesforce API
+    ## names), mapped to the current destination name. The `name` field is not yet consumed;
+    ## table identifiers come from the salesforce_<table>[_history]_identifier vars above. Only
     ## columns that are actually customized need an entry -- everything else defaults to
     ## present under its own canonical name, so this payload only lists the real cases:
     ## Account.AccountNumber (unrenamed-but-not-snake_cased), Account.Website (explicitly
@@ -53,20 +55,13 @@ vars:
     ## columns the history seeds don't actually carry -- flagged `<fivetran_not_synced>` so they
     ## null-fill instead of erroring.
     ##
-    ## The top-level schema key(s) below MUST match whatever salesforce_schema/
-    ## salesforce_history_schema actually resolve to at runtime -- not just their defaults above.
-    ## Buildkite's run_test_scenarios.py overrides both vars via --vars to the same per-build
-    ## schema (CLI vars always outrank the project-level defaults set above), so in CI there's
-    ## only ever one physical schema; locally (no CLI override) they fall back to the two
-    ## distinct literals, which is what actually exercises resolve_source_columns' multi-schema
-    ## `.get()` lookup path rather than the single-schema shortcut. Hardcoding the literals here
-    ## instead of reading the vars back is exactly what broke CI: salesforce_schema resolved to
-    ## the CI-generated schema, which never matched the hardcoded `zz_dbt_catherine` key, so
-    ## every lookup silently fell through to {} and no column config applied.
-    {%- set _schema = var('salesforce_schema', 'zz_dbt_catherine') %}
-    {%- set _history_schema = var('salesforce_history_schema', 'zz_dbt_catherine_history') %}
+    ## Keying by source_name rather than physical schema is what makes this immune to CI's
+    ## schema vars (Buildkite overrides salesforce_schema/salesforce_history_schema via --vars
+    ## to the same per-build value, dbt_project.yml isn't pre-rendered as a whole Jinja template
+    ## so the keys here can't track that dynamically anyway) -- the two sources below stay
+    ## independently configured no matter what schema either one physically resolves to.
     salesforce__source_config:
-      {{ _schema }}:
+      salesforce:
         Account:
           name: sf_account_data
           columns:
@@ -76,7 +71,7 @@ vars:
           name: sf_opportunity_data
           columns:
             Description: Description__c
-        {%- if _history_schema == _schema %}
+      salesforce_history:
         AccountHistory:
           name: sf_account_history_data
           columns:
@@ -88,21 +83,6 @@ vars:
           columns:
             Department: "<fivetran_not_synced>"
             MailingStateCode: "<fivetran_not_synced>"
-        {%- endif %}
-      {%- if _history_schema != _schema %}
-      {{ _history_schema }}:
-        AccountHistory:
-          name: sf_account_history_data
-          columns:
-            BillingStateCode: "<fivetran_not_synced>"
-            ShippingCountryCode: "<fivetran_not_synced>"
-            ShippingStateCode: "<fivetran_not_synced>"
-        ContactHistory:
-          name: sf_contact_history_data
-          columns:
-            Department: "<fivetran_not_synced>"
-            MailingStateCode: "<fivetran_not_synced>"
-      {%- endif %}
 
 seeds:
   +docs:
