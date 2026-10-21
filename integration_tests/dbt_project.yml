@@ -51,13 +51,22 @@ vars:
     ## flagged `<fivetran_not_synced>` -- genuinely missing from this seed), Opportunity.Description (a
     ## genuine connection rename, Description__c, see sf_opportunity_data.csv), and a handful of
     ## columns the history seeds don't actually carry -- flagged `<fivetran_not_synced>` so they
-    ## null-fill instead of erroring. zz_dbt_catherine and zz_dbt_catherine_history are
-    ## deliberately two different top-level schema keys (matching salesforce_schema and
-    ## salesforce_history_schema above), to exercise resolve_source_columns' multi-schema
-    ## lookup path (the schema-matching branch, not the single-schema shortcut) -- this is the
-    ## realistic production shape, where the two sources normally live in different schemas.
+    ## null-fill instead of erroring.
+    ##
+    ## The top-level schema key(s) below MUST match whatever salesforce_schema/
+    ## salesforce_history_schema actually resolve to at runtime -- not just their defaults above.
+    ## Buildkite's run_test_scenarios.py overrides both vars via --vars to the same per-build
+    ## schema (CLI vars always outrank the project-level defaults set above), so in CI there's
+    ## only ever one physical schema; locally (no CLI override) they fall back to the two
+    ## distinct literals, which is what actually exercises resolve_source_columns' multi-schema
+    ## `.get()` lookup path rather than the single-schema shortcut. Hardcoding the literals here
+    ## instead of reading the vars back is exactly what broke CI: salesforce_schema resolved to
+    ## the CI-generated schema, which never matched the hardcoded `zz_dbt_catherine` key, so
+    ## every lookup silently fell through to {} and no column config applied.
+    {%- set _schema = var('salesforce_schema', 'zz_dbt_catherine') %}
+    {%- set _history_schema = var('salesforce_history_schema', 'zz_dbt_catherine_history') %}
     salesforce__source_config:
-      zz_dbt_catherine:
+      {{ _schema }}:
         Account:
           name: sf_account_data
           columns:
@@ -67,7 +76,7 @@ vars:
           name: sf_opportunity_data
           columns:
             Description: Description__c
-      zz_dbt_catherine_history:
+        {%- if _history_schema == _schema %}
         AccountHistory:
           name: sf_account_history_data
           columns:
@@ -79,6 +88,21 @@ vars:
           columns:
             Department: "<fivetran_not_synced>"
             MailingStateCode: "<fivetran_not_synced>"
+        {%- endif %}
+      {%- if _history_schema != _schema %}
+      {{ _history_schema }}:
+        AccountHistory:
+          name: sf_account_history_data
+          columns:
+            BillingStateCode: "<fivetran_not_synced>"
+            ShippingCountryCode: "<fivetran_not_synced>"
+            ShippingStateCode: "<fivetran_not_synced>"
+        ContactHistory:
+          name: sf_contact_history_data
+          columns:
+            Department: "<fivetran_not_synced>"
+            MailingStateCode: "<fivetran_not_synced>"
+      {%- endif %}
 
 seeds:
   +docs:
