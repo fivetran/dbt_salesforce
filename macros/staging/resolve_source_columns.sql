@@ -6,6 +6,14 @@
     adapter.get_columns_in_relation introspection is needed. `identifier:` in the source yml
     stays plain var('salesforce_<table>_identifier', '<table>') -- untouched by this macro.
 
+    The actual rendering is delegated to fivetran_utils.fill_staging_columns, which already
+    implements "quote present column / cast null for absent / honor column.alias" and
+    fivetran_using_source_casing (a documented Fivetran-wide var for the Managed Data Lake
+    Service/Iceberg-on-Snowflake case) -- this macro's only job is building the two lists
+    fill_staging_columns expects: present_columns (what's actually there, under its current
+    name) and resolved_columns (staging_columns with `name` replaced by the current name and
+    an explicit `alias` so the canonical name is always what's output, never the renamed one).
+
     salesforce__source_config is keyed by the connector's own source field/table names (e.g.
     Salesforce API names like `AccountNumber`), not this package's destination/canonical
     names, since those can be renamed per connection. Shape: `schema -> TableKey ->
@@ -56,23 +64,36 @@
 {# this table's own entry, defaulting to {} whether it's missing entirely or just has no columns map #}
 {%- set column_config = ((schema_config or {}).get(payload_key, {}) or {}).get('columns', {}) or {} -%}
 
-    select
-        {%- for column in staging_columns %}
-        {%- if '_fivetran' in column.name %}
-            {{ fivetran_utils.quote_column({"name": column.name, "quote": true}) }} as
-            {{ fivetran_utils.quote_column(column) }}
-        {%- else %}
+{# build what fill_staging_columns expects: a list of columns that are actually "present"
+   (keyed by their current name, so its own name|lower membership check matches), and the
+   staging_columns list with `name` swapped to the current name and `alias` always explicit
+   so the canonical name is what's output, never the renamed one #}
+{%- set present_columns = [] -%}
+{%- set resolved_columns = [] -%}
+{%- for column in staging_columns -%}
+    {%- if '_fivetran' in column.name -%}
+        {%- set resolved = column.copy() -%}
+        {%- do resolved.update({'quote': true}) -%}
+        {%- do resolved_columns.append(resolved) -%}
+        {%- do present_columns.append({'name': column.name}) -%}
+    {%- else -%}
         {# unmentioned columns default to their own canonical name; <fivetran_not_synced> is the explicit missing-field flag #}
-        {%- set current_name = column_config.get(column.source_name, column.name) %}
-        {%- if current_name == '<fivetran_not_synced>' %}
-            cast(null as {{ column.datatype }}) as
-            {%- if 'alias' in column %} {{ column.alias }}{% else %} {{ fivetran_utils.quote_column(column) }}{% endif %}
-        {%- else %}
-            {{ fivetran_utils.quote_column({"name": current_name, "quote": true}) }} as
-            {%- if 'alias' in column %} {{ column.alias }}{% else %} {{ fivetran_utils.quote_column(column) }}{% endif %}
-        {%- endif %}
-        {%- endif %}{{ ',' if not loop.last }}
-        {%- endfor %}
+        {%- set current_name = column_config.get(column.source_name, column.name) -%}
+        {%- set resolved = column.copy() -%}
+        {%- do resolved.update({
+            'name': current_name,
+            'alias': column.alias if 'alias' in column else column.name,
+            'quote': current_name != column.name
+        }) -%}
+        {%- do resolved_columns.append(resolved) -%}
+        {%- if current_name != '<fivetran_not_synced>' -%}
+            {%- do present_columns.append({'name': current_name}) -%}
+        {%- endif -%}
+    {%- endif -%}
+{%- endfor -%}
+
+    select
+        {{ fivetran_utils.fill_staging_columns(source_columns=present_columns, staging_columns=resolved_columns) }}
 
     from {{ table_source }}
 
