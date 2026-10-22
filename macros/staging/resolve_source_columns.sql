@@ -63,18 +63,58 @@
     whatever case the connector actually produced. A no-op for plain lowercase/underscore
     names.
 
+    naming_standard, set per-source (a sibling key to the table entries, e.g.
+    `salesforce__source_config.salesforce.naming_standard: source`), flips the default for
+    every column NOT explicitly mentioned in that source's config from "present under its
+    canonical Fivetran-standard name" (the `fivetran` default) to "present under its raw
+    connector/API field name" (`source`) -- for connections where the synced columns actually
+    use the connector's own spelling rather than Fivetran's normalized one. Explicit entries in
+    a table's `columns` map always win either way; naming_standard only changes what happens
+    when a column isn't mentioned at all, so a `source`-standard connection still only needs
+    entries for genuine exceptions, not an exhaustive list.
+
+    fivetran_packages_using_introspective_queries (default false) is an escape hatch back to
+    plain live-introspection-based presence detection: a live adapter.get_columns_in_relation
+    lookup feeding fivetran_utils.fill_staging_columns directly, ignoring
+    salesforce__source_config entirely. It exists for dbt OSS users who depended on automatic
+    column detection and don't want to adopt explicit config yet -- state-aware compilation and
+    dbt v2 compatibility are the tradeoff for leaving it off, not a reason to force the switch
+    on everyone immediately.
+
+    This restores presence/absence detection only, not the camelCase/snake_case coalescing
+    add_renamed_columns/coalesce_rename used to layer on top of it (removed earlier in this
+    same rewrite). fill_staging_columns' own membership check is case-insensitive, so a purely
+    case difference still resolves fine, but a column whose live name doesn't otherwise match
+    its canonical name -- e.g. the connector's `AccountNumber` against this package's
+    `account_number`, not just a case difference -- still null-fills under this fallback. That
+    gap needs salesforce__source_config, not this var.
+
     Usage in a model's `fields` CTE:
         with fields as (
             {{ salesforce.resolve_source_columns(source_name='salesforce', table_name='campaign_member', staging_columns=salesforce.get_campaign_member_columns(), payload_key='CampaignMember') }}
         ),
 #}
 {%- set table_source = source(source_name, table_name) -%}
+
+{%- if var('fivetran_packages_using_introspective_queries', false) -%}
+    {# opt-in legacy path: discover what's actually there via a live warehouse round trip,
+       bypassing salesforce__source_config -- not state-aware, kept only for dbt OSS users who
+       want the pre-upgrade automatic behavior back instead of adopting explicit config #}
+    select
+        {{ fivetran_utils.fill_staging_columns(source_columns=adapter.get_columns_in_relation(table_source), staging_columns=staging_columns) }}
+
+    from {{ table_source }}
+{%- else -%}
 {# the whole payload var, defaulting to {} if the connection never set it #}
 {%- set full_source_config = var('salesforce__source_config', {}) or {} -%}
 {# this source's own config, defaulting to {} if it's missing entirely #}
 {%- set source_config = full_source_config.get(source_name, {}) or {} -%}
 {# this table's own entry, defaulting to {} whether it's missing entirely or just has no columns map #}
 {%- set column_config = ((source_config or {}).get(payload_key, {}) or {}).get('columns', {}) or {} -%}
+{# 'fivetran' (default): unmentioned columns default to their canonical name. 'source':
+   unmentioned columns default to their raw connector/API field spelling instead -- for
+   connections where synced columns actually use the connector's own naming #}
+{%- set naming_standard = source_config.get('naming_standard', 'fivetran') -%}
 
 {# build what fill_staging_columns expects: a list of columns that are actually "present"
    (keyed by their current name, so its own name|lower membership check matches), and the
@@ -83,9 +123,11 @@
 {%- set present_columns = [] -%}
 {%- set resolved_columns = [] -%}
 {%- for column in staging_columns -%}
-    {# metadata columns have no source_name (never renamed), so they key the lookup by their
-       own canonical name instead -- same default-to-present, same <fivetran_not_synced> flag #}
-    {%- set current_name = column_config.get(column.get('source_name', column.name), column.name) -%}
+    {# metadata columns have no source_name (never renamed), so they key the lookup -- and any
+       naming_standard default -- by their own canonical name instead #}
+    {%- set source_name_key = column.get('source_name', column.name) -%}
+    {%- set default_name = source_name_key if naming_standard == 'source' else column.name -%}
+    {%- set current_name = column_config.get(source_name_key, default_name) -%}
     {%- set resolved = column.copy() -%}
     {%- do resolved.update({
         'name': current_name,
@@ -102,5 +144,6 @@
         {{ fivetran_utils.fill_staging_columns(source_columns=present_columns, staging_columns=resolved_columns) }}
 
     from {{ table_source }}
+{%- endif -%}
 
 {%- endmacro %}
