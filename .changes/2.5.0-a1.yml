@@ -1,9 +1,16 @@
 version: 2.5.0-a1
 pr_number: 93
 new_features:
-  - title: Adds the `salesforce__source_config` variable
-    description: Replaces the live-schema check (`adapter.get_columns_in_relation`) that staging and daily history models previously ran at every `dbt run` and `dbt compile`. Use it to declare column renames and fields your connector doesn't sync, on a per-table basis.
-    details:
-      - Add an entry only for a column that's actually renamed or missing; everything else keeps working under its standard name.
-      - If your connector left a field in a non-standard spelling and you don't declare it, the build now fails with a column-not-found error instead of resolving it automatically.
-      - See the README for configuration details.
+- title: Adds the `salesforce__source_config` variable
+  description: Replaces the live-schema check (`adapter.get_columns_in_relation`)
+    that staging and daily history models previously ran at every `dbt run` and `dbt
+    compile`. Use it to declare column renames and fields your connector doesn't sync,
+    on a per-table basis.
+  details:
+  - Add an entry only for a column that's actually renamed or missing; everything
+    else keeps working under its standard name.
+  - If your connector left a field in a non-standard spelling and you don't declare
+    it, the build now fails with a column-not-found error instead of resolving it
+    automatically.
+  - See the README for configuration details.
+date: '2026-10-22'
