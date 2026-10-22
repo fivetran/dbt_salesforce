@@ -43,9 +43,15 @@
 
     Every non-metadata column dict in staging_columns must carry an explicit `source_name`
     (set alongside `name`/`datatype` in the get_*_columns macro) naming its real Salesforce
-    API field -- not guessed or computed here. Fivetran metadata columns (any `name`
-    containing `_fivetran`) skip the lookup entirely -- always present, never renamed, no
-    `source_name` needed.
+    API field -- not guessed or computed here. Fivetran metadata columns (`_fivetran_synced`,
+    `_fivetran_active`, `_fivetran_deleted`) go through the same lookup as any other column,
+    keyed by their own canonical name (never renamed in practice, so there's no separate
+    `source_name` to give them) -- they default to present, same as everything else, but can
+    be flagged `<fivetran_not_synced>` too. That matters because they're not universally
+    present: `_fivetran_active`, for instance, isn't guaranteed on every connection. Without
+    adapter.get_columns_in_relation to fall back on, there's no way to detect that at compile
+    time anymore, so a connection missing one has to say so explicitly instead of the build
+    silently assuming it's there.
 
     payload_key is required and must match the key this table's entry uses in
     salesforce__source_config (its Salesforce API Object name, e.g. `OpportunityLineItem`,
@@ -77,24 +83,18 @@
 {%- set present_columns = [] -%}
 {%- set resolved_columns = [] -%}
 {%- for column in staging_columns -%}
-    {%- if '_fivetran' in column.name -%}
-        {%- set resolved = column.copy() -%}
-        {%- do resolved.update({'quote': true}) -%}
-        {%- do resolved_columns.append(resolved) -%}
-        {%- do present_columns.append({'name': column.name}) -%}
-    {%- else -%}
-        {# unmentioned columns default to their own canonical name; <fivetran_not_synced> is the explicit missing-field flag #}
-        {%- set current_name = column_config.get(column.source_name, column.name) -%}
-        {%- set resolved = column.copy() -%}
-        {%- do resolved.update({
-            'name': current_name,
-            'alias': column.alias if 'alias' in column else column.name,
-            'quote': current_name != column.name
-        }) -%}
-        {%- do resolved_columns.append(resolved) -%}
-        {%- if current_name != '<fivetran_not_synced>' -%}
-            {%- do present_columns.append({'name': current_name}) -%}
-        {%- endif -%}
+    {# metadata columns have no source_name (never renamed), so they key the lookup by their
+       own canonical name instead -- same default-to-present, same <fivetran_not_synced> flag #}
+    {%- set current_name = column_config.get(column.get('source_name', column.name), column.name) -%}
+    {%- set resolved = column.copy() -%}
+    {%- do resolved.update({
+        'name': current_name,
+        'alias': column.alias if 'alias' in column else column.name,
+        'quote': current_name != column.name
+    }) -%}
+    {%- do resolved_columns.append(resolved) -%}
+    {%- if current_name != '<fivetran_not_synced>' -%}
+        {%- do present_columns.append({'name': current_name}) -%}
     {%- endif -%}
 {%- endfor -%}
 
