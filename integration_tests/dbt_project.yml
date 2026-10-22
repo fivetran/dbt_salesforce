@@ -19,7 +19,7 @@ vars:
 
   salesforce:
     salesforce_schema: zz_dbt_catherine #salesforce_integrations_tests_4
-    salesforce_history_schema: zz_dbt_catherine_history # deliberately a different schema than salesforce_schema -- salesforce__source_config is keyed by source_name, not by schema, so this has no bearing on it; it's just the realistic shape (the two sources are commonly in different physical schemas)
+    salesforce_history_schema: zz_dbt_catherine # same schema as salesforce_schema, matching main -- CI overrides both vars to the same per-build value regardless, and salesforce__source_config is keyed by source_name, not by schema, so the two sources stay independently configured whether they share a schema or not
 
     salesforce_account_identifier: "sf_account_data"
     salesforce_campaign_identifier: "sf_campaign_data"
@@ -244,7 +244,6 @@ seeds:
         is_deleted: boolean
 
     sf_campaign_history_data:
-      +schema: "history"
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
@@ -264,7 +263,6 @@ seeds:
         number_of_won_opportunities: integer
         amount_all_opportunities: float
     sf_account_history_data:
-      +schema: "history"
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
@@ -274,7 +272,6 @@ seeds:
         last_viewed_date: timestamp
         is_deleted: boolean
     sf_contact_history_data:
-      +schema: "history"
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
@@ -283,7 +280,6 @@ seeds:
         last_viewed_date: timestamp
         is_deleted: boolean
     sf_opportunity_history_data:
-      +schema: "history"
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
