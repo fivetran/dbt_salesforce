@@ -1,5 +1,5 @@
 name: 'salesforce_integration_tests'
-version: '2.4.1'
+version: '2.5.0'
 config-version: 2
 
 profile: 'integration_tests'
@@ -18,8 +18,8 @@ vars:
   # salesforce__opportunity_history_enabled: true # @docs-include
 
   salesforce:
-    salesforce_schema: salesforce_integrations_tests_4
-    salesforce_history_schema: salesforce_integrations_tests_4
+    salesforce_schema: zz_dbt_catherine #salesforce_integrations_tests_4
+    salesforce_history_schema: zz_dbt_catherine # same schema as salesforce_schema, matching main -- CI overrides both vars to the same per-build value regardless, and salesforce__source_config is keyed by source_name, not by schema, so the two sources stay independently configured whether they share a schema or not
 
     salesforce_account_identifier: "sf_account_data"
     salesforce_campaign_identifier: "sf_campaign_data"
@@ -41,6 +41,48 @@ vars:
     salesforce_account_history_identifier: "sf_account_history_data"
     salesforce_contact_history_identifier: "sf_contact_history_data"
     salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
+
+    ## Keyed by source_name (the dbt source() each table belongs to -- always one of the
+    ## hardcoded literals 'salesforce'/'salesforce_history' every model already passes, never a
+    ## schema name), then by the connector's own source field/table names (e.g. Salesforce API
+    ## names), mapped to the current destination name. The `name` field is not yet consumed;
+    ## table identifiers come from the salesforce_<table>[_history]_identifier vars above. Only
+    ## columns that are actually customized need an entry -- everything else defaults to
+    ## present under its own canonical name, so this payload only lists the real cases:
+    ## Account.AccountNumber (unrenamed-but-not-snake_cased), Account.Website (explicitly
+    ## flagged `<fivetran_not_synced>` -- genuinely missing from this seed), Opportunity.Description (a
+    ## genuine connection rename, Description__c, see sf_opportunity_data.csv), and a handful of
+    ## columns the history seeds don't actually carry -- flagged `<fivetran_not_synced>` so they
+    ## null-fill instead of erroring.
+    ##
+    ## Keying by source_name rather than physical schema is what makes this immune to CI's
+    ## schema vars (Buildkite overrides salesforce_schema/salesforce_history_schema via --vars
+    ## to the same per-build value, dbt_project.yml isn't pre-rendered as a whole Jinja template
+    ## so the keys here can't track that dynamically anyway) -- the two sources below stay
+    ## independently configured no matter what schema either one physically resolves to.
+    salesforce__source_config:
+      salesforce:
+        Account:
+          name: sf_account_data
+          columns:
+            AccountNumber: AccountNumber
+            Website: "<fivetran_not_synced>"
+        Opportunity:
+          name: sf_opportunity_data
+          columns:
+            Description: Description__c
+      salesforce_history:
+        AccountHistory:
+          name: sf_account_history_data
+          columns:
+            BillingStateCode: "<fivetran_not_synced>"
+            ShippingCountryCode: "<fivetran_not_synced>"
+            ShippingStateCode: "<fivetran_not_synced>"
+        ContactHistory:
+          name: sf_contact_history_data
+          columns:
+            Department: "<fivetran_not_synced>"
+            MailingStateCode: "<fivetran_not_synced>"
 
 seeds:
   +docs:
