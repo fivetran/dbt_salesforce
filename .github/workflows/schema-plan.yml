@@ -1,0 +1,75 @@
+name: Review schema changes
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: schema-plan-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  schema-plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DBT_SEND_ANONYMOUS_USAGE_STATS: "false"
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dbt and DuckDB adapter
+        run: pip install dbt-core==1.11.14 dbt-duckdb==1.10.1
+
+      - name: Configure fixture database
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import yaml
+
+          temporary = Path(os.environ["RUNNER_TEMP"])
+          profiles = temporary / "dbt-plan-profiles"
+          profiles.mkdir()
+          profile = {"integration_tests": {"target": "duckdb", "outputs": {
+              "duckdb": {"type": "duckdb", "path": str(temporary / "salesforce.duckdb"),
+                         "schema": "salesforce_integrations_tests_4", "threads": 4}
+          }}}
+          (profiles / "profiles.yml").write_text(yaml.safe_dump(profile))
+          with open(os.environ["GITHUB_ENV"], "a") as output:
+              output.write(f"DBT_PROFILES_DIR={profiles}\n")
+          PY
+
+      - name: Review package schema changes
+        uses: PresentJay/dbt-plan@0954f1dc64bc3596c8b2dcc77b034c9cd1c34704 # v0.18.3
+        with:
+          version: "0.18.3"
+          fail-on: never
+          compile-command: |
+            set -euo pipefail
+            fixture_vars=$(python - <<'PY'
+            from pathlib import Path
+            import yaml
+
+            project = yaml.safe_load(Path("integration_tests/dbt_project.yml").read_text())
+            scenarios = yaml.safe_load(Path("integration_tests/ci/test_scenarios.yml").read_text())
+            variables = project["vars"]["salesforce"]
+            history = next(item for item in scenarios["test_scenarios"] if item["name"] == "history enabled")
+            variables.update(history["vars"])
+            print(yaml.safe_dump(variables))
+            PY
+            )
+            dbt deps --project-dir integration_tests
+            dbt seed --project-dir integration_tests --target duckdb --full-refresh --vars "$fixture_vars"
+            dbt deps
+            dbt compile --profile integration_tests --target duckdb --no-partial-parse --vars "$fixture_vars"
