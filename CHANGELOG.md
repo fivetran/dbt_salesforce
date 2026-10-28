@@ -1,3 +1,9 @@
+# dbt_salesforce v2.4.2-a1
+
+## Feature Updates
+- Adds the `salesforce_naming_convention` variable, which lets you configure the package to match how your Salesforce source tables are actually spelled in your warehouse. Supports `snake_case` (default, e.g. `user_role`), `lowercase` (e.g. `userrole`), and `pascalcase` (e.g. `UserRole`). You can still override individual table names with the existing identifier variables. See the [README](https://github.com/fivetran/dbt_salesforce/blob/main/README.md#configure-source-table-naming-convention) for more details.
+
+
 # dbt_salesforce v2.4.1
 
 [PR #88](https://github.com/fivetran/dbt_salesforce/pull/88) includes the following updates:
