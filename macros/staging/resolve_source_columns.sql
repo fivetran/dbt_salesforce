@@ -26,12 +26,8 @@
 
 {%- if var('fivetran_packages_using_introspective_queries', false) -%}
 
-    select
-        {{ fivetran_utils.fill_staging_columns(
-            source_columns=adapter.get_columns_in_relation(table_source),
-            staging_columns=staging_columns
-        ) }}
-    from {{ table_source }}
+    {%- set present_columns = adapter.get_columns_in_relation(table_source) -%}
+    {%- set resolved_columns = staging_columns -%}
 
 {%- else -%}
 
@@ -62,13 +58,13 @@
         {%- endif -%}
     {%- endfor -%}
 
+{%- endif -%}
+
     select
         {{ fivetran_utils.fill_staging_columns(
             source_columns=present_columns,
             staging_columns=resolved_columns
         ) }}
     from {{ table_source }}
-
-{%- endif -%}
 
 {%- endmacro %}
