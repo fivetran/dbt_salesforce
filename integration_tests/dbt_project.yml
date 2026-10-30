@@ -1,5 +1,5 @@
 name: 'salesforce_integration_tests'
-version: '2.4.1'
+version: '2.5.0'
 config-version: 2
 
 profile: 'integration_tests'
@@ -23,24 +23,49 @@ vars:
 
     salesforce_account_identifier: "sf_account_data"
     salesforce_campaign_identifier: "sf_campaign_data"
-    salesforce_campaign_member_identifier: "sf_campaign_member_data"
+    salesforce_campaignmember_identifier: "sf_campaign_member_data"
     salesforce_opportunity_identifier: "sf_opportunity_data"
-    salesforce_record_type_identifier: "sf_record_type_data"
+    salesforce_recordtype_identifier: "sf_record_type_data"
     salesforce_user_identifier: "sf_user_data"
-    salesforce_user_role_identifier: "sf_user_role_data"
+    salesforce_userrole_identifier: "sf_user_role_data"
     salesforce_contact_identifier: "sf_contact_data"
     salesforce_lead_identifier: "sf_lead_data"
     salesforce_task_identifier: "sf_task_data"
     salesforce_event_identifier: "sf_event_data"
-    salesforce_product_2_identifier: "sf_product_2_data"
+    salesforce_product2_identifier: "sf_product_2_data"
     salesforce_order_identifier: "sf_order_data"
-    salesforce_opportunity_line_item_identifier: "sf_opportunity_line_item_data"
+    salesforce_opportunitylineitem_identifier: "sf_opportunity_line_item_data"
 
     ##history mode identifiers
-    salesforce_campaign_history_identifier: "sf_campaign_history_data"
-    salesforce_account_history_identifier: "sf_account_history_data"
-    salesforce_contact_history_identifier: "sf_contact_history_data"
-    salesforce_opportunity_history_identifier: "sf_opportunity_history_data"
+    salesforce_campaignhistory_identifier: "sf_campaign_history_data"
+    salesforce_accounthistory_identifier: "sf_account_history_data"
+    salesforce_contacthistory_identifier: "sf_contact_history_data"
+    salesforce_opportunityhistory_identifier: "sf_opportunity_history_data"
+
+    ## Exercises a rename (Description__c), an API-spelled field (AccountNumber), and unsynced fields
+    salesforce__source_config:
+      salesforce:
+        Account:
+          name: sf_account_data
+          columns:
+            AccountNumber: AccountNumber
+            Website: "<fivetran_not_synced>"
+        Opportunity:
+          name: sf_opportunity_data
+          columns:
+            Description: Description__c
+      salesforce_history:
+        AccountHistory:
+          name: sf_account_history_data
+          columns:
+            BillingStateCode: "<fivetran_not_synced>"
+            ShippingCountryCode: "<fivetran_not_synced>"
+            ShippingStateCode: "<fivetran_not_synced>"
+        ContactHistory:
+          name: sf_contact_history_data
+          columns:
+            Department: "<fivetran_not_synced>"
+            MailingStateCode: "<fivetran_not_synced>"
 
 seeds:
   +docs:

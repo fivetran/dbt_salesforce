@@ -1,3 +1,18 @@
+# dbt_salesforce v2.5.0-a1
+
+[PR #93](https://github.com/fivetran/dbt_salesforce/pull/93) includes the following updates:
+
+## Feature Update
+- **Adds the `salesforce__source_config` variable**: Replaces automatic column detection with explicit configuration for renamed or unsynced columns, reducing introspective queries during `dbt run` and `dbt compile`.
+  - Only renamed or unsynced columns need to be configured. All others use their default names.
+  - Set `naming_standard: source` to use Salesforce's original column names by default.
+  - Set `fivetran_packages_using_introspective_queries: true` to restore automatic column detection, but not the previous camelCase/snake_case fallback.
+  - Undeclared non-standard column names now cause build errors.
+  - See the [sample configuration](https://github.com/fivetran/dbt_salesforce/blob/v2.5.0-a1/integration_tests/dbt_project.yml).
+
+## Under the Hood
+- **Aligns table identifier variables with Salesforce API names**: Renames nine identifier variables to match Salesforce API object names (e.g. `salesforce_campaignmember_identifier`). Previous variable names remain supported, so no action is required.
+
 # dbt_salesforce v2.4.1
 
 [PR #88](https://github.com/fivetran/dbt_salesforce/pull/88) includes the following updates:

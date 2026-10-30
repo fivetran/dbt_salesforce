@@ -336,7 +336,7 @@ sources:
           description: The category of user license.
 
       - name: user_role
-        identifier: "{{ var('salesforce_user_role_identifier', 'user_role')}}"
+        identifier: "{{ var('salesforce_userrole_identifier', var('salesforce_user_role_identifier', 'user_role'))}}"
         config:
           freshness: null
         description: Represents a user role in your organization.
@@ -778,7 +778,7 @@ sources:
           description: Website for the lead.
         
       - name: opportunity_line_item
-        identifier: "{{ var('salesforce_opportunity_line_item_identifier', 'opportunity_line_item')}}"
+        identifier: "{{ var('salesforce_opportunitylineitem_identifier', var('salesforce_opportunity_line_item_identifier', 'opportunity_line_item'))}}"
         config:
           freshness: null
         description: Represents an opportunity line item, which is a member of the list of Product2 products associated with an Opportunity.
@@ -968,7 +968,7 @@ sources:
           description: If you want to show more information about your order, you can add custom values to the Type picklist. By default, the Type field doesn't perform any actions or show any values.
         
       - name: product_2
-        identifier: "{{ var('salesforce_product_2_identifier', 'product_2')}}"
+        identifier: "{{ var('salesforce_product2_identifier', var('salesforce_product_2_identifier', 'product_2'))}}"
         config:
           freshness: null
         description: Represents a product that your company sells.
@@ -1179,7 +1179,7 @@ sources:
           description: Type of campaign, such as Direct Mail, Email, or Webinar.
 
       - name: campaign_member
-        identifier: "{{ var('salesforce_campaign_member_identifier', 'campaign_member')}}"
+        identifier: "{{ var('salesforce_campaignmember_identifier', var('salesforce_campaign_member_identifier', 'campaign_member'))}}"
         description: Represents the relationship between a campaign and either a lead or a contact.
         columns:
         - name: id
@@ -1218,7 +1218,7 @@ sources:
           description: The status of the campaign member, such as Sent or Responded.
 
       - name: record_type
-        identifier: "{{ var('salesforce_record_type_identifier', 'record_type')}}"
+        identifier: "{{ var('salesforce_recordtype_identifier', var('salesforce_record_type_identifier', 'record_type'))}}"
         config:
           freshness: null
         description: Represents a record type, which allows you to offer different business processes, picklist values, and page layouts to different users.
