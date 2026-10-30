@@ -19,53 +19,30 @@ vars:
 
   salesforce:
     salesforce_schema: salesforce_integrations_tests_4
-    salesforce_history_schema: salesforce_integrations_tests_4 
+    salesforce_history_schema: salesforce_integrations_tests_4
 
     salesforce_account_identifier: "sf_account_data"
     salesforce_campaign_identifier: "sf_campaign_data"
-    salesforce_campaignmember_identifier: "sf_campaign_member_data" # api-naming var; see note below
+    salesforce_campaignmember_identifier: "sf_campaign_member_data"
     salesforce_opportunity_identifier: "sf_opportunity_data"
-    salesforce_recordtype_identifier: "sf_record_type_data" # api-naming var; see note below
+    salesforce_recordtype_identifier: "sf_record_type_data"
     salesforce_user_identifier: "sf_user_data"
-    salesforce_userrole_identifier: "sf_user_role_data" # api-naming var; see note below
+    salesforce_userrole_identifier: "sf_user_role_data"
     salesforce_contact_identifier: "sf_contact_data"
     salesforce_lead_identifier: "sf_lead_data"
     salesforce_task_identifier: "sf_task_data"
     salesforce_event_identifier: "sf_event_data"
-    salesforce_product2_identifier: "sf_product_2_data" # api-naming var; see note below
+    salesforce_product2_identifier: "sf_product_2_data"
     salesforce_order_identifier: "sf_order_data"
-    salesforce_opportunitylineitem_identifier: "sf_opportunity_line_item_data" # api-naming var; see note below
+    salesforce_opportunitylineitem_identifier: "sf_opportunity_line_item_data"
 
     ##history mode identifiers
-    salesforce_campaignhistory_identifier: "sf_campaign_history_data" # api-naming var; see note below
-    salesforce_accounthistory_identifier: "sf_account_history_data" # api-naming var; see note below
-    salesforce_contacthistory_identifier: "sf_contact_history_data" # api-naming var; see note below
-    salesforce_opportunityhistory_identifier: "sf_opportunity_history_data" # api-naming var; see note below
-    ## "api-naming var" identifiers above take precedence over the older destination-naming vars
-    ## (salesforce_campaign_member_identifier, salesforce_record_type_identifier, etc, still
-    ## supported as a fallback in src_salesforce[_history].yml, per GA-1038188) -- only these 9
-    ## of the 18 identifiers actually change spelling, since the rest are already single Salesforce
-    ## API object words identical either way (Account, Campaign, Opportunity, User, Contact, Lead,
-    ## Task, Event, Order)
+    salesforce_campaignhistory_identifier: "sf_campaign_history_data"
+    salesforce_accounthistory_identifier: "sf_account_history_data"
+    salesforce_contacthistory_identifier: "sf_contact_history_data"
+    salesforce_opportunityhistory_identifier: "sf_opportunity_history_data"
 
-    ## Keyed by source_name (the dbt source() each table belongs to -- always one of the
-    ## hardcoded literals 'salesforce'/'salesforce_history' every model already passes, never a
-    ## schema name), then by the connector's own source field/table names (e.g. Salesforce API
-    ## names), mapped to the current destination name. The `name` field is not yet consumed;
-    ## table identifiers come from the salesforce_<table>[_history]_identifier vars above. Only
-    ## columns that are actually customized need an entry -- everything else defaults to
-    ## present under its own canonical name, so this payload only lists the real cases:
-    ## Account.AccountNumber (unrenamed-but-not-snake_cased), Account.Website (explicitly
-    ## flagged `<fivetran_not_synced>` -- genuinely missing from this seed), Opportunity.Description (a
-    ## genuine connection rename, Description__c, see sf_opportunity_data.csv), and a handful of
-    ## columns the history seeds don't actually carry -- flagged `<fivetran_not_synced>` so they
-    ## null-fill instead of erroring.
-    ##
-    ## Keying by source_name rather than physical schema is what makes this immune to CI's
-    ## schema vars (Buildkite overrides salesforce_schema/salesforce_history_schema via --vars
-    ## to the same per-build value, dbt_project.yml isn't pre-rendered as a whole Jinja template
-    ## so the keys here can't track that dynamically anyway) -- the two sources below stay
-    ## independently configured no matter what schema either one physically resolves to.
+    ## Exercises a rename (Description__c), an API-spelled field (AccountNumber), and unsynced fields
     salesforce__source_config:
       salesforce:
         Account:
