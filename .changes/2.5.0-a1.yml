@@ -1,4 +1,3 @@
-```yaml
 version: 2.5.0-a1
 pr_number: 93
 new_features:
@@ -16,4 +15,3 @@ under_the_hood:
     description: Renames nine identifier variables to match Salesforce API object names (e.g. `salesforce_campaignmember_identifier`). Previous variable names remain supported, so no action is required.
 
 date: '2026-10-30'
-```
