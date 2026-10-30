@@ -18,8 +18,8 @@ vars:
   # salesforce__opportunity_history_enabled: true # @docs-include
 
   salesforce:
-    salesforce_schema: zz_dbt_catherine #salesforce_integrations_tests_4
-    salesforce_history_schema: zz_dbt_catherine # same schema as salesforce_schema, matching main -- CI overrides both vars to the same per-build value regardless, and salesforce__source_config is keyed by source_name, not by schema, so the two sources stay independently configured whether they share a schema or not
+    salesforce_schema: salesforce_integrations_tests_4
+    salesforce_history_schema: salesforce_integrations_tests_4 
 
     salesforce_account_identifier: "sf_account_data"
     salesforce_campaign_identifier: "sf_campaign_data"
