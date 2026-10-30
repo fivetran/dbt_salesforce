@@ -3,7 +3,12 @@
 
 with fields as (
 
-    {{ salesforce.resolve_source_columns(source_name='salesforce', table_name='campaign', staging_columns=salesforce.get_campaign_columns(), payload_key='Campaign') }}
+    {{ salesforce.resolve_source_columns(
+        source_name='salesforce',
+        table_name='campaign',
+        staging_columns=salesforce.get_campaign_columns(),
+        payload_key='Campaign'
+    ) }}
 ),
 
 final as (

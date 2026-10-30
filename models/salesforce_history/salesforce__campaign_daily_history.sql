@@ -29,7 +29,15 @@ with spine as (
 
 fields as (
 
-    {{ salesforce.resolve_source_columns(source_name='salesforce_history', table_name='campaign', staging_columns=salesforce.get_history_columns(base_columns=salesforce.get_campaign_columns(), id_alias='campaign_id'), payload_key='CampaignHistory') }}
+    {{ salesforce.resolve_source_columns(
+        source_name='salesforce_history',
+        table_name='campaign',
+        staging_columns=salesforce.get_history_columns(
+            base_columns=salesforce.get_campaign_columns(),
+            id_alias='campaign_id'
+        ),
+        payload_key='CampaignHistory'
+    ) }}
 
 ),
 

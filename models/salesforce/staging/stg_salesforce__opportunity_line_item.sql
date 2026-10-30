@@ -3,7 +3,12 @@
 
 with fields as (
 
-    {{ salesforce.resolve_source_columns(source_name='salesforce', table_name='opportunity_line_item', staging_columns=salesforce.get_opportunity_line_item_columns(), payload_key='OpportunityLineItem') }}
+    {{ salesforce.resolve_source_columns(
+        source_name='salesforce',
+        table_name='opportunity_line_item',
+        staging_columns=salesforce.get_opportunity_line_item_columns(),
+        payload_key='OpportunityLineItem'
+    ) }}
 ), 
 
 final as (

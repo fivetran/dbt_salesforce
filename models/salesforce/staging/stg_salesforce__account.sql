@@ -1,6 +1,11 @@
 with fields as (
 
-    {{ salesforce.resolve_source_columns(source_name='salesforce', table_name='account', staging_columns=salesforce.get_account_columns(), payload_key='Account') }}
+    {{ salesforce.resolve_source_columns(
+        source_name='salesforce',
+        table_name='account',
+        staging_columns=salesforce.get_account_columns(),
+        payload_key='Account'
+    ) }}
 ), 
 
 final as (
