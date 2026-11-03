@@ -1,8 +1,9 @@
 {% macro resolve_source_columns(source_name, table_name, staging_columns, payload_key) %}
 {#
-    Resolves staging columns from `salesforce__source_config` (keyed by source name, then
-    API object name) instead of warehouse introspection. Unmapped columns use their canonical
-    or API name per `naming_standard`; `<fivetran_not_synced>` columns become typed nulls.
+    Resolves staging columns from `salesforce__source_config` (keyed by connection schema or
+    source name, then API object name) instead of warehouse introspection. Unmapped columns use
+    their canonical or API name per `naming_standard`; `<fivetran_not_synced>` columns become
+    typed nulls.
     `fivetran_packages_using_introspective_queries: true` restores the live lookup instead.
 #}
 {%- set table_source = source(source_name, table_name) -%}
@@ -15,7 +16,8 @@
 {%- else -%}
 
     {# `or {}` guards against keys present but empty in YAML (e.g. a bare `columns:`), which .get() defaults don't cover #}
-    {%- set source_config = (var('salesforce__source_config', {}) or {}).get(source_name, {}) or {} -%}
+    {%- set full_config = var('salesforce__source_config', {}) or {} -%}
+    {%- set source_config = full_config.get(table_source.schema) or full_config.get(source_name, {}) or {} -%}
     {%- set column_config = ((source_config.get(payload_key, {}) or {}).get('columns', {})) or {} -%}
     {%- set naming_standard = source_config.get('naming_standard', 'fivetran') -%}
 

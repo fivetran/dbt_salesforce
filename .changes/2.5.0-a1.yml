@@ -6,6 +6,7 @@ new_features:
     renamed or unsynced columns, reducing introspective queries during `dbt run` and
     `dbt compile`.
   details:
+  - Key each source by its connection schema name, or by `salesforce` or `salesforce_history`.
   - Only renamed or unsynced columns need to be configured. All others use their default
     names.
   - 'Set `naming_standard: source` to use Salesforce''s original column names by default.'
