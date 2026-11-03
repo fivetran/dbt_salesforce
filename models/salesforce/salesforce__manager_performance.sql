@@ -55,18 +55,18 @@ select
     coalesce(sum(total_pipeline_forecast_amount), 0) as total_pipeline_forecast_amount,
     coalesce(max(largest_deal_in_pipeline), 0) as largest_deal_in_pipeline,
     round(case 
-        when sum(bookings_amount_closed_this_month + lost_amount_this_month) > 0 then
-        sum(bookings_amount_closed_this_month) / sum(bookings_amount_closed_this_month + lost_amount_this_month) * 100
+        when sum(coalesce(bookings_amount_closed_this_month, 0) + coalesce(lost_amount_this_month, 0)) > 0 then
+        sum(bookings_amount_closed_this_month) / sum(coalesce(bookings_amount_closed_this_month, 0) + coalesce(lost_amount_this_month, 0)) * 100
         else 0
     end, 2) as win_percent_this_month,
     round(case
-        when sum(bookings_amount_closed_this_quarter + lost_amount_this_quarter) > 0 then
-        sum(bookings_amount_closed_this_quarter) / sum(bookings_amount_closed_this_quarter + lost_amount_this_quarter) * 100
+        when sum(coalesce(bookings_amount_closed_this_quarter, 0) + coalesce(lost_amount_this_quarter, 0)) > 0 then
+        sum(bookings_amount_closed_this_quarter) / sum(coalesce(bookings_amount_closed_this_quarter, 0) + coalesce(lost_amount_this_quarter, 0)) * 100
         else 0
     end, 2) as win_percent_this_quarter,
     round(case
-        when sum(total_bookings_amount + total_lost_amount) > 0 then
-        sum(total_bookings_amount) / sum(total_bookings_amount + total_lost_amount) * 100
+        when sum(coalesce(total_bookings_amount, 0) + coalesce(total_lost_amount, 0)) > 0 then
+        sum(total_bookings_amount) / sum(coalesce(total_bookings_amount, 0) + coalesce(total_lost_amount, 0)) * 100
         else 0
     end, 2) as total_win_percent
 

@@ -9,13 +9,13 @@ pipeline as (
     select 
         round(sum(created_amount_this_month)) as pipeline_created_amount_this_month,
         round(sum(created_amount_this_quarter)) as pipeline_created_amount_this_quarter,
-        round(sum(created_amount_this_month * probability)) as pipeline_created_forecast_amount_this_month,
-        round(sum(created_amount_this_quarter * probability)) as pipeline_created_forecast_amount_this_quarter,
+        round(sum(created_amount_this_month * probability / 100.0)) as pipeline_created_forecast_amount_this_month,
+        round(sum(created_amount_this_quarter * probability / 100.0)) as pipeline_created_forecast_amount_this_quarter,
         sum(created_count_this_month) as pipeline_count_created_this_month,
         sum(created_count_this_quarter) as pipeline_count_created_this_quarter,
         count(*) as total_number_pipeline,
         round(sum(amount)) as total_pipeline_amount,
-        round(sum(amount * probability)) as total_pipeline_forecast_amount,
+        round(sum(amount * probability / 100.0)) as total_pipeline_forecast_amount,
         round(avg(amount)) as avg_pipeline_opp_amount,
         max(amount) as largest_deal_in_pipeline,
         avg(days_since_created) as avg_days_open
