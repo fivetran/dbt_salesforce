@@ -16,7 +16,7 @@ new_features:
   - See the [sample configuration](https://github.com/fivetran/dbt_salesforce/blob/v2.5.0-a1/integration_tests/dbt_project.yml).
 under_the_hood:
 - title: Aligns table identifier variables with Salesforce API names
-  description: Renames nine identifier variables to match Salesforce API object names
-    (e.g. `salesforce_campaignmember_identifier`). Previous variable names remain
+  description: Renames the table identifier variables to match Salesforce API object
+    names (e.g. `salesforce_CampaignMember_identifier`). Previous variable names remain
     supported, so no action is required.
 date: '2026-10-30'

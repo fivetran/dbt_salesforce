@@ -21,26 +21,26 @@ vars:
     salesforce_schema: salesforce_integrations_tests_4
     salesforce_history_schema: salesforce_integrations_tests_4
 
-    salesforce_account_identifier: "sf_account_data"
-    salesforce_campaign_identifier: "sf_campaign_data"
-    salesforce_campaignmember_identifier: "sf_campaign_member_data"
-    salesforce_opportunity_identifier: "sf_opportunity_data"
-    salesforce_recordtype_identifier: "sf_record_type_data"
-    salesforce_user_identifier: "sf_user_data"
-    salesforce_userrole_identifier: "sf_user_role_data"
-    salesforce_contact_identifier: "sf_contact_data"
-    salesforce_lead_identifier: "sf_lead_data"
-    salesforce_task_identifier: "sf_task_data"
-    salesforce_event_identifier: "sf_event_data"
-    salesforce_product2_identifier: "sf_product_2_data"
-    salesforce_order_identifier: "sf_order_data"
-    salesforce_opportunitylineitem_identifier: "sf_opportunity_line_item_data"
+    salesforce_Account_identifier: "sf_account_data"
+    salesforce_Campaign_identifier: "sf_campaign_data"
+    salesforce_CampaignMember_identifier: "sf_campaign_member_data"
+    salesforce_Opportunity_identifier: "sf_opportunity_data"
+    salesforce_RecordType_identifier: "sf_record_type_data"
+    salesforce_User_identifier: "sf_user_data"
+    salesforce_UserRole_identifier: "sf_user_role_data"
+    salesforce_Contact_identifier: "sf_contact_data"
+    salesforce_Lead_identifier: "sf_lead_data"
+    salesforce_Task_identifier: "sf_task_data"
+    salesforce_Event_identifier: "sf_event_data"
+    salesforce_Product2_identifier: "sf_product_2_data"
+    salesforce_Order_identifier: "sf_order_data"
+    salesforce_OpportunityLineItem_identifier: "sf_opportunity_line_item_data"
 
     ##history mode identifiers
-    salesforce_campaignhistory_identifier: "sf_campaign_history_data"
-    salesforce_accounthistory_identifier: "sf_account_history_data"
-    salesforce_contacthistory_identifier: "sf_contact_history_data"
-    salesforce_opportunityhistory_identifier: "sf_opportunity_history_data"
+    salesforce_CampaignHistory_identifier: "sf_campaign_history_data"
+    salesforce_AccountHistory_identifier: "sf_account_history_data"
+    salesforce_ContactHistory_identifier: "sf_contact_history_data"
+    salesforce_OpportunityHistory_identifier: "sf_opportunity_history_data"
 
     ## Exercises a rename (Description__c), an API-spelled field (AccountNumber), and unsynced fields
     salesforce__source_config:
