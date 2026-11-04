@@ -9,6 +9,9 @@ new_features:
   - Key each source by its connection schema name, or by `salesforce` or `salesforce_history`.
   - Only renamed or unsynced columns need to be configured. All others use their default
     names.
+  - 'Set `sync_mode` (`soft_delete`, `history`, or `live`) per source or table to match your
+    Fivetran sync mode. The default is `soft_delete`, so set `sync_mode: history` if your
+    tables use history mode.'
   - 'Set `naming_standard: source` to use Salesforce''s original column names by default.'
   - 'Set `fivetran_packages_using_introspective_queries: true` to restore automatic
     column detection, but not the previous camelCase/snake_case fallback.'
