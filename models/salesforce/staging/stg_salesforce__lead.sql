@@ -1,14 +1,11 @@
 --To disable this model, set the salesforce__lead_enabled within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__lead_enabled', True)) }}
 
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'lead', 'payload_key': 'Lead'} -%}
+
 with fields as (
 
-    {{ salesforce.resolve_source_columns(
-        source_name='salesforce',
-        table_name='lead',
-        staging_columns=salesforce.get_lead_columns(),
-        payload_key='Lead'
-    ) }}
+    {{ salesforce.resolve_source_columns(staging_columns=salesforce.get_lead_columns(), **source_table) }}
 ), 
 
 final as (
@@ -62,7 +59,7 @@ final as (
         {{ fivetran_utils.fill_pass_through_columns('salesforce__lead_pass_through_columns') }}
         
     from fields
-    where {{ salesforce.sync_mode_filter(source_name='salesforce', table_name='lead', payload_key='Lead') }}
+    where {{ salesforce.sync_mode_filter(**source_table) }}
 )
 
 select *

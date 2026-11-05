@@ -1,14 +1,11 @@
 --To disable this model, set the salesforce__campaign_enabled within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__campaign_enabled', True)) }}
 
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'campaign', 'payload_key': 'Campaign'} -%}
+
 with fields as (
 
-    {{ salesforce.resolve_source_columns(
-        source_name='salesforce',
-        table_name='campaign',
-        staging_columns=salesforce.get_campaign_columns(),
-        payload_key='Campaign'
-    ) }}
+    {{ salesforce.resolve_source_columns(staging_columns=salesforce.get_campaign_columns(), **source_table) }}
 ),
 
 final as (
@@ -39,7 +36,7 @@ final as (
         {{ fivetran_utils.fill_pass_through_columns('salesforce__campaign_pass_through_columns') }}
 
     from fields
-    where {{ salesforce.sync_mode_filter(source_name='salesforce', table_name='campaign', payload_key='Campaign') }}
+    where {{ salesforce.sync_mode_filter(**source_table) }}
 )
 
 select *

@@ -1,11 +1,8 @@
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'user', 'payload_key': 'User'} -%}
+
 with fields as (
 
-    {{ salesforce.resolve_source_columns(
-        source_name='salesforce',
-        table_name='user',
-        staging_columns=salesforce.get_user_columns(),
-        payload_key='User'
-    ) }}
+    {{ salesforce.resolve_source_columns(staging_columns=salesforce.get_user_columns(), **source_table) }}
 ), 
 
 final as (
@@ -45,7 +42,7 @@ final as (
         {{ fivetran_utils.fill_pass_through_columns('salesforce__user_pass_through_columns') }}
     
     from fields
-    where {{ salesforce.sync_mode_filter(source_name='salesforce', table_name='user', payload_key='User') }}
+    where {{ salesforce.sync_mode_filter(**source_table) }}
 )
 
 select * 

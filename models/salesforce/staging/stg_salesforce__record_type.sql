@@ -1,14 +1,11 @@
 --To disable this model, set the salesforce__record_type_enabled within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__record_type_enabled', True)) }}
 
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'record_type', 'payload_key': 'RecordType'} -%}
+
 with fields as (
 
-    {{ salesforce.resolve_source_columns(
-        source_name='salesforce',
-        table_name='record_type',
-        staging_columns=salesforce.get_record_type_columns(),
-        payload_key='RecordType'
-    ) }}
+    {{ salesforce.resolve_source_columns(staging_columns=salesforce.get_record_type_columns(), **source_table) }}
 ),
 
 final as (
@@ -24,7 +21,7 @@ final as (
         sobject_type
 
     from fields
-    where {{ salesforce.sync_mode_filter(source_name='salesforce', table_name='record_type', payload_key='RecordType') }}
+    where {{ salesforce.sync_mode_filter(**source_table) }}
 )
 
 select *
