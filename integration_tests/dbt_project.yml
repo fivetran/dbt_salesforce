@@ -45,7 +45,7 @@ vars:
     ## Exercises history sync mode, a rename (Description__c), an API-spelled field (AccountNumber), and unsynced fields
     salesforce__source_config:
       salesforce:
-        sync_mode: history
+        sync_mode: History
         Account:
           name: sf_account_data
           columns:

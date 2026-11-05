@@ -37,7 +37,7 @@ fields as (
             id_alias='campaign_id'
         ),
         payload_key='CampaignHistory',
-        default_sync_mode='history'
+        default_sync_mode='History'
     ) }}
 
 ),

@@ -1,9 +1,9 @@
-{% macro resolve_source_columns(source_name, table_name, staging_columns, payload_key, default_sync_mode='soft_delete') %}
+{% macro resolve_source_columns(source_name, table_name, staging_columns, payload_key, default_sync_mode='legacy') %}
 {#
     Resolves staging columns from `salesforce__source_config` (keyed by connection schema or
     source name, then API object name) instead of warehouse introspection. Unmapped columns use
     their canonical or API name per `naming_standard`; `<fivetran_not_synced>` columns become
-    typed nulls, as do metadata columns that the table's `sync_mode` (default soft_delete)
+    typed nulls, as do metadata columns that the table's `sync_mode` (default Legacy)
     doesn't add.
     `fivetran_packages_using_introspective_queries: true` restores the live lookup instead.
 #}
@@ -24,14 +24,17 @@
     {%- set naming_standard = source_config.get('naming_standard', 'fivetran') -%}
 
     {# each sync mode adds its own metadata columns; the other modes' columns become typed nulls #}
-    {%- set sync_mode = table_config.get('sync_mode') or source_config.get('sync_mode') or default_sync_mode -%}
+    {# values match what Quickstart sends (Legacy, History, Live), case-insensitive; Legacy is soft delete mode #}
+    {%- set raw_sync_mode = table_config.get('sync_mode') or source_config.get('sync_mode') or default_sync_mode -%}
+    {%- set sync_mode = raw_sync_mode | string | lower -%}
     {%- set sync_mode_columns = {
+        'legacy': ['_fivetran_deleted'],
         'soft_delete': ['_fivetran_deleted'],
         'history': ['_fivetran_active', '_fivetran_start', '_fivetran_end'],
         'live': []
     } -%}
     {%- if sync_mode not in sync_mode_columns -%}
-        {{ exceptions.raise_compiler_error("Invalid sync_mode '" ~ sync_mode ~ "' for " ~ source_name ~ "." ~ payload_key ~ " in salesforce__source_config. Use soft_delete, history, or live.") }}
+        {{ exceptions.raise_compiler_error("Invalid sync_mode '" ~ raw_sync_mode ~ "' for " ~ source_name ~ "." ~ payload_key ~ " in salesforce__source_config. Use Legacy (soft delete), History, or Live.") }}
     {%- endif -%}
     {%- set mode_metadata_columns = ['_fivetran_deleted', '_fivetran_active', '_fivetran_start', '_fivetran_end'] -%}
 

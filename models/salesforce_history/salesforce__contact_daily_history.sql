@@ -37,7 +37,7 @@ fields as (
             id_alias='contact_id'
         ),
         payload_key='ContactHistory',
-        default_sync_mode='history'
+        default_sync_mode='History'
     ) }}
 
 ),

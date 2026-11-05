@@ -37,7 +37,7 @@ fields as (
             id_alias='opportunity_id'
         ),
         payload_key='OpportunityHistory',
-        default_sync_mode='history'
+        default_sync_mode='History'
     ) }}
 
 ),
