@@ -25,22 +25,22 @@ schema_data_changes:
       This also applies when `fivetran_packages_using_introspective_queries` is true.
 new_features:
 - title: Adds `sync_mode` to `salesforce__source_config`
-  description: Staging models now filter deleted or inactive rows with the column your
-    Fivetran sync mode adds.
+  description: Staging models now filter deleted or inactive rows with the column
+    your Fivetran sync mode adds.
   details:
-  - 'Set `sync_mode` (`Legacy`, `History`, or `Live`) per source or table. `Legacy` is
-    soft delete mode and is the default, so set `sync_mode: History` if your tables use
-    history mode.'
-  - '`Legacy` filters on `_fivetran_deleted`, `History` filters on `_fivetran_active`, and
-    `Live` keeps every row. Metadata columns your sync mode doesn''t add are null.'
+  - 'Set `sync_mode` (`Legacy`, `History`, or `Live`) per source or table. `Legacy`
+    is soft delete mode and is the default, so set `sync_mode: History` if your tables
+    use history mode.'
+  - '`Legacy` filters on `_fivetran_deleted`, `History` filters on `_fivetran_active`,
+    and `Live` keeps every row. Metadata columns your sync mode doesn''t add are null.'
   - Other values cause a compile error.
 bug_fixes:
-- description: '`salesforce__source_config` is now looked up by connection schema name first,
-    then by `salesforce` or `salesforce_history`. Before, a config keyed by schema name
-    was ignored.'
+- description: '`salesforce__source_config` is now looked up by connection schema
+    name first, then by `salesforce` or `salesforce_history`. Before, a config keyed
+    by schema name was ignored.'
 under_the_hood:
 - title: Matches table identifier variable casing to Salesforce API names
   description: Identifier variables now use Salesforce API casing (e.g. `salesforce_CampaignMember_identifier`)
-    instead of the lowercase names added in v2.5.0-a1. The original snake_case names (e.g.
-    `salesforce_campaign_member_identifier`) remain supported.
+    instead of the lowercase names added in v2.5.0-a1. The original snake_case names
+    (e.g. `salesforce_campaign_member_identifier`) remain supported.
 date: '2026-11-05'

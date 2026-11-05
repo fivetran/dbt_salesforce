@@ -1,17 +1,25 @@
-# dbt_salesforce v2.5.0-a1
+# dbt_salesforce v2.5.0-a2
 
-[PR #93](https://github.com/fivetran/dbt_salesforce/pull/93) includes the following updates:
+[PR #99](https://github.com/fivetran/dbt_salesforce/pull/99) includes the following updates:
+
+## Schema/Data Change
+**1 total change • 0 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| stg_salesforce__account<br>stg_salesforce__campaign<br>stg_salesforce__campaign_member<br>stg_salesforce__contact<br>stg_salesforce__event<br>stg_salesforce__lead<br>stg_salesforce__opportunity<br>stg_salesforce__opportunity_line_item<br>stg_salesforce__order<br>stg_salesforce__product_2<br>stg_salesforce__task<br>stg_salesforce__user<br>stg_salesforce__user_role | Changed field/model | In soft delete mode, rows marked `_fivetran_deleted` were kept unless Salesforce's `is_deleted` was also true. | In soft delete (`Legacy`) mode, rows marked `_fivetran_deleted` are removed. | Downstream models no longer include records that Fivetran marked as deleted. This also applies when `fivetran_packages_using_introspective_queries` is true. |
 
 ## Feature Update
-- **Adds the `salesforce__source_config` variable**: Replaces automatic column detection with explicit configuration for renamed or unsynced columns, reducing introspective queries during `dbt run` and `dbt compile`.
-  - Only renamed or unsynced columns need to be configured. All others use their default names.
-  - Set `naming_standard: source` to use Salesforce's original column names by default.
-  - Set `fivetran_packages_using_introspective_queries: true` to restore automatic column detection, but not the previous camelCase/snake_case fallback.
-  - Undeclared non-standard column names now cause build errors.
-  - See the [sample configuration](https://github.com/fivetran/dbt_salesforce/blob/v2.5.0-a1/integration_tests/dbt_project.yml).
+- **Adds `sync_mode` to `salesforce__source_config`**: Staging models now filter deleted or inactive rows with the column your Fivetran sync mode adds.
+  - Set `sync_mode` (`Legacy`, `History`, or `Live`) per source or table. `Legacy` is soft delete mode and is the default, so set `sync_mode: History` if your tables use history mode.
+  - `Legacy` filters on `_fivetran_deleted`, `History` filters on `_fivetran_active`, and `Live` keeps every row. Metadata columns your sync mode doesn't add are null.
+  - Other values cause a compile error.
+
+## Bug Fix
+- `salesforce__source_config` is now looked up by connection schema name first, then by `salesforce` or `salesforce_history`. Before, a config keyed by schema name was ignored.
 
 ## Under the Hood
-- **Aligns table identifier variables with Salesforce API names**: Renames nine identifier variables to match Salesforce API object names (e.g. `salesforce_campaignmember_identifier`). Previous variable names remain supported, so no action is required.
+- **Matches table identifier variable casing to Salesforce API names**: Identifier variables now use Salesforce API casing (e.g. `salesforce_CampaignMember_identifier`) instead of the lowercase names added in v2.5.0-a1. The original snake_case names (e.g. `salesforce_campaign_member_identifier`) remain supported.
 
 # dbt_salesforce v2.4.1
 
