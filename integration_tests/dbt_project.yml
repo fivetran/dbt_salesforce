@@ -42,10 +42,9 @@ vars:
     salesforce_ContactHistory_identifier: "sf_contact_history_data"
     salesforce_OpportunityHistory_identifier: "sf_opportunity_history_data"
 
-    ## Exercises history sync mode with a per-table Legacy override (RecordType), a rename (Description__c), an API-spelled field (AccountNumber), and unsynced fields
+    ## Default (Legacy) sync mode; exercises a rename (Description__c), an API-spelled field (AccountNumber), and unsynced fields. Other sync modes are in ci/test_scenarios.yml
     salesforce__source_config:
       salesforce:
-        sync_mode: History
         Account:
           name: sf_account_data
           columns:
@@ -55,9 +54,6 @@ vars:
           name: sf_opportunity_data
           columns:
             Description: Description__c
-        RecordType:
-          name: sf_record_type_data
-          sync_mode: Legacy
       salesforce_history:
         AccountHistory:
           name: sf_account_history_data
@@ -80,6 +76,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         last_activity_date: timestamp
         last_referenced_date: timestamp
         last_viewed_date: timestamp
@@ -92,6 +89,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         start_date: timestamp
         end_date: timestamp
         is_active: boolean
@@ -109,6 +107,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         created_date: timestamp
         first_responded_date: timestamp
         has_responded: boolean
@@ -122,6 +121,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         close_date: timestamp
         created_date: timestamp
         last_activity_date: timestamp
@@ -143,6 +143,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         created_date: timestamp
         email_bounced_date: timestamp
         last_activity_date: timestamp
@@ -157,6 +158,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         converted_date: timestamp
         created_date: timestamp
         email_bounced_date: timestamp
@@ -170,6 +172,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         activity_date: timestamp
         completed_date_time: timestamp
         created_date: timestamp
@@ -183,6 +186,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         activity_date: timestamp
         activity_date_time: timestamp
         created_date: timestamp
@@ -199,6 +203,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         created_date: timestamp
         last_modified_date: timestamp
         last_referenced_date: timestamp
@@ -209,6 +214,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         activated_date: timestamp
         created_date: timestamp
         effective_date: timestamp
@@ -222,6 +228,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         created_date: timestamp
         last_modified_date: timestamp
         last_referenced_date: timestamp
