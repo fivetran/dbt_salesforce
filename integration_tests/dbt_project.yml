@@ -42,7 +42,7 @@ vars:
     salesforce_ContactHistory_identifier: "sf_contact_history_data"
     salesforce_OpportunityHistory_identifier: "sf_opportunity_history_data"
 
-    ## Default (Legacy) sync mode; exercises a rename (Description__c), an API-spelled field (AccountNumber), and unsynced fields. Other sync modes are in ci/test_scenarios.yml
+    ## Legacy sync mode, renames, and unsynced fields. Other sync modes: ci/test_scenarios.yml
     salesforce__source_config:
       salesforce:
         Account:

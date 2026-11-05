@@ -16,13 +16,12 @@ include_dbt_compile: true
 include_duckdb: true
 
 test_scenarios:
-  # Uses the committed salesforce__source_config (default Legacy sync mode)
+  # Committed config (Legacy sync mode)
   - name: "Default"
     vars: {}
     include_incremental: false
 
-  # Passing salesforce__source_config replaces the committed one, so the renames are repeated below.
-  # RecordType stays Legacy because its seed has no _fivetran_active, which also covers a per-table override.
+  # Scenario configs replace the committed one, so renames repeat. RecordType's seed has no _fivetran_active.
   - name: "history sync mode"
     vars:
       salesforce__source_config:

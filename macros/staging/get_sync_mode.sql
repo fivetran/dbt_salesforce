@@ -1,9 +1,5 @@
 {% macro get_sync_mode(source_name, table_name, payload_key, default_sync_mode='legacy') %}
-{#
-    Returns the table's Fivetran sync mode from `salesforce__source_config` (table, then source,
-    then `default_sync_mode`), lowercased: legacy (soft delete), history, or live. Values match what
-    Quickstart sends (Legacy, History, Live), case-insensitive.
-#}
+{# Table's sync mode (table, then source, then default), lowercased: legacy, history, or live #}
 {%- set table_source = source(source_name, table_name) -%}
 {%- set full_config = var('salesforce__source_config', {}) or {} -%}
 {%- set source_config = full_config.get(table_source.schema) or full_config.get(source_name, {}) or {} -%}

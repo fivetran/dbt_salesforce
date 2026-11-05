@@ -1,11 +1,7 @@
 {% macro resolve_source_columns(source_name, table_name, staging_columns, payload_key, default_sync_mode='legacy') %}
 {#
-    Resolves staging columns from `salesforce__source_config` (keyed by connection schema or
-    source name, then API object name) instead of warehouse introspection. Unmapped columns use
-    their canonical or API name per `naming_standard`; `<fivetran_not_synced>` columns become
-    typed nulls, as do metadata columns that the table's `sync_mode` (default Legacy) doesn't add.
-    `sync_mode_filter` picks the column each mode uses to filter out deleted or inactive rows.
-    `fivetran_packages_using_introspective_queries: true` restores the live lookup instead.
+    Resolves staging columns from `salesforce__source_config` instead of introspection.
+    Unsynced columns, and metadata columns the sync mode doesn't add, become typed nulls.
 #}
 {%- set table_source = source(source_name, table_name) -%}
 
@@ -16,14 +12,14 @@
 
 {%- else -%}
 
-    {# `or {}` guards against keys present but empty in YAML (e.g. a bare `columns:`), which .get() defaults don't cover #}
+    {# `or {}` covers keys present but empty in YAML #}
     {%- set full_config = var('salesforce__source_config', {}) or {} -%}
     {%- set source_config = full_config.get(table_source.schema) or full_config.get(source_name, {}) or {} -%}
     {%- set table_config = source_config.get(payload_key, {}) or {} -%}
     {%- set column_config = table_config.get('columns', {}) or {} -%}
     {%- set naming_standard = source_config.get('naming_standard', 'fivetran') -%}
 
-    {# each sync mode adds its own metadata columns (https://fivetran.com/docs/core-concepts/sync-modes) #}
+    {# metadata columns each mode adds: https://fivetran.com/docs/core-concepts/sync-modes #}
     {%- set sync_mode = salesforce.get_sync_mode(source_name, table_name, payload_key, default_sync_mode) -%}
     {%- set sync_mode_columns = {
         'legacy': ['_fivetran_deleted'],
