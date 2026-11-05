@@ -19,10 +19,10 @@ schema_data_changes:
     change_type: Changed field/model
     old: In soft delete mode, rows marked `_fivetran_deleted` were kept unless Salesforce's
       `is_deleted` was also true.
-    new: In soft delete mode, rows marked `_fivetran_deleted` are removed.
+    new: In soft delete (`Legacy`) mode, rows marked `_fivetran_deleted` are removed.
     is_breaking: false
-    notes: Applies when you use `salesforce__source_config`. Downstream models no longer
-      include records that Fivetran marked as deleted.
+    notes: Downstream models no longer include records that Fivetran marked as deleted.
+      This also applies when `fivetran_packages_using_introspective_queries` is true.
 new_features:
 - title: Adds the `salesforce__source_config` variable
   description: Replaces automatic column detection with explicit configuration for
@@ -35,8 +35,9 @@ new_features:
   - 'Set `sync_mode` (`Legacy`, `History`, or `Live`) per source or table to match your
     Fivetran sync mode. `Legacy` is soft delete mode and is the default, so set
     `sync_mode: History` if your tables use history mode.'
-  - Metadata columns that a sync mode doesn't add are derived from the ones it does. For
-    example, `_fivetran_active` is derived from `_fivetran_deleted` in soft delete mode.
+  - Staging models filter deleted or inactive rows with the column your sync mode adds
+    (`_fivetran_deleted` for `Legacy`, `_fivetran_active` for `History`). `Live` mode keeps
+    every row. Metadata columns your sync mode doesn't add are null.
   - 'Set `naming_standard: source` to use Salesforce''s original column names by default.'
   - 'Set `fivetran_packages_using_introspective_queries: true` to restore automatic
     column detection, but not the previous camelCase/snake_case fallback.'

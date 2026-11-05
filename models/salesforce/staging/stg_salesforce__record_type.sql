@@ -24,7 +24,7 @@ final as (
         sobject_type
 
     from fields
-    where not coalesce(_fivetran_deleted, false)
+    where {{ salesforce.sync_mode_filter(source_name='salesforce', table_name='record_type', payload_key='RecordType') }}
 )
 
 select *

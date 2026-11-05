@@ -34,7 +34,7 @@ final as (
         {{ fivetran_utils.fill_pass_through_columns('salesforce__campaign_member_pass_through_columns') }}
 
     from fields
-    where coalesce(_fivetran_active, true)
+    where {{ salesforce.sync_mode_filter(source_name='salesforce', table_name='campaign_member', payload_key='CampaignMember') }}
 )
 
 select *

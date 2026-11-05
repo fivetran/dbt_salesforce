@@ -20,6 +20,8 @@ sources:
           description: The unique, system-generated ID assigned during creation
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+        - name: _fivetran_deleted
+          description: True if Fivetran marked the record as deleted. Soft delete mode only.
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
         - name: account_number
@@ -125,6 +127,8 @@ sources:
           description: The unique, system-generated ID assigned during creation.
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+        - name: _fivetran_deleted
+          description: True if Fivetran marked the record as deleted. Soft delete mode only.
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
         - name: account_id
@@ -381,6 +385,8 @@ sources:
           description: The unique, system-generated ID assigned during creation.
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+        - name: _fivetran_deleted
+          description: True if Fivetran marked the record as deleted. Soft delete mode only.
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
         - name: account_id
@@ -523,6 +529,8 @@ sources:
           description: The unique, system-generated ID assigned during creation.
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+        - name: _fivetran_deleted
+          description: True if Fivetran marked the record as deleted. Soft delete mode only.
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
         - name: account_id
@@ -672,6 +680,8 @@ sources:
           description: The unique, system-generated ID assigned during creation.
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+        - name: _fivetran_deleted
+          description: True if Fivetran marked the record as deleted. Soft delete mode only.
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
         - name: annual_revenue
@@ -787,6 +797,8 @@ sources:
           description: The unique, system-generated ID assigned during creation.
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+        - name: _fivetran_deleted
+          description: True if Fivetran marked the record as deleted. Soft delete mode only.
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
         - name: created_by_id
@@ -870,6 +882,8 @@ sources:
           description: The unique, system-generated ID assigned during creation.
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+        - name: _fivetran_deleted
+          description: True if Fivetran marked the record as deleted. Soft delete mode only.
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
         - name: account_id
@@ -977,6 +991,8 @@ sources:
           description: The unique, system-generated ID assigned during creation.
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+        - name: _fivetran_deleted
+          description: True if Fivetran marked the record as deleted. Soft delete mode only.
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
         - name: created_by_id
@@ -1042,6 +1058,8 @@ sources:
           description: The unique, system-generated ID assigned during creation.
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+        - name: _fivetran_deleted
+          description: True if Fivetran marked the record as deleted. Soft delete mode only.
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
         - name: account_id
@@ -1137,6 +1155,8 @@ sources:
           description: The unique, system-generated ID assigned during creation.
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record.
+        - name: _fivetran_deleted
+          description: True if Fivetran marked the record as deleted. Soft delete mode only.
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled.
         - name: actual_cost
@@ -1186,6 +1206,8 @@ sources:
           description: The unique, system-generated ID assigned during creation.
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record.
+        - name: _fivetran_deleted
+          description: True if Fivetran marked the record as deleted. Soft delete mode only.
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled.
         - name: account_id
@@ -1227,6 +1249,8 @@ sources:
           description: The unique, system-generated ID assigned during creation.
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record.
+        - name: _fivetran_active
+          description: True if record is active, used to filter out only active records if History Mode is enabled
         - name: _fivetran_deleted
           description: True if the record has been deleted in Salesforce.
         - name: description

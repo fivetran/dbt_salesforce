@@ -2,6 +2,7 @@
 
 {% set columns = [
     {"name": "_fivetran_synced", "datatype": dbt.type_timestamp()},
+    {"name": "_fivetran_deleted", "datatype": dbt.type_boolean()},
     {"name": "_fivetran_active", "datatype": dbt.type_boolean()},
     {"name": "account_id", "source_name": "AccountId", "datatype": dbt.type_string()},
     {"name": "activated_by_id", "source_name": "ActivatedById", "datatype": dbt.type_string()},

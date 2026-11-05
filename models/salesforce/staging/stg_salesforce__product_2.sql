@@ -43,7 +43,7 @@ final as (
         {{ fivetran_utils.fill_pass_through_columns('salesforce__product_2_pass_through_columns') }}
         
     from fields
-    where coalesce(_fivetran_active, true)
+    where {{ salesforce.sync_mode_filter(source_name='salesforce', table_name='product_2', payload_key='Product2') }}
 )
 
 select *
