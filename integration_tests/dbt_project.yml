@@ -42,7 +42,7 @@ vars:
     salesforce_ContactHistory_identifier: "sf_contact_history_data"
     salesforce_OpportunityHistory_identifier: "sf_opportunity_history_data"
 
-    ## Exercises history sync mode, a rename (Description__c), an API-spelled field (AccountNumber), and unsynced fields
+    ## Exercises history sync mode with a per-table Legacy override (RecordType), a rename (Description__c), an API-spelled field (AccountNumber), and unsynced fields
     salesforce__source_config:
       salesforce:
         sync_mode: History
@@ -55,6 +55,9 @@ vars:
           name: sf_opportunity_data
           columns:
             Description: Description__c
+        RecordType:
+          name: sf_record_type_data
+          sync_mode: Legacy
       salesforce_history:
         AccountHistory:
           name: sf_account_history_data
