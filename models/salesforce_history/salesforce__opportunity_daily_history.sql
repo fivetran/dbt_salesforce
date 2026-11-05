@@ -36,7 +36,8 @@ fields as (
             base_columns=salesforce.get_opportunity_columns(),
             id_alias='opportunity_id'
         ),
-        payload_key='OpportunityHistory'
+        payload_key='OpportunityHistory',
+        default_sync_mode='History'
     ) }}
 
 ),

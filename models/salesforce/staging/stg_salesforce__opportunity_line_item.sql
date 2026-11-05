@@ -1,14 +1,11 @@
 --To disable this model, set the salesforce__opportunity_line_item_enabled variable within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__opportunity_line_item_enabled', True)) }}
 
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'opportunity_line_item', 'payload_key': 'OpportunityLineItem'} -%}
+
 with fields as (
 
-    {{ salesforce.resolve_source_columns(
-        source_name='salesforce',
-        table_name='opportunity_line_item',
-        staging_columns=salesforce.get_opportunity_line_item_columns(),
-        payload_key='OpportunityLineItem'
-    ) }}
+    {{ salesforce.resolve_source_columns(staging_columns=salesforce.get_opportunity_line_item_columns(), **source_table) }}
 ), 
 
 final as (
@@ -43,7 +40,7 @@ final as (
         {{ fivetran_utils.fill_pass_through_columns('salesforce__opportunity_line_item_pass_through_columns') }}
         
     from fields
-    where coalesce(_fivetran_active, true)
+    where {{ salesforce.sync_mode_filter(**source_table) }}
 )
 
 select *

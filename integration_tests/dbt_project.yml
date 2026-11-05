@@ -21,28 +21,28 @@ vars:
     salesforce_schema: salesforce_integrations_tests_4
     salesforce_history_schema: salesforce_integrations_tests_4
 
-    salesforce_account_identifier: "sf_account_data"
-    salesforce_campaign_identifier: "sf_campaign_data"
-    salesforce_campaignmember_identifier: "sf_campaign_member_data"
-    salesforce_opportunity_identifier: "sf_opportunity_data"
-    salesforce_recordtype_identifier: "sf_record_type_data"
-    salesforce_user_identifier: "sf_user_data"
-    salesforce_userrole_identifier: "sf_user_role_data"
-    salesforce_contact_identifier: "sf_contact_data"
-    salesforce_lead_identifier: "sf_lead_data"
-    salesforce_task_identifier: "sf_task_data"
-    salesforce_event_identifier: "sf_event_data"
-    salesforce_product2_identifier: "sf_product_2_data"
-    salesforce_order_identifier: "sf_order_data"
-    salesforce_opportunitylineitem_identifier: "sf_opportunity_line_item_data"
+    salesforce_Account_identifier: "sf_account_data"
+    salesforce_Campaign_identifier: "sf_campaign_data"
+    salesforce_CampaignMember_identifier: "sf_campaign_member_data"
+    salesforce_Opportunity_identifier: "sf_opportunity_data"
+    salesforce_RecordType_identifier: "sf_record_type_data"
+    salesforce_User_identifier: "sf_user_data"
+    salesforce_UserRole_identifier: "sf_user_role_data"
+    salesforce_Contact_identifier: "sf_contact_data"
+    salesforce_Lead_identifier: "sf_lead_data"
+    salesforce_Task_identifier: "sf_task_data"
+    salesforce_Event_identifier: "sf_event_data"
+    salesforce_Product2_identifier: "sf_product_2_data"
+    salesforce_Order_identifier: "sf_order_data"
+    salesforce_OpportunityLineItem_identifier: "sf_opportunity_line_item_data"
 
     ##history mode identifiers
-    salesforce_campaignhistory_identifier: "sf_campaign_history_data"
-    salesforce_accounthistory_identifier: "sf_account_history_data"
-    salesforce_contacthistory_identifier: "sf_contact_history_data"
-    salesforce_opportunityhistory_identifier: "sf_opportunity_history_data"
+    salesforce_CampaignHistory_identifier: "sf_campaign_history_data"
+    salesforce_AccountHistory_identifier: "sf_account_history_data"
+    salesforce_ContactHistory_identifier: "sf_contact_history_data"
+    salesforce_OpportunityHistory_identifier: "sf_opportunity_history_data"
 
-    ## Exercises a rename (Description__c), an API-spelled field (AccountNumber), and unsynced fields
+    ## Legacy sync mode, renames, and unsynced fields. Other sync modes: ci/test_scenarios.yml
     salesforce__source_config:
       salesforce:
         Account:
@@ -76,6 +76,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         last_activity_date: timestamp
         last_referenced_date: timestamp
         last_viewed_date: timestamp
@@ -88,6 +89,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         start_date: timestamp
         end_date: timestamp
         is_active: boolean
@@ -105,6 +107,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         created_date: timestamp
         first_responded_date: timestamp
         has_responded: boolean
@@ -118,6 +121,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         close_date: timestamp
         created_date: timestamp
         last_activity_date: timestamp
@@ -139,6 +143,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         created_date: timestamp
         email_bounced_date: timestamp
         last_activity_date: timestamp
@@ -153,6 +158,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         converted_date: timestamp
         created_date: timestamp
         email_bounced_date: timestamp
@@ -166,6 +172,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         activity_date: timestamp
         completed_date_time: timestamp
         created_date: timestamp
@@ -179,6 +186,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         activity_date: timestamp
         activity_date_time: timestamp
         created_date: timestamp
@@ -195,6 +203,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         created_date: timestamp
         last_modified_date: timestamp
         last_referenced_date: timestamp
@@ -205,6 +214,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         activated_date: timestamp
         created_date: timestamp
         effective_date: timestamp
@@ -218,6 +228,7 @@ seeds:
       +column_types:
         _fivetran_synced: timestamp
         _fivetran_active: boolean
+        _fivetran_deleted: boolean
         created_date: timestamp
         last_modified_date: timestamp
         last_referenced_date: timestamp

@@ -1,11 +1,8 @@
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'contact', 'payload_key': 'Contact'} -%}
+
 with fields as (
 
-    {{ salesforce.resolve_source_columns(
-        source_name='salesforce',
-        table_name='contact',
-        staging_columns=salesforce.get_contact_columns(),
-        payload_key='Contact'
-    ) }}
+    {{ salesforce.resolve_source_columns(staging_columns=salesforce.get_contact_columns(), **source_table) }}
 ), 
 
 final as (
@@ -46,7 +43,7 @@ final as (
         {{ fivetran_utils.fill_pass_through_columns('salesforce__contact_pass_through_columns') }}
         
     from fields
-    where coalesce(_fivetran_active, true)
+    where {{ salesforce.sync_mode_filter(**source_table) }}
 )
 
 select *

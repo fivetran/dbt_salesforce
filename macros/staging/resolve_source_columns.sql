@@ -1,9 +1,7 @@
-{% macro resolve_source_columns(source_name, table_name, staging_columns, payload_key) %}
+{% macro resolve_source_columns(source_name, table_name, staging_columns, payload_key, default_sync_mode='legacy') %}
 {#
-    Resolves staging columns from `salesforce__source_config` (keyed by source name, then
-    API object name) instead of warehouse introspection. Unmapped columns use their canonical
-    or API name per `naming_standard`; `<fivetran_not_synced>` columns become typed nulls.
-    `fivetran_packages_using_introspective_queries: true` restores the live lookup instead.
+    Resolves staging columns from `salesforce__source_config` instead of introspection.
+    Unsynced columns, and metadata columns the sync mode doesn't add, become typed nulls.
 #}
 {%- set table_source = source(source_name, table_name) -%}
 
@@ -14,10 +12,21 @@
 
 {%- else -%}
 
-    {# `or {}` guards against keys present but empty in YAML (e.g. a bare `columns:`), which .get() defaults don't cover #}
-    {%- set source_config = (var('salesforce__source_config', {}) or {}).get(source_name, {}) or {} -%}
-    {%- set column_config = ((source_config.get(payload_key, {}) or {}).get('columns', {})) or {} -%}
+    {# `or {}` covers keys present but empty in YAML #}
+    {%- set full_config = var('salesforce__source_config', {}) or {} -%}
+    {%- set source_config = full_config.get(table_source.schema) or full_config.get(source_name, {}) or {} -%}
+    {%- set table_config = source_config.get(payload_key, {}) or {} -%}
+    {%- set column_config = table_config.get('columns', {}) or {} -%}
     {%- set naming_standard = source_config.get('naming_standard', 'fivetran') -%}
+
+    {# metadata columns each mode adds: https://fivetran.com/docs/core-concepts/sync-modes #}
+    {%- set sync_mode = salesforce.get_sync_mode(source_name, table_name, payload_key, default_sync_mode) -%}
+    {%- set sync_mode_columns = {
+        'legacy': ['_fivetran_deleted'],
+        'history': ['_fivetran_active', '_fivetran_start', '_fivetran_end'],
+        'live': []
+    }[sync_mode] -%}
+    {%- set mode_metadata_columns = ['_fivetran_deleted', '_fivetran_active', '_fivetran_start', '_fivetran_end'] -%}
 
     {%- set present_columns = [] -%}
     {%- set resolved_columns = [] -%}
@@ -25,7 +34,11 @@
     {%- for column in staging_columns -%}
         {# metadata columns have no source_name, so they fall back to their canonical name #}
         {%- set field_name = column.get('source_name', column.name) -%}
-        {%- set default_name = field_name if naming_standard == 'source' else column.name -%}
+        {%- if column.name in mode_metadata_columns and column.name not in sync_mode_columns -%}
+            {%- set default_name = '<fivetran_not_synced>' -%}
+        {%- else -%}
+            {%- set default_name = field_name if naming_standard == 'source' else column.name -%}
+        {%- endif -%}
         {%- set current_name = column_config.get(field_name, default_name) -%}
 
         {%- set resolved = column.copy() -%}

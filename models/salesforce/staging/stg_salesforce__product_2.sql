@@ -1,14 +1,11 @@
 --To disable this model, set the salesforce__product_2_enabled variable within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__product_2_enabled', True)) }}
 
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'product_2', 'payload_key': 'Product2'} -%}
+
 with fields as (
 
-    {{ salesforce.resolve_source_columns(
-        source_name='salesforce',
-        table_name='product_2',
-        staging_columns=salesforce.get_product_2_columns(),
-        payload_key='Product2'
-    ) }}
+    {{ salesforce.resolve_source_columns(staging_columns=salesforce.get_product_2_columns(), **source_table) }}
 ), 
 
 final as (
@@ -43,7 +40,7 @@ final as (
         {{ fivetran_utils.fill_pass_through_columns('salesforce__product_2_pass_through_columns') }}
         
     from fields
-    where coalesce(_fivetran_active, true)
+    where {{ salesforce.sync_mode_filter(**source_table) }}
 )
 
 select *

@@ -16,8 +16,45 @@ include_dbt_compile: true
 include_duckdb: true
 
 test_scenarios:
+  # Committed config (Legacy sync mode)
   - name: "Default"
     vars: {}
+    include_incremental: false
+
+  # Scenario configs replace the committed one, so renames repeat. RecordType's seed has no _fivetran_active.
+  - name: "history sync mode"
+    vars:
+      salesforce__source_config:
+        salesforce:
+          sync_mode: History
+          Account:
+            name: sf_account_data
+            columns:
+              AccountNumber: AccountNumber
+              Website: "<fivetran_not_synced>"
+          Opportunity:
+            name: sf_opportunity_data
+            columns:
+              Description: Description__c
+          RecordType:
+            name: sf_record_type_data
+            sync_mode: Legacy
+    include_incremental: false
+
+  - name: "live sync mode"
+    vars:
+      salesforce__source_config:
+        salesforce:
+          sync_mode: Live
+          Account:
+            name: sf_account_data
+            columns:
+              AccountNumber: AccountNumber
+              Website: "<fivetran_not_synced>"
+          Opportunity:
+            name: sf_opportunity_data
+            columns:
+              Description: Description__c
     include_incremental: false
 
   - name: "features disabled"

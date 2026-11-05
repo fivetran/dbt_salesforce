@@ -36,7 +36,8 @@ fields as (
             base_columns=salesforce.get_contact_columns(),
             id_alias='contact_id'
         ),
-        payload_key='ContactHistory'
+        payload_key='ContactHistory',
+        default_sync_mode='History'
     ) }}
 
 ),

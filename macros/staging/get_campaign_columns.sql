@@ -4,6 +4,7 @@
 {% set columns = [
     {"name": "_fivetran_active", "datatype": "boolean"},
     {"name": "_fivetran_synced", "datatype": dbt.type_timestamp()},
+    {"name": "_fivetran_deleted", "datatype": dbt.type_boolean()},
     {"name": "actual_cost", "source_name": "ActualCost", "datatype": dbt.type_numeric()},
     {"name": "amount_all_opportunities", "source_name": "AmountAllOpportunities", "datatype": dbt.type_numeric()},
     {"name": "budgeted_cost", "source_name": "BudgetedCost", "datatype": dbt.type_numeric()},
