@@ -32,12 +32,12 @@ new_features:
   - Key each source by its connection schema name, or by `salesforce` or `salesforce_history`.
   - Only renamed or unsynced columns need to be configured. All others use their default
     names.
-  - 'Set `sync_mode` (`Legacy`, `History`, or `Live`) per source or table to match your
-    Fivetran sync mode. `Legacy` is soft delete mode and is the default, so set
+  - 'Set `sync_mode` (`Legacy`, `History`, or `Live`) per source or table to match
+    your Fivetran sync mode. `Legacy` is soft delete mode and is the default, so set
     `sync_mode: History` if your tables use history mode.'
-  - Staging models filter deleted or inactive rows with the column your sync mode adds
-    (`_fivetran_deleted` for `Legacy`, `_fivetran_active` for `History`). `Live` mode keeps
-    every row. Metadata columns your sync mode doesn't add are null.
+  - Staging models filter deleted or inactive rows with the column your sync mode
+    adds (`_fivetran_deleted` for `Legacy`, `_fivetran_active` for `History`). `Live`
+    mode keeps every row. Metadata columns your sync mode doesn't add are null.
   - 'Set `naming_standard: source` to use Salesforce''s original column names by default.'
   - 'Set `fivetran_packages_using_introspective_queries: true` to restore automatic
     column detection, but not the previous camelCase/snake_case fallback.'
