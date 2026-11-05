@@ -1,43 +1,13 @@
 version: 2.5.0-a1
 pr_number: 93
-schema_data_changes:
-  entries:
-  - models:
-    - stg_salesforce__account
-    - stg_salesforce__campaign
-    - stg_salesforce__campaign_member
-    - stg_salesforce__contact
-    - stg_salesforce__event
-    - stg_salesforce__lead
-    - stg_salesforce__opportunity
-    - stg_salesforce__opportunity_line_item
-    - stg_salesforce__order
-    - stg_salesforce__product_2
-    - stg_salesforce__task
-    - stg_salesforce__user
-    - stg_salesforce__user_role
-    change_type: Changed field/model
-    old: In soft delete mode, rows marked `_fivetran_deleted` were kept unless Salesforce's
-      `is_deleted` was also true.
-    new: In soft delete (`Legacy`) mode, rows marked `_fivetran_deleted` are removed.
-    is_breaking: false
-    notes: Downstream models no longer include records that Fivetran marked as deleted.
-      This also applies when `fivetran_packages_using_introspective_queries` is true.
 new_features:
 - title: Adds the `salesforce__source_config` variable
   description: Replaces automatic column detection with explicit configuration for
     renamed or unsynced columns, reducing introspective queries during `dbt run` and
     `dbt compile`.
   details:
-  - Key each source by its connection schema name, or by `salesforce` or `salesforce_history`.
   - Only renamed or unsynced columns need to be configured. All others use their default
     names.
-  - 'Set `sync_mode` (`Legacy`, `History`, or `Live`) per source or table to match
-    your Fivetran sync mode. `Legacy` is soft delete mode and is the default, so set
-    `sync_mode: History` if your tables use history mode.'
-  - Staging models filter deleted or inactive rows with the column your sync mode
-    adds (`_fivetran_deleted` for `Legacy`, `_fivetran_active` for `History`). `Live`
-    mode keeps every row. Metadata columns your sync mode doesn't add are null.
   - 'Set `naming_standard: source` to use Salesforce''s original column names by default.'
   - 'Set `fivetran_packages_using_introspective_queries: true` to restore automatic
     column detection, but not the previous camelCase/snake_case fallback.'
@@ -45,7 +15,7 @@ new_features:
   - See the [sample configuration](https://github.com/fivetran/dbt_salesforce/blob/v2.5.0-a1/integration_tests/dbt_project.yml).
 under_the_hood:
 - title: Aligns table identifier variables with Salesforce API names
-  description: Renames the table identifier variables to match Salesforce API object
-    names (e.g. `salesforce_CampaignMember_identifier`). Previous variable names remain
+  description: Renames nine identifier variables to match Salesforce API object names
+    (e.g. `salesforce_campaignmember_identifier`). Previous variable names remain
     supported, so no action is required.
 date: '2026-10-30'
