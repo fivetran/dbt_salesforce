@@ -16,8 +16,26 @@ include_dbt_compile: true
 include_duckdb: true
 
 test_scenarios:
+  # Uses the committed salesforce__source_config: History sync mode, with a Legacy override on RecordType
   - name: "Default"
     vars: {}
+    include_incremental: false
+
+  # Passing salesforce__source_config replaces the committed one, so the renames are repeated here
+  - name: "live sync mode"
+    vars:
+      salesforce__source_config:
+        salesforce:
+          sync_mode: Live
+          Account:
+            name: sf_account_data
+            columns:
+              AccountNumber: AccountNumber
+              Website: "<fivetran_not_synced>"
+          Opportunity:
+            name: sf_opportunity_data
+            columns:
+              Description: Description__c
     include_incremental: false
 
   - name: "features disabled"
