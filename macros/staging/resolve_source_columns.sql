@@ -29,7 +29,6 @@
     {%- set sync_mode = raw_sync_mode | string | lower -%}
     {%- set sync_mode_columns = {
         'legacy': ['_fivetran_deleted'],
-        'soft_delete': ['_fivetran_deleted'],
         'history': ['_fivetran_active', '_fivetran_start', '_fivetran_end'],
         'live': []
     } -%}
@@ -43,7 +42,6 @@
     #}
     {%- set derived_metadata = {
         'legacy': {'_fivetran_active': 'not coalesce(_fivetran_deleted, false)'},
-        'soft_delete': {'_fivetran_active': 'not coalesce(_fivetran_deleted, false)'},
         'history': {'_fivetran_deleted': 'not coalesce(_fivetran_active, true)'},
         'live': {'_fivetran_active': 'true', '_fivetran_deleted': 'false'}
     }[sync_mode] -%}
