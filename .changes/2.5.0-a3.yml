@@ -2,13 +2,24 @@ version: 2.5.0-a3
 pr_number: 100
 bug_fixes:
 - title: History table config keys
-  description: '`salesforce__source_config` entries for the history tables now use the Salesforce object name (for example, `Account`) under the history source, instead of `AccountHistory`. If you set history table config in an earlier 2.5.0 pre-release, rename those keys.'
+  description: '`salesforce__source_config` entries for the history tables now use
+    the Salesforce object name (for example, `Account`) under the history source,
+    instead of `AccountHistory`. If you set history table config in an earlier 2.5.0
+    pre-release, rename those keys.'
 under_the_hood:
 - title: Source names in source yml
-  description: Moves the Salesforce API names from the staging models and `get_*_columns` macros to `src_salesforce.yml` and `src_salesforce_history.yml`. The names now live in one place and appear in `manifest.json`.
+  description: Moves the Salesforce API names from the staging models and `get_*_columns`
+    macros to `src_salesforce.yml` and `src_salesforce_history.yml`. The names now
+    live in one place and appear in `manifest.json`.
   details:
-  - 'Each table has `config.meta.source_table_name` (for example, `OpportunityLineItem`), which is its `salesforce__source_config` key. History tables use the object they come from (for example, `Account`).'
-  - 'Each column has `config.meta.source_column_name` (for example, `RecordTypeId`). Columns without one, such as pass-through columns, use their own name.'
-  - Removes the `payload_key` argument from `resolve_source_columns`, `get_sync_mode`, and `sync_mode_filter`.
-  - Adds 6 columns that the history models select to `src_salesforce_history.yml` documentation.
+  - Each table has `config.meta.source_table_name` (for example, `OpportunityLineItem`),
+    which is its `salesforce__source_config` key. History tables use the object they
+    come from (for example, `Account`).
+  - Each column has `config.meta.source_column_name` (for example, `RecordTypeId`).
+    Columns without one, such as pass-through columns, use their own name.
+  - Removes the `payload_key` argument from `resolve_source_columns`, `get_sync_mode`,
+    and `sync_mode_filter`.
+  - Adds 6 columns that the history models select to `src_salesforce_history.yml`
+    documentation.
   - No change to model output.
+date: '2026-11-06'

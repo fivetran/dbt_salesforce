@@ -2,9 +2,14 @@
 
 [PR #100](https://github.com/fivetran/dbt_salesforce/pull/100) includes the following updates:
 
+## Bug Fix
+- **History table config keys**: `salesforce__source_config` entries for the history tables now use the Salesforce object name (for example, `Account`) under the history source, instead of `AccountHistory`. If you set history table config in an earlier 2.5.0 pre-release, rename those keys.
+
 ## Under the Hood
-- **Source column names in source yml**: Moves each column's Salesforce API name (for example, `RecordTypeId`) from the `get_*_columns` macros to `config.meta.source_column_name` in `src_salesforce.yml` and `src_salesforce_history.yml`. The names now live in one place and appear in `manifest.json`.
-  - `resolve_source_columns` reads each column's source column name from the source yml. Columns without one, such as `_fivetran_*` and pass-through columns, use their own name.
+- **Source names in source yml**: Moves the Salesforce API names from the staging models and `get_*_columns` macros to `src_salesforce.yml` and `src_salesforce_history.yml`. The names now live in one place and appear in `manifest.json`.
+  - Each table has `config.meta.source_table_name` (for example, `OpportunityLineItem`), which is its `salesforce__source_config` key. History tables use the object they come from (for example, `Account`).
+  - Each column has `config.meta.source_column_name` (for example, `RecordTypeId`). Columns without one, such as pass-through columns, use their own name.
+  - Removes the `payload_key` argument from `resolve_source_columns`, `get_sync_mode`, and `sync_mode_filter`.
   - Adds 6 columns that the history models select to `src_salesforce_history.yml` documentation.
   - No change to model output.
 
