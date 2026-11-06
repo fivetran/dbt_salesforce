@@ -15,6 +15,9 @@ sources:
       - name: account
         identifier: "{{ var('salesforce_Account_identifier', var('salesforce_account_identifier', 'account'))}}"
         description: Represents an individual account, which is an organization or person involved with your business (such as customers, competitors, and partners).
+        config:
+          meta:
+            source_table_name: Account
         columns:
         - name: id
           description: The unique, system-generated ID assigned during creation
@@ -275,6 +278,9 @@ sources:
       - name: opportunity
         identifier: "{{ var('salesforce_Opportunity_identifier', var('salesforce_opportunity_identifier', 'opportunity'))}}"
         description: Represents an opportunity, which is a sale or pending deal.
+        config:
+          meta:
+            source_table_name: Opportunity
         columns:
         - name: id
           description: The unique, system-generated ID assigned during creation.
@@ -465,6 +471,8 @@ sources:
       - name: user
         identifier: "{{ var('salesforce_User_identifier', var('salesforce_user_identifier', 'user'))}}"
         config:
+          meta:
+            source_table_name: User
           freshness: null
         description: Represents a user in your organization.
         columns:
@@ -802,6 +810,8 @@ sources:
       - name: user_role
         identifier: "{{ var('salesforce_UserRole_identifier', var('salesforce_user_role_identifier', 'user_role'))}}"
         config:
+          meta:
+            source_table_name: UserRole
           freshness: null
         description: Represents a user role in your organization.
         columns:
@@ -880,6 +890,8 @@ sources:
       - name: contact
         identifier: "{{ var('salesforce_Contact_identifier', var('salesforce_contact_identifier', 'contact'))}}"
         config:
+          meta:
+            source_table_name: Contact
           freshness: null
         description: Represents a contact, which is a person associated with an account.
         columns:
@@ -1210,6 +1222,8 @@ sources:
       - name: event
         identifier: "{{ var('salesforce_Event_identifier', var('salesforce_event_identifier', 'event'))}}"
         config:
+          meta:
+            source_table_name: Event
           freshness: null
         description: Represents an event in the calendar. In the user interface, event and task records are collectively referred to as activities.
         columns:
@@ -1518,6 +1532,8 @@ sources:
       - name: lead
         identifier: "{{ var('salesforce_Lead_identifier', var('salesforce_lead_identifier', 'lead'))}}"
         config:
+          meta:
+            source_table_name: Lead
           freshness: null
         description: Represents a prospect or lead.
         columns:
@@ -1797,6 +1813,8 @@ sources:
       - name: opportunity_line_item
         identifier: "{{ var('salesforce_OpportunityLineItem_identifier', var('salesforce_opportunity_line_item_identifier', 'opportunity_line_item'))}}"
         config:
+          meta:
+            source_table_name: OpportunityLineItem
           freshness: null
         description: Represents an opportunity line item, which is a member of the list of Product2 products associated with an Opportunity.
         columns:
@@ -1966,6 +1984,8 @@ sources:
           {% if target.type == 'snowflake' %}{{ var('salesforce_Order_identifier', var('salesforce_order_identifier', '"ORDER"')) }}
           {% else %}{{ var('salesforce_Order_identifier', var('salesforce_order_identifier', 'order')) }}{% endif %}
         config:
+          meta:
+            source_table_name: Order
           freshness: null
         description: Represents an order associated with a contract or an account.
         columns:
@@ -2228,6 +2248,8 @@ sources:
       - name: product_2
         identifier: "{{ var('salesforce_Product2_identifier', var('salesforce_product_2_identifier', 'product_2'))}}"
         config:
+          meta:
+            source_table_name: Product2
           freshness: null
         description: Represents a product that your company sells.
         columns:
@@ -2385,6 +2407,8 @@ sources:
       - name: task
         identifier: "{{ var('salesforce_Task_identifier', var('salesforce_task_identifier', 'task'))}}"
         config:
+          meta:
+            source_table_name: Task
           freshness: null
         description: Represents a business activity such as making a phone call or other to-do items. In the user interface, Task and Event records are collectively referred to as activities.
         columns:
@@ -2622,6 +2646,9 @@ sources:
       - name: campaign
         identifier: "{{ var('salesforce_Campaign_identifier', var('salesforce_campaign_identifier', 'campaign'))}}"
         description: Represents a marketing campaign, such as a direct mail promotion, webinar, or trade show.
+        config:
+          meta:
+            source_table_name: Campaign
         columns:
         - name: id
           description: The unique, system-generated ID assigned during creation.
@@ -2742,6 +2769,9 @@ sources:
       - name: campaign_member
         identifier: "{{ var('salesforce_CampaignMember_identifier', var('salesforce_campaign_member_identifier', 'campaign_member'))}}"
         description: Represents the relationship between a campaign and either a lead or a contact.
+        config:
+          meta:
+            source_table_name: CampaignMember
         columns:
         - name: id
           description: The unique, system-generated ID assigned during creation.
@@ -2837,6 +2867,8 @@ sources:
       - name: record_type
         identifier: "{{ var('salesforce_RecordType_identifier', var('salesforce_record_type_identifier', 'record_type'))}}"
         config:
+          meta:
+            source_table_name: RecordType
           freshness: null
         description: Represents a record type, which allows you to offer different business processes, picklist values, and page layouts to different users.
         columns:

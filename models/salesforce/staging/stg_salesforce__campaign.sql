@@ -1,7 +1,7 @@
 --To disable this model, set the salesforce__campaign_enabled within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__campaign_enabled', True)) }}
 
-{%- set source_table = {'source_name': 'salesforce', 'table_name': 'campaign', 'payload_key': 'Campaign'} -%}
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'campaign'} -%}
 
 with fields as (
 

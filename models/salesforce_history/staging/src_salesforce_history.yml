@@ -16,6 +16,8 @@ sources:
         identifier: "{{ var('salesforce_CampaignHistory_identifier', var('salesforce_campaign_history_identifier', 'campaign'))}}"
         description: Represents historical records of campaigns, which are outreach initiatives designed to generate leads and track revenue.
         config:
+          meta:
+            source_table_name: Campaign
           enabled: "{{ var('salesforce__campaign_history_enabled', False) }}"
         columns:
           - name: id
@@ -143,6 +145,8 @@ sources:
         identifier: "{{ var('salesforce_AccountHistory_identifier', var('salesforce_account_history_identifier', 'account'))}}"
         description: Represents historical records of individual accounts, which are organizations or people involved with your business (such as customers, competitors, and partners).
         config:
+          meta:
+            source_table_name: Account
           enabled: "{{ var('salesforce__account_history_enabled', False) }}"
         columns:
           - name: id
@@ -335,6 +339,8 @@ sources:
         identifier: "{{ var('salesforce_ContactHistory_identifier', var('salesforce_contact_history_identifier', 'contact'))}}"
         description: Represents the historical record of contacts, which are people associated with an account.
         config:
+          meta:
+            source_table_name: Contact
           enabled: "{{ var('salesforce__contact_history_enabled', False) }}"
         columns:
           - name: id
@@ -521,6 +527,8 @@ sources:
         identifier: "{{ var('salesforce_OpportunityHistory_identifier', var('salesforce_opportunity_history_identifier', 'opportunity'))}}"
         description: Represents historical records of opportunities, which are sales or pending deals.
         config:
+          meta:
+            source_table_name: Opportunity
           enabled: "{{ var('salesforce__opportunity_history_enabled', False) }}"
         columns:
           - name: id

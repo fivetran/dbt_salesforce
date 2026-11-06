@@ -1,7 +1,7 @@
 --To disable this model, set the salesforce__order_enabled within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__order_enabled', True)) }}
 
-{%- set source_table = {'source_name': 'salesforce', 'table_name': 'order', 'payload_key': 'Order'} -%}
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'order'} -%}
 
 with fields as (
 

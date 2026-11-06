@@ -1,7 +1,7 @@
 --To disable this model, set the salesforce__lead_enabled within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__lead_enabled', True)) }}
 
-{%- set source_table = {'source_name': 'salesforce', 'table_name': 'lead', 'payload_key': 'Lead'} -%}
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'lead'} -%}
 
 with fields as (
 
