@@ -1,7 +1,7 @@
 --To disable this model, set the salesforce__event_enabled variable within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__event_enabled', True)) }}
 
-{%- set source_table = {'source_name': 'salesforce', 'table_name': 'event', 'payload_key': 'Event'} -%}
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'event'} -%}
 
 with fields as (
 

@@ -74,7 +74,7 @@ Include the following salesforce package version in your `packages.yml`
 ```yaml
 packages:
   - package: fivetran/salesforce
-    version: 2.5.0-a2 # pre-release version; pin exactly since ranges exclude pre-releases
+    version: 2.5.0-a3 # pre-release version; pin exactly since ranges exclude pre-releases
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/salesforce_source` in your `packages.yml` since this package has been deprecated.

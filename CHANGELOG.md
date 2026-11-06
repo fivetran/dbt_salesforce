@@ -1,25 +1,17 @@
-# dbt_salesforce v2.5.0-a2
+# dbt_salesforce v2.5.0-a3
 
-[PR #99](https://github.com/fivetran/dbt_salesforce/pull/99) includes the following updates:
-
-## Schema/Data Change
-**1 total change • 0 possible breaking changes**
-
-| Data Model(s) | Change type | Old | New | Notes |
-| ------------- | ----------- | --- | --- | ----- |
-| stg_salesforce__account<br>stg_salesforce__campaign<br>stg_salesforce__campaign_member<br>stg_salesforce__contact<br>stg_salesforce__event<br>stg_salesforce__lead<br>stg_salesforce__opportunity<br>stg_salesforce__opportunity_line_item<br>stg_salesforce__order<br>stg_salesforce__product_2<br>stg_salesforce__task<br>stg_salesforce__user<br>stg_salesforce__user_role | Changed field/model | In soft delete mode, rows marked `_fivetran_deleted` were kept unless Salesforce's `is_deleted` was also true. | In soft delete (`Legacy`) mode, rows marked `_fivetran_deleted` are removed. | Downstream models no longer include records that Fivetran marked as deleted. This also applies when `fivetran_packages_using_introspective_queries` is true. |
-
-## Feature Update
-- **Adds `sync_mode` to `salesforce__source_config`**: Staging models now filter deleted or inactive rows with the column your Fivetran sync mode adds.
-  - Set `sync_mode` (`Legacy`, `History`, or `Live`) per source or table. `Legacy` is soft delete mode and is the default, so set `sync_mode: History` if your tables use history mode.
-  - `Legacy` filters on `_fivetran_deleted`, `History` filters on `_fivetran_active`, and `Live` keeps every row. Metadata columns your sync mode doesn't add are null.
-  - Other values cause a compile error.
+[PR #100](https://github.com/fivetran/dbt_salesforce/pull/100) includes the following updates:
 
 ## Bug Fix
-- `salesforce__source_config` is now looked up by connection schema name first, then by `salesforce` or `salesforce_history`. Before, a config keyed by schema name was ignored.
+- **History table config keys**: `salesforce__source_config` entries for the history tables now use the Salesforce object name (for example, `Account`) under the history source, instead of `AccountHistory`. If you set history table config in an earlier 2.5.0 pre-release, rename those keys.
 
 ## Under the Hood
-- **Matches table identifier variable casing to Salesforce API names**: Identifier variables now use Salesforce API casing (e.g. `salesforce_CampaignMember_identifier`) instead of the lowercase names added in v2.5.0-a1. The original snake_case names (e.g. `salesforce_campaign_member_identifier`) remain supported.
+- **Source names in source yml**: Moves the Salesforce API names from the staging models and `get_*_columns` macros to `src_salesforce.yml` and `src_salesforce_history.yml`. The names now live in one place and appear in `manifest.json`.
+  - Each table has `config.meta.source_table_name` (for example, `OpportunityLineItem`), which is its `salesforce__source_config` key. History tables use the object they come from (for example, `Account`).
+  - Each column has `config.meta.source_column_name` (for example, `RecordTypeId`). Columns without one, such as pass-through columns, use their own name.
+  - Removes the `payload_key` argument from `resolve_source_columns`, `get_sync_mode`, and `sync_mode_filter`.
+  - Adds 6 columns that the history models select to `src_salesforce_history.yml` documentation.
+  - No change to model output.
 
 # dbt_salesforce v2.4.1
 

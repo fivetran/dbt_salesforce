@@ -1,7 +1,7 @@
 --To disable this model, set the salesforce__opportunity_line_item_enabled variable within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__opportunity_line_item_enabled', True)) }}
 
-{%- set source_table = {'source_name': 'salesforce', 'table_name': 'opportunity_line_item', 'payload_key': 'OpportunityLineItem'} -%}
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'opportunity_line_item'} -%}
 
 with fields as (
 

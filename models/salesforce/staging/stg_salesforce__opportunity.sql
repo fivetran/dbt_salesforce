@@ -1,4 +1,4 @@
-{%- set source_table = {'source_name': 'salesforce', 'table_name': 'opportunity', 'payload_key': 'Opportunity'} -%}
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'opportunity'} -%}
 
 with fields as (
 

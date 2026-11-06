@@ -1,7 +1,7 @@
 --To disable this model, set the salesforce__product_2_enabled variable within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__product_2_enabled', True)) }}
 
-{%- set source_table = {'source_name': 'salesforce', 'table_name': 'product_2', 'payload_key': 'Product2'} -%}
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'product_2'} -%}
 
 with fields as (
 
