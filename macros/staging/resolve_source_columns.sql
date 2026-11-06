@@ -28,14 +28,14 @@
     }[sync_mode] -%}
     {%- set mode_metadata_columns = ['_fivetran_deleted', '_fivetran_active', '_fivetran_start', '_fivetran_end'] -%}
 
-    {# source field names from each column's `config.meta.source_name` in the source yml; graph is only populated at execution #}
-    {%- set source_field_names = {} -%}
+    {# each column's `config.meta.source_column_name` from the source yml; graph is only populated at execution #}
+    {%- set source_column_names = {} -%}
     {%- if execute -%}
         {%- for node in graph.sources.values() if node.source_name == source_name and node.name == table_name -%}
             {%- for column_name, source_column in node.columns.items() -%}
                 {%- set column_meta = (source_column.get('config') or {}).get('meta') or source_column.get('meta') or {} -%}
-                {%- if column_meta.get('source_name') -%}
-                    {%- do source_field_names.update({column_name: column_meta.get('source_name')}) -%}
+                {%- if column_meta.get('source_column_name') -%}
+                    {%- do source_column_names.update({column_name: column_meta.get('source_column_name')}) -%}
                 {%- endif -%}
             {%- endfor -%}
         {%- endfor -%}
@@ -45,8 +45,8 @@
     {%- set resolved_columns = [] -%}
 
     {%- for column in staging_columns -%}
-        {# metadata and pass-through columns have no source name, so they fall back to their canonical name #}
-        {%- set field_name = source_field_names.get(column.name, column.name) -%}
+        {# metadata and pass-through columns have no source column name, so they fall back to their canonical name #}
+        {%- set field_name = source_column_names.get(column.name, column.name) -%}
         {%- if column.name in mode_metadata_columns and column.name not in sync_mode_columns -%}
             {%- set default_name = '<fivetran_not_synced>' -%}
         {%- else -%}
