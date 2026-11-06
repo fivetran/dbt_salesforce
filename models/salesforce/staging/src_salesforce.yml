@@ -23,10 +23,19 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: account_number
           description: Account number assigned to this account (not the unique, system-generated ID assigned during creation).
           config:
@@ -54,12 +63,24 @@ sources:
               source_column_name: BillingCountry
         - name: billing_country_code
           description: The ISO country code for the account’s billing address.
+          config:
+            meta:
+              source_column_name: BillingCountryCode
         - name: billing_geocode_accuracy
           description: Accuracy level of the geocode for the billing address. See Compound Field Considerations and Limitations for details on geolocation compound fields.
+          config:
+            meta:
+              source_column_name: BillingGeocodeAccuracy
         - name: billing_latitude
           description: Used with BillingLongitude to specify the precise geolocation of a billing address.
+          config:
+            meta:
+              source_column_name: BillingLatitude
         - name: billing_longitude
           description: Used with BillingLatitude to specify the precise geolocation of a billing address.
+          config:
+            meta:
+              source_column_name: BillingLongitude
         - name: billing_postal_code
           description: Details for the billing address of this account.
           config:
@@ -87,6 +108,9 @@ sources:
               source_column_name: Description
         - name: fax
           description: Fax number for the account.
+          config:
+            meta:
+              source_column_name: Fax
         - name: industry
           description: An industry associated with this account.
           config:
@@ -99,6 +123,9 @@ sources:
               source_column_name: IsDeleted
         - name: jigsaw_company_id
           description: References the ID of a company in Data.com. If an account has a value in this field, it means that the account was imported from Data.com.
+          config:
+            meta:
+              source_column_name: JigsawCompanyId
         - name: last_activity_date
           description: Value is one of the following, whichever is the most recent
           config:
@@ -146,8 +173,14 @@ sources:
               source_column_name: ParentId
         - name: phone
           description: Phone number for this account.
+          config:
+            meta:
+              source_column_name: Phone
         - name: photo_url
           description: Path to be combined with the URL of a Salesforce instance (for example, https://yourInstance.salesforce.com/) to generate a URL to request the social network profile image associated with the account.
+          config:
+            meta:
+              source_column_name: PhotoUrl
         - name: rating
           description: The account’s prospect rating, for example Hot, Warm, or Cold.
           config:
@@ -175,10 +208,19 @@ sources:
               source_column_name: ShippingCountryCode
         - name: shipping_geocode_accuracy
           description: Accuracy level of the geocode for the shipping address.
+          config:
+            meta:
+              source_column_name: ShippingGeocodeAccuracy
         - name: shipping_latitude
           description: Used with ShippingLongitude to specify the precise geolocation of a shipping address.
+          config:
+            meta:
+              source_column_name: ShippingLatitude
         - name: shipping_longitude
           description: Used with ShippingLatitude to specify the precise geolocation of an address.
+          config:
+            meta:
+              source_column_name: ShippingLongitude
         - name: shipping_postal_code
           description: Details of the shipping address for this account. Postal code
           config:
@@ -201,12 +243,24 @@ sources:
               source_column_name: ShippingStreet
         - name: sic
           description: Standard Industrial Classification code of the company’s main business categorization, for example, 57340 for Electronics.
+          config:
+            meta:
+              source_column_name: Sic
         - name: sic_desc
           description: A brief description of an organization’s line of business, based on its SIC code.
+          config:
+            meta:
+              source_column_name: SicDesc
         - name: site
           description: Name of the account’s location, for example Headquarters or London.
+          config:
+            meta:
+              source_column_name: Site
         - name: ticker_symbol
           description: The stock market symbol for this account. This field is available on business accounts, not person accounts.
+          config:
+            meta:
+              source_column_name: TickerSymbol
         - name: type
           description: Type of account, for example, Customer, Competitor, or Partner.
           config:
@@ -229,10 +283,19 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: account_id
           description: ID of the account associated with this opportunity.
           config:
@@ -320,6 +383,9 @@ sources:
               source_column_name: IsDeleted
         - name: is_excluded_from_territory_2_filter
           description: Used for Filter-Based Opportunity Territory Assignment. Indicates whether the opportunity is excluded (True) or included (False) each time the APEX filter is executed.
+          config:
+            meta:
+              source_column_name: IsExcludedFromTerritory2Filter
         - name: is_won
           description: True, if Stage Name Label is Won.
           config:
@@ -362,8 +428,14 @@ sources:
               source_column_name: OwnerId
         - name: Pricebook2Id
           description: ID of a related Pricebook2 object. The Pricebook2Id field indicates which Pricebook2 applies to this opportunity. The Pricebook2Id field is defined only for those organizations that have products enabled as a feature. You can specify values for only one field (Pricebook2Id or PricebookId)—not both fields. For this reason, both fields are declared nillable.
+          config:
+            meta:
+              source_column_name: Pricebook2Id
         - name: pricebook_2_id
           description: Unavailable as of version 3.0. As of version 8.0, the Pricebook object is no longer available. Use the Pricebook2Id field instead, specifying the ID of the Pricebook2 record.
+          config:
+            meta:
+              source_column_name: Pricebook2Id
         - name: probability
           description: Percentage of estimated confidence in closing the opportunity.
           config:
@@ -386,6 +458,9 @@ sources:
               source_column_name: SyncedQuoteId
         - name: territory_2_id
           description: The ID of the territory that is assigned to the opportunity.
+          config:
+            meta:
+              source_column_name: Territory2Id
         - name: type
           description: Type of opportunity. For example, Existing Business or New Business.
           config:
@@ -405,12 +480,24 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: _fivetran_deleted
           description: True, if this field has been deleted
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: about_me
           description: Information about the user, such as areas of interest or skills.
+          config:
+            meta:
+              source_column_name: AboutMe
         - name: account_id
           description: ID of the Account associated with a Customer Portal user. This field is null for Salesforce users.
           config:
@@ -423,10 +510,19 @@ sources:
               source_column_name: Alias
         - name: badge_text
           description: The community role, displayed on the user profile page just below the user name.
+          config:
+            meta:
+              source_column_name: BadgeText
         - name: banner_photo_url
           description: The URL for the user's banner photo.
+          config:
+            meta:
+              source_column_name: BannerPhotoUrl
         - name: call_center_id
           description: If Salesforce CRM Call Center is enabled, represents the call center to which this user is assigned.
+          config:
+            meta:
+              source_column_name: CallCenterId
         - name: city
           description: The city associated with the user. Up to 40 characters allowed.
           config:
@@ -434,6 +530,9 @@ sources:
               source_column_name: City
         - name: community_nickname
           description: Name used to identify this user in the Community application, which includes the ideas and answers features.
+          config:
+            meta:
+              source_column_name: CommunityNickname
         - name: company_name
           description: The name of the user’s company.
           config:
@@ -456,8 +555,14 @@ sources:
               source_column_name: CountryCode
         - name: default_group_notification_frequency
           description: The default frequency for sending the user's Chatter group email notifications when the user joins groups.
+          config:
+            meta:
+              source_column_name: DefaultGroupNotificationFrequency
         - name: delegated_approver_id
           description: Id of the user who is a delegated approver for this user.
+          config:
+            meta:
+              source_column_name: DelegatedApproverId
         - name: department
           description: The company department associated with the user.
           config:
@@ -465,8 +570,14 @@ sources:
               source_column_name: Department
         - name: digest_frequency
           description: The frequency at which the system sends the user’s Chatter personal email digest.
+          config:
+            meta:
+              source_column_name: DigestFrequency
         - name: division
           description: The division associated with this user, similar to Department and unrelated to DefaultDivision.
+          config:
+            meta:
+              source_column_name: Division
         - name: email
           description: Required. The user’s email address.
           config:
@@ -474,16 +585,34 @@ sources:
               source_column_name: Email
         - name: email_encoding_key
           description: Required. The email encoding for the user, such as ISO-8859-1 or UTF-8.
+          config:
+            meta:
+              source_column_name: EmailEncodingKey
         - name: email_preferences_auto_bcc
           description: Determines whether the user receives copies of sent emails. This option applies only if compliance BCC emails are not enabled.
+          config:
+            meta:
+              source_column_name: EmailPreferencesAutoBcc
         - name: employee_number
           description: The user’s employee number.
+          config:
+            meta:
+              source_column_name: EmployeeNumber
         - name: extension
           description: The user’s phone extension number.
+          config:
+            meta:
+              source_column_name: Extension
         - name: fax
           description: The user’s fax number.
+          config:
+            meta:
+              source_column_name: Fax
         - name: federation_identifier
           description: Indicates the value that must be listed in the Subject element of a Security Assertion Markup Language (SAML) IDP certificate to authenticate the user for a client application using single sign-on.
+          config:
+            meta:
+              source_column_name: FederationIdentifier
         - name: first_name
           description: The user’s first name.
           config:
@@ -491,10 +620,19 @@ sources:
               source_column_name: FirstName
         - name: forecast_enabled
           description: Indicates whether the user is enabled as a forecast manager (true) or not (false).
+          config:
+            meta:
+              source_column_name: ForecastEnabled
         - name: full_photo_url
           description: The URL for the user's profile photo.
+          config:
+            meta:
+              source_column_name: FullPhotoUrl
         - name: geocode_accuracy
           description: The level of accuracy of a location’s geographical coordinates compared with its physical address.
+          config:
+            meta:
+              source_column_name: GeocodeAccuracy
         - name: individual_id
           description: ID of the data privacy record associated with this user. This field is available if Data Protection and Privacy is enabled.
           config:
@@ -507,8 +645,14 @@ sources:
               source_column_name: IsActive
         - name: is_profile_photo_active
           description: Indicates whether a user has a profile photo (true) or not (false).
+          config:
+            meta:
+              source_column_name: IsProfilePhotoActive
         - name: language_locale_key
           description: Required. The user’s language, such as “French” or “Chinese (Traditional).”
+          config:
+            meta:
+              source_column_name: LanguageLocaleKey
         - name: last_login_date
           description: The date and time when the user last successfully logged in. This value is updated if 60 seconds have elapsed since the user’s last login.
           config:
@@ -531,10 +675,19 @@ sources:
               source_column_name: LastViewedDate
         - name: latitude
           description: Used with Longitude to specify the precise geolocation of an address.
+          config:
+            meta:
+              source_column_name: Latitude
         - name: locale_sid_key
           description: Required. This field is a restricted picklist field. The value of the field affects formatting and parsing of values, especially numeric values, in the user interface.
+          config:
+            meta:
+              source_column_name: LocaleSidKey
         - name: longitude
           description: Used with Latitude to specify the precise geolocation of an address.
+          config:
+            meta:
+              source_column_name: Longitude
         - name: manager_id
           description: The Id of the user who manages this user.
           config:
@@ -542,8 +695,14 @@ sources:
               source_column_name: ManagerId
         - name: medium_banner_photo_url
           description: The URL for the medium-sized user profile banner photo.
+          config:
+            meta:
+              source_column_name: MediumBannerPhotoUrl
         - name: mobile_phone
           description: The user’s mobile or cellular phone number.
+          config:
+            meta:
+              source_column_name: MobilePhone
         - name: name
           description: Concatenation of FirstName and LastName.
           config:
@@ -551,8 +710,14 @@ sources:
               source_column_name: Name
         - name: offline_trial_expiration_date
           description: The date and time when the user’s Connect Offline trial expires.
+          config:
+            meta:
+              source_column_name: OfflineTrialExpirationDate
         - name: phone
           description: The user’s phone number.
+          config:
+            meta:
+              source_column_name: Phone
         - name: postal_code
           description: The user’s postal or ZIP code.
           config:
@@ -565,18 +730,39 @@ sources:
               source_column_name: ProfileId
         - name: receives_admin_info_emails
           description: Indicates whether the user receives email for administrators from Salesforce (true) or not (false).
+          config:
+            meta:
+              source_column_name: ReceivesAdminInfoEmails
         - name: receives_info_emails
           description: Indicates whether the user receives informational email from Salesforce (true) or not (false).
+          config:
+            meta:
+              source_column_name: ReceivesInfoEmails
         - name: sender_email
           description: The email address used as the From address when the user sends emails. This address is the same value shown in Setup on the My Email Settings page.
+          config:
+            meta:
+              source_column_name: SenderEmail
         - name: sender_name
           description: The name used as the email sender when the user sends emails. This name is the same value shown in Setup on the My Email Settings page.
+          config:
+            meta:
+              source_column_name: SenderName
         - name: signature
           description: The signature text added to emails.
+          config:
+            meta:
+              source_column_name: Signature
         - name: small_banner_photo_url
           description: The URL for the small user profile banner photo.
+          config:
+            meta:
+              source_column_name: SmallBannerPhotoUrl
         - name: small_photo_url
           description: The URL for a thumbnail of the user's profile photo.
+          config:
+            meta:
+              source_column_name: SmallPhotoUrl
         - name: state
           description: The state associated with the User.
           config:
@@ -594,6 +780,9 @@ sources:
               source_column_name: Street
         - name: time_zone_sid_key
           description: Required. This field is a restricted picklist field. A User time zone affects the offset used when displaying or entering times in the user interface.
+          config:
+            meta:
+              source_column_name: TimeZoneSidKey
         - name: title
           description: The user’s business title, such as “Vice President.”
           config:
@@ -628,14 +817,29 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True, if this field has been deleted
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: case_access_for_account_owner
           description: The case access level for the account owner.
+          config:
+            meta:
+              source_column_name: CaseAccessForAccountOwner
         - name: contact_access_for_account_owner
           description: The contact access level for the account owner.
+          config:
+            meta:
+              source_column_name: ContactAccessForAccountOwner
         - name: developer_name
           description: The unique name of the object in the API.
           config:
@@ -643,8 +847,14 @@ sources:
               source_column_name: DeveloperName
         - name: forecast_user_id
           description: The ID of the forecast manager associated with this role.
+          config:
+            meta:
+              source_column_name: ForecastUserId
         - name: may_forecast_manager_share
           description: Indicates whether the forecast manager can manually share their own forecast.
+          config:
+            meta:
+              source_column_name: MayForecastManagerShare
         - name: name
           description: Required. Name of the role. Corresponds to Label on the user interface.
           config:
@@ -662,6 +872,9 @@ sources:
               source_column_name: ParentRoleId
         - name: portal_type
           description: This value indicates the type of portal for the role
+          config:
+            meta:
+              source_column_name: PortalType
         - name: rollup_description
           description: Description of the forecast rollup.
           config:
@@ -682,10 +895,19 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: account_id
           description: ID of the account that’s the parent of this contact.
           config:
@@ -693,10 +915,19 @@ sources:
               source_column_name: AccountId
         - name: assistant_name
           description: The assistant’s name.
+          config:
+            meta:
+              source_column_name: AssistantName
         - name: assistant_phone
           description: The assistant’s telephone number.
+          config:
+            meta:
+              source_column_name: AssistantPhone
         - name: birthdate
           description: The contact’s birthdate.
+          config:
+            meta:
+              source_column_name: Birthdate
         - name: department
           description: The contact’s department.
           config:
@@ -709,6 +940,9 @@ sources:
               source_column_name: Description
         - name: do_not_call
           description: Indicates that the contact does not want to receive calls.
+          config:
+            meta:
+              source_column_name: DoNotCall
         - name: email
           description: The contact’s email address.
           config:
@@ -716,10 +950,19 @@ sources:
               source_column_name: Email
         - name: email_bounced_date
           description: If bounce management is activated and an email sent to the contact bounces, the date and time of the bounce.
+          config:
+            meta:
+              source_column_name: EmailBouncedDate
         - name: email_bounced_reason
           description: If bounce management is activated and an email sent to the contact bounces, the reason for the bounce.
+          config:
+            meta:
+              source_column_name: EmailBouncedReason
         - name: fax
           description: The contact’s fax number. Label is Business Fax.
+          config:
+            meta:
+              source_column_name: Fax
         - name: first_name
           description: The contact’s first name up to 40 characters.
           config:
@@ -727,8 +970,14 @@ sources:
               source_column_name: FirstName
         - name: has_opted_out_of_email
           description: indicates whether the contact doesn’t want to receive email from Salesforce (true) or does (false). Label is Email Opt Out
+          config:
+            meta:
+              source_column_name: HasOptedOutOfEmail
         - name: has_opted_out_of_fax
           description: Indicates whether the contact prohibits receiving faxes.
+          config:
+            meta:
+              source_column_name: HasOptedOutOfFax
         - name: home_phone
           description: The contact’s home telephone number.
           config:
@@ -746,10 +995,19 @@ sources:
               source_column_name: IsDeleted
         - name: is_email_bounced
           description: If bounce management is activated and an email is sent to a contact, indicates whether the email bounced (true) or not (false).
+          config:
+            meta:
+              source_column_name: IsEmailBounced
         - name: jigsaw
           description: Data.com Key
+          config:
+            meta:
+              source_column_name: Jigsaw
         - name: jigsaw_contact_id
           description: Jigsaw contact OD
+          config:
+            meta:
+              source_column_name: JigsawContactId
         - name: last_activity_date
           description: > 
             Value is the most recent of either:
@@ -760,8 +1018,14 @@ sources:
               source_column_name: LastActivityDate
         - name: last_curequest_date
           description: Last Stay-in-Touch Request Date
+          config:
+            meta:
+              source_column_name: LastCURequestDate
         - name: last_cuupdate_date
           description: Last Stay-in-Touch Save Date
+          config:
+            meta:
+              source_column_name: LastCUUpdateDate
         - name: last_modified_by_id
           description: Last Modified By ID
           config:
@@ -809,10 +1073,19 @@ sources:
               source_column_name: MailingCountryCode
         - name: mailing_geocode_accuracy
           description: Accuracy level of the geocode for the mailing address. For details on geolocation compound field
+          config:
+            meta:
+              source_column_name: MailingGeocodeAccuracy
         - name: mailing_latitude
           description: Used with MailingLongitude to specify the precise geolocation of a mailing address. Acceptable values are numbers between –90 and 90 up to 15 decimal places. For details on geolocation compound fields
+          config:
+            meta:
+              source_column_name: MailingLatitude
         - name: mailing_longitude
           description: Used with MailingLatitude to specify the precise geolocation of a mailing address. Acceptable values are numbers between –180 and 180 up to 15 decimal places. For details on geolocation compound fields
+          config:
+            meta:
+              source_column_name: MailingLongitude
         - name: mailing_postal_code
           description: Mailing address details.
           config:
@@ -852,22 +1125,49 @@ sources:
               source_column_name: Name
         - name: other_city
           description: Alternate address details. 
+          config:
+            meta:
+              source_column_name: OtherCity
         - name: other_country
           description: Alternate address details.
+          config:
+            meta:
+              source_column_name: OtherCountry
         - name: other_geocode_accuracy
           description: Accuracy level of the geocode for the other address. For details on geolocation compound fields
+          config:
+            meta:
+              source_column_name: OtherGeocodeAccuracy
         - name: other_latitude
           description: Used with OtherLongitude to specify the precise geolocation of an alternate address. Acceptable values are numbers between –90 and 90 up to 15 decimal places. For details on geolocation compound fields
+          config:
+            meta:
+              source_column_name: OtherLatitude
         - name: other_longitude
           description: Used with OtherLatitude to specify the precise geolocation of an alternate address. Acceptable values are numbers between –180 and 180 up to 15 decimal places. For details on geolocation compound fields
+          config:
+            meta:
+              source_column_name: OtherLongitude
         - name: other_phone
           description: Telephone for alternate address.
+          config:
+            meta:
+              source_column_name: OtherPhone
         - name: other_postal_code
           description: Alternate address details.
+          config:
+            meta:
+              source_column_name: OtherPostalCode
         - name: other_state
           description: Alternate address details.
+          config:
+            meta:
+              source_column_name: OtherState
         - name: other_street
           description: Street for alternate address.
+          config:
+            meta:
+              source_column_name: OtherStreet
         - name: owner_id
           description: >
             The ID of the owner of the account associated with this contact.
@@ -886,6 +1186,9 @@ sources:
             to generate a URL to request the social network profile image associated with the contact. Generated URL returns an HTTP redirect (code 302) 
             to the social network profile image for the contact. Empty if Social Accounts and Contacts isn't enabled or if Social Accounts and Contacts is 
             disabled for the requesting user.'
+          config:
+            meta:
+              source_column_name: PhotoUrl
         - name: reports_to_id
           description: > 
             This field doesn’t appear if IsPersonAccount is true.
@@ -895,8 +1198,14 @@ sources:
               source_column_name: ReportsToId
         - name: salutation
           description: Honorific abbreviation, word, or phrase to be used in front of name in greetings, such as Dr. or Mrs.
+          config:
+            meta:
+              source_column_name: Salutation
         - name: system_modstamp
           description: System Modstamp
+          config:
+            meta:
+              source_column_name: SystemModstamp
         - name: title
           description: Title
           config:
@@ -916,10 +1225,19 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: account_id
           description: >
             Represents the ID of the related account. The AccountId is determined as follows.
@@ -975,6 +1293,9 @@ sources:
         - name: duration_in_minutes
           description: >
             Contains the event length, in minutes
+          config:
+            meta:
+              source_column_name: DurationInMinutes
         - name: end_date
           description: Read-only. Available in versions 46.0 and later. This field supplies the date value that appears in the EndDateTime field. This field is a date field with a timestamp that is always set to midnight in the Coordinated Universal Time (UTC) time zone.
           config:
@@ -1017,6 +1338,9 @@ sources:
               source_column_name: IsGroupEvent
         - name: is_private
           description: Indicates whether users other than the creator of the event can (false) or can’t (true) see the event details when viewing the event user’s calendar. However, users with the View All Data or Modify All Data permission can see private events in reports and searches, or when viewing other users’ calendars. Private events can’t be associated with opportunities, accounts, cases, campaigns, contracts, leads, or contacts. Label is Private.
+          config:
+            meta:
+              source_column_name: IsPrivate
         - name: is_recurrence
           description: Indicates whether a Salesforce Classic event is scheduled to repeat itself (true) or only occurs one time (false). This field is read-only when updating records, but not when creating them. If this field value is true, then RecurrenceEndDateOnly, RecurrenceStartDateTime, RecurrenceType, and any recurrence fields associated with the given recurrence type must be populated. Label is Create recurring series of events.
           config:
@@ -1024,12 +1348,24 @@ sources:
               source_column_name: IsRecurrence
         - name: is_recurrence_2
           description: Read-only. This field available in API version 44.0 and later. Indicates whether a Lightning Experience event is scheduled to repeat (true) or only occurs one time (false). If this field value is true, then Recurrence2PatternText and Recurrence2PatternVersion must be populated. Label is Repeat.
+          config:
+            meta:
+              source_column_name: IsRecurrence2
         - name: is_recurrence_2_exception
           description: Read-only. This field available in API version 44.0 and later. Indicates whether an individual event in a Lightning Experience event series has a recurrence pattern that’s different from the rest of the series, making it an exception.
+          config:
+            meta:
+              source_column_name: IsRecurrence2Exception
         - name: is_recurrence_2_exclusion
           description: Read-only. This field available in API version 44.0 and later. Indicates when updates to a Lightning Experience event series recurrence pattern have been made, but affect future event occurrences only. For past event occurrences, IsRecurrence2Exclusion is set to true, excluding past occurrences from the series recurrence pattern.
+          config:
+            meta:
+              source_column_name: IsRecurrence2Exclusion
         - name: is_reminder_set
           description: Indicates whether the activity is a reminder (true) or not (false).
+          config:
+            meta:
+              source_column_name: IsReminderSet
         - name: last_modified_by_id
           description: Last Modified By ID
           config:
@@ -1052,18 +1388,36 @@ sources:
               source_column_name: OwnerId
         - name: recurrence_2_pattern_start_date
           description: Read-only. This field available in API version 44.0 and later. Indicates the date and time when the Lightning Experience event series begins. The time portion of this field is always transferred in the Coordinated Universal Time (UTC) time zone. Translate the time portion to or from a local time zone for the user or the application, as appropriate.
+          config:
+            meta:
+              source_column_name: Recurrence2PatternStartDate
         - name: recurrence_2_pattern_text
           description: >
             The RRULE that describes the recurrence pattern for Lightning Experience event series. Supports a subset of the RFC 5545 standard for internet calendaring and scheduling. See the Event Series section in this topic for usage examples. This field has a maximum length of 512 characters.
             This field is available in API version 44.0 and later, and has the Create property in API version 52.0 and later.
+          config:
+            meta:
+              source_column_name: Recurrence2PatternText
         - name: recurrence_2_pattern_time_zone
           description: This field available in API version 44.0 and later. Indicates the time zone in which the Lightning Experience event series was created or updated. This field uses standard Java TimeZone IDs. For example, America/Los_Angeles.
+          config:
+            meta:
+              source_column_name: Recurrence2PatternTimeZone
         - name: recurrence_2_pattern_version
           description: Read-only. This field available in API version 44.0 and later. Indicates the standard specifications for Lightning Experience event series recurrence patterns. The only possible value is 1 (RFC 5545 v4 RRULE)—RFC 5545 is a standard set of specifications for internet calendaring and scheduling that IsRecurrence2 adheres to for series recurrence patterns. RFC 5545 specifications for series recurrence patterns are called RRULES. For examples of rrule usage, see the Event Series section in this topic.
+          config:
+            meta:
+              source_column_name: Recurrence2PatternVersion
         - name: recurrence_activity_id
           description: Read-only. Not required on create. Contains the ID of the main record of the Salesforce Classic recurring event. Subsequent occurrences have the same value in this field.
+          config:
+            meta:
+              source_column_name: RecurrenceActivityId
         - name: recurrence_day_of_month
           description: Indicates the day of the month on which the event repeats.
+          config:
+            meta:
+              source_column_name: RecurrenceDayOfMonth
         - name: recurrence_day_of_week_mask
           description: > 
             Indicates the day or days of the week on which the Salesforce Classic recurring event repeats. This field contains a bitmask. The values are as follows: Sunday = 1
@@ -1073,24 +1427,54 @@ sources:
             Thursday = 16
             Friday = 32
             Saturday = 64 Multiple days are represented as the sum of their numerical values. For example, Tuesday and Thursday = 4 + 16 = 20.
+          config:
+            meta:
+              source_column_name: RecurrenceDayOfWeekMask
         - name: recurrence_end_date_only
           description: Indicates the last date on which the event repeats. For multiday Salesforce Classic recurring events, this date is the day on which the last occurrence starts. This field is a date field with a timestamp that is always set to midnight in the Coordinated Universal Time (UTC) time zone. Don’t attempt to alter the timestamp to account for time zone differences.
+          config:
+            meta:
+              source_column_name: RecurrenceEndDateOnly
         - name: recurrence_instance
           description: Indicates the frequency of the Salesforce Classic event’s recurrence. For example, 2nd or 3rd.
+          config:
+            meta:
+              source_column_name: RecurrenceInstance
         - name: recurrence_interval
           description: Indicates the interval between Salesforce Classic recurring events.
+          config:
+            meta:
+              source_column_name: RecurrenceInterval
         - name: recurrence_month_of_year
           description: Indicates the month in which the Salesforce Classic recurring event repeats.
+          config:
+            meta:
+              source_column_name: RecurrenceMonthOfYear
         - name: recurrence_start_date_time
           description: Indicates the date and time when the Salesforce Classic recurring event begins. The value must precede the RecurrenceEndDateOnly. The time portion of this field is always transferred in the Coordinated Universal Time (UTC) time zone. Translate the time portion to or from a local time zone for the user or the application, as appropriate.
+          config:
+            meta:
+              source_column_name: RecurrenceStartDateTime
         - name: recurrence_time_zone_sid_key
           description: Indicates the time zone associated with a Salesforce Classic recurring event. For example, “UTC-8:00” for Pacific Standard Time.
+          config:
+            meta:
+              source_column_name: RecurrenceTimeZoneSidKey
         - name: recurrence_type
           description: Indicates how often the Salesforce Classic event repeats. For example, daily, weekly, or every nth month (where “nth” is defined in RecurrenceInstance).
+          config:
+            meta:
+              source_column_name: RecurrenceType
         - name: reminder_date_time
           description: Represents the time when the reminder is scheduled to fire, if IsReminderSet is set to true. If IsReminderSet is set to false, then the user may have deselected the reminder checkbox in the Salesforce user interface, or the reminder has already fired at the time indicated by the value.
+          config:
+            meta:
+              source_column_name: ReminderDateTime
         - name: show_as
           description: 'Indicates how this event appears when another user views the calendar: Busy, Out of Office, or Free. Label is Show Time As.'
+          config:
+            meta:
+              source_column_name: ShowAs
         - name: start_date_time
           description: > 
             Indicates the start date and time of the event. Available in versions 13.0 and later.
@@ -1106,6 +1490,9 @@ sources:
               source_column_name: Subject
         - name: system_modstamp
           description: System Modstamp
+          config:
+            meta:
+              source_column_name: SystemModstamp
         - name: type
           description: Indicates the event type, such as Call, Email, or Meeting.
           config:
@@ -1146,10 +1533,19 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: annual_revenue
           description: Annual revenue for the lead’s company.
           config:
@@ -1227,6 +1623,9 @@ sources:
               source_column_name: EmailBouncedReason
         - name: fax
           description: The lead’s fax number.
+          config:
+            meta:
+              source_column_name: Fax
         - name: first_name
           description: The lead’s first name up to 40 characters. 
           config:
@@ -1234,6 +1633,9 @@ sources:
               source_column_name: FirstName
         - name: geocode_accuracy
           description: Accuracy level of the geocode for the address.
+          config:
+            meta:
+              source_column_name: GeocodeAccuracy
         - name: has_opted_out_of_email
           description: Indicates whether the lead doesn’t want to receive email from Salesforce (true) or does (false). Label is Email Opt Out.
           config:
@@ -1266,6 +1668,9 @@ sources:
               source_column_name: IsUnreadByOwner
         - name: jigsaw_contact_id
           description: Jigsaw Contact ID
+          config:
+            meta:
+              source_column_name: JigsawContactId
         - name: last_activity_date
           description: > 
             'Value is the most recent of either: Due date of the most recent event logged against the record.
@@ -1300,6 +1705,9 @@ sources:
               source_column_name: LastViewedDate
         - name: latitude
           description: Used with Longitude to specify the precise geolocation of an address. Acceptable values are numbers between –90 and 90 up to 15 decimal places.
+          config:
+            meta:
+              source_column_name: Latitude
         - name: lead_source
           description: The lead’s source.
           config:
@@ -1307,6 +1715,9 @@ sources:
               source_column_name: LeadSource
         - name: longitude
           description: Used with Latitude to specify the precise geolocation of an address. Acceptable values are numbers between –180 and 180 up to 15 decimal places.
+          config:
+            meta:
+              source_column_name: Longitude
         - name: master_record_id
           description: If this record was deleted as the result of a merge, this field contains the ID of the record that was kept. If this record was deleted for any other reason, or has not been deleted, the value is null.
           config:
@@ -1339,6 +1750,9 @@ sources:
               source_column_name: Phone
         - name: photo_url
           description: Path to be combined with the URL of a Salesforce instance 
+          config:
+            meta:
+              source_column_name: PhotoUrl
         - name: postal_code
           description: Postal code for the address of the lead. Label is Zip/Postal Code.
           config:
@@ -1346,6 +1760,9 @@ sources:
               source_column_name: PostalCode
         - name: salutation
           description: Salutation for the lead.
+          config:
+            meta:
+              source_column_name: Salutation
         - name: state
           description: State for the address of the lead.
           config:
@@ -1368,6 +1785,9 @@ sources:
               source_column_name: Street
         - name: system_modstamp
           description: System Modstamp
+          config:
+            meta:
+              source_column_name: SystemModstamp
         - name: title
           description: Title for the lead, such as CFO or CEO.
           config:
@@ -1392,10 +1812,19 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: created_by_id
           description: Created By ID
           config:
@@ -1515,6 +1944,9 @@ sources:
               source_column_name: SortOrder
         - name: system_modstamp
           description: System Modstamp
+          config:
+            meta:
+              source_column_name: SystemModstamp
         - name: total_price
           description: >
             This field is available only for backward compatibility. It represents the total price of the OpportunityLineItem.
@@ -1549,10 +1981,19 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: account_id
           description: Required. ID of the Account associated with this order. Can only be updated when the order’s StatusCode value is Draft. This is a relationship field.
           config:
@@ -1585,10 +2026,19 @@ sources:
               source_column_name: BillingCountryCode
         - name: billing_geocode_accuracy
           description: Accuracy level of the geocode of the address.
+          config:
+            meta:
+              source_column_name: BillingGeocodeAccuracy
         - name: billing_latitude
           description: Used with BillingLongitude to specify the precise geolocation of a billing address. Acceptable values are numbers between –90 and 90 with up to 15 decimal places.
+          config:
+            meta:
+              source_column_name: BillingLatitude
         - name: billing_longitude
           description: Used with BillingLatitude to specify the precise geolocation of a billing address. Acceptable values are numbers between –180 and 180 with up to 15 decimal places.
+          config:
+            meta:
+              source_column_name: BillingLongitude
         - name: billing_postal_code
           description: Postal code for the billing address for this order. Maximum size is 20 characters.
           config:
@@ -1611,6 +2061,9 @@ sources:
               source_column_name: BillingStreet
         - name: company_authorized_by_id
           description: ID of the user who authorized the account associated with the order. This is a relationship field.
+          config:
+            meta:
+              source_column_name: CompanyAuthorizedById
         - name: contract_id
           description: ID of the contract associated with this order. Can only be updated when the order’s StatusCode value is Draft. This is a relationship field. 
           config:
@@ -1628,6 +2081,9 @@ sources:
               source_column_name: CreatedDate
         - name: customer_authorized_by_id
           description: ID of the contact who authorized the order. This is a relationship field.
+          config:
+            meta:
+              source_column_name: CustomerAuthorizedById
         - name: description
           description: Description of the order.
           config:
@@ -1635,6 +2091,9 @@ sources:
               source_column_name: Description
         - name: effective_date
           description: Date at which the order becomes effective. Label is Order Start Date.
+          config:
+            meta:
+              source_column_name: EffectiveDate
         - name: end_date
           description: Date at which the order ends. Label is Order End Date.
           config:
@@ -1647,6 +2106,9 @@ sources:
               source_column_name: IsDeleted
         - name: is_reduction_order
           description: Read-only. Determines whether an order is a reduction order. Label is Reduction Order.
+          config:
+            meta:
+              source_column_name: IsReductionOrder
         - name: last_modified_by_id
           description: Last Modified By ID
           config:
@@ -1709,10 +2171,19 @@ sources:
               source_column_name: ShippingCountryCode
         - name: shipping_geocode_accuracy
           description: Accuracy level of the geocode of the shipping address.
+          config:
+            meta:
+              source_column_name: ShippingGeocodeAccuracy
         - name: shipping_latitude
           description: Used with ShippingLongitude to specify the precise geolocation of a shipping address. Acceptable values are numbers between –90 and 90 with up to 15 decimal places.
+          config:
+            meta:
+              source_column_name: ShippingLatitude
         - name: shipping_longitude
           description: Used with ShippingLatitude to specify the precise geolocation of an address. Acceptable values are numbers between –180 and 180 with up to 15 decimal places.
+          config:
+            meta:
+              source_column_name: ShippingLongitude
         - name: shipping_postal_code
           description: Postal code of the shipping address. Maximum size is 20 characters.
           config:
@@ -1740,8 +2211,14 @@ sources:
               source_column_name: Status
         - name: status_code
           description: The status category for the order. An order can be either Draft or Activated. Label is Status Category.
+          config:
+            meta:
+              source_column_name: StatusCode
         - name: system_modstamp
           description: System Modstamp
+          config:
+            meta:
+              source_column_name: SystemModstamp
         - name: total_amount
           description: The total amount for the order products associated with this order. This field is available in API v48.0 and later. 
           config:
@@ -1766,10 +2243,19 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: created_by_id
           description: Created By ID
           config:
@@ -1792,6 +2278,9 @@ sources:
               source_column_name: DisplayUrl
         - name: external_data_source_id
           description: ID of the related external data source.
+          config:
+            meta:
+              source_column_name: ExternalDataSourceId
         - name: external_id
           description: The unique identifier of a record in the linked external data source. For example, ID #123.
           config:
@@ -1889,8 +2378,14 @@ sources:
               source_column_name: RevenueScheduleType
         - name: stock_keeping_unit
           description: The SKU for the product. Use in tandem with or instead of the ProductCode field. For example, you can track the manufacturer’s identifying code in the Product Code field and assign the product a SKU when you resell it.
+          config:
+            meta:
+              source_column_name: StockKeepingUnit
         - name: system_modstamp
           description: System Modstamp 
+          config:
+            meta:
+              source_column_name: SystemModstamp
         
       - name: task
         identifier: "{{ var('salesforce_Task_identifier', var('salesforce_task_identifier', 'task'))}}"
@@ -1905,10 +2400,19 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: account_id
           description: Represents the ID of the related Account. The AccountId is determined as follows. If the value of WhatId is any of the following objects, then Salesforce uses that object’s AccountId. Account Opportunity Contract Custom object that is a child of Account If the value of the WhatIdfield is any other object, and the value of the WhoId field is a Contact object, then Salesforce uses that contact’s AccountId. (If your organization uses Shared Activities, then Salesforce uses the AccountId of the primary contact.) Otherwise, Salesforce sets the value of the AccountId field to null. This is a relationship field.
           config:
@@ -1981,8 +2485,14 @@ sources:
               source_column_name: IsHighPriority
         - name: is_recurrence
           description: Indicates whether the task is scheduled to repeat itself (true) or only occurs once (false). This field is read-only on update, but not on create. If this field value is true, then RecurrenceStartDateOnly, RecurrenceEndDateOnly, RecurrenceType, and any recurrence fields associated with the given recurrence type must be populated. See Recurring Tasks.
+          config:
+            meta:
+              source_column_name: IsRecurrence
         - name: is_reminder_set
           description: Indicates whether a popup reminder has been set for the task (true) or not (false).
+          config:
+            meta:
+              source_column_name: IsReminderSet
         - name: last_modified_by_id
           description: Last Modified By ID
           config:
@@ -2010,28 +2520,64 @@ sources:
               source_column_name: RecordTypeId
         - name: recurrence_activity_id
           description: Read-only. Not required on create. ID of the main record of the recurring task. Subsequent occurrences have the same value in this field.
+          config:
+            meta:
+              source_column_name: RecurrenceActivityId
         - name: recurrence_day_of_month
           description: The day of the month in which the task repeats.
+          config:
+            meta:
+              source_column_name: RecurrenceDayOfMonth
         - name: recurrence_day_of_week_mask
           description: 'The day or days of the week on which the task repeats. This field contains a bitmask. The values are as follows: Sunday = 1 Monday = 2 Tuesday = 4 Wednesday = 8 Thursday = 16 Friday = 32 Saturday = 64 Multiple days are represented as the sum of their numerical values. For example, Tuesday and Thursday = 4 + 16 = 20.'
+          config:
+            meta:
+              source_column_name: RecurrenceDayOfWeekMask
         - name: recurrence_end_date_only
           description: 'The last date on which the task repeats. This field has a timestamp that is always set to midnight in the Coordinated Universal Time (UTC) time zone. The timestamp is not relevant; do not attempt to alter it to accommodate time zone differences. '
+          config:
+            meta:
+              source_column_name: RecurrenceEndDateOnly
         - name: recurrence_instance
           description: 'The frequency of the recurring task. Possible values are: First—1st Fourth—4th Last—last Second—2nd Third—3rd'
+          config:
+            meta:
+              source_column_name: RecurrenceInstance
         - name: recurrence_interval
           description: The interval between recurring tasks.
+          config:
+            meta:
+              source_column_name: RecurrenceInterval
         - name: recurrence_month_of_year
           description: The month of the year in which the task repeats.
+          config:
+            meta:
+              source_column_name: RecurrenceMonthOfYear
         - name: recurrence_regenerated_type
           description: 'Represents what triggers a repeating task to repeat. Add this field to a page layout together with the RecurrenceInterval field, which determines the number of days between the triggering date (due date or close date) and the due date of the next repeating task in the series. Label is Repeat This Task. This field has the following picklist values: None: The task doesn’t repeat. After due date: The next repeating task will be due the specified number of days after the current task’s due date. After the task is closed: The next repeating task will be due the specified number of days after the current task is closed. (Task closed): This task, now closed, was opened as part of a repeating series. '
+          config:
+            meta:
+              source_column_name: RecurrenceRegeneratedType
         - name: recurrence_start_date_only
           description: The date when the recurring task begins. Must be a date and time before RecurrenceEndDateOnly.
+          config:
+            meta:
+              source_column_name: RecurrenceStartDateOnly
         - name: recurrence_time_zone_sid_key
           description: The time zone associated with the recurring task. For example, “UTC-8:00” for Pacific Standard Time.
+          config:
+            meta:
+              source_column_name: RecurrenceTimeZoneSidKey
         - name: recurrence_type
           description: Indicates how often the task repeats. For example, daily, weekly, or every nth month (where “nth” is defined in RecurrenceInstance).
+          config:
+            meta:
+              source_column_name: RecurrenceType
         - name: reminder_date_time
           description: Represents the time when the reminder is scheduled to fire, if IsReminderSet is set to true. If IsReminderSet is set to false, then the user may have deselected the reminder checkbox in the Salesforce user interface, or the reminder has already fired at the time indicated by the value.
+          config:
+            meta:
+              source_column_name: ReminderDateTime
         - name: status
           description: Required. The status of the task, such as In Progress or Completed. Each predefined Status field implies a value for the IsClosed flag. To obtain picklist values, query the TaskStatus object.
           config:
@@ -2044,6 +2590,9 @@ sources:
               source_column_name: Subject
         - name: system_modstamp
           description: System Modstamp 
+          config:
+            meta:
+              source_column_name: SystemModstamp
         - name: task_subtype
           description: Provides standard subtypes to facilitate creating and searching for specific task subtypes.
           config:
@@ -2086,10 +2635,19 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record.
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled.
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: actual_cost
           description: Amount of money spent to run the campaign.
           config:
@@ -2197,10 +2755,19 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record.
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled.
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: account_id
           description: ID of the account associated with the contact or lead.
           config:
@@ -2285,10 +2852,19 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record.
+          config:
+            meta:
+              source_column_name: _fivetran_synced
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
+          config:
+            meta:
+              source_column_name: _fivetran_active
         - name: _fivetran_deleted
           description: True if the record has been deleted in Salesforce.
+          config:
+            meta:
+              source_column_name: _fivetran_deleted
         - name: description
           description: Description of the record type.
           config:

@@ -25,12 +25,24 @@ sources:
                 source_column_name: Id
           - name: _fivetran_active
             description: true if it is the currently active record. false if it is a historical version of the record. Only one version of the record can be true.
+            config:
+              meta:
+                source_column_name: _fivetran_active
           - name: _fivetran_start
             description: The time when the record was first created or modified in the source, based on a timestamp value in the source table that monotonically increases over time with data change or update.
+            config:
+              meta:
+                source_column_name: _fivetran_start
           - name: _fivetran_end
             description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
+            config:
+              meta:
+                source_column_name: _fivetran_end
           - name: _fivetran_synced
             description: The time at which fivetran last synced this record.
+            config:
+              meta:
+                source_column_name: _fivetran_synced
           - name: actual_cost
             description: Amount of money spent to run the campaign.
             config:
@@ -140,12 +152,24 @@ sources:
                 source_column_name: Id
           - name: _fivetran_active 
             description: true if it is the currently active record. false if it is a historical version of the record. Only one version of the record can be true.
+            config:
+              meta:
+                source_column_name: _fivetran_active
           - name: _fivetran_start
             description: The time when the record was first created or modified in the source, based on a timestamp value in the source table that monotonically increases over time with data change or update.
+            config:
+              meta:
+                source_column_name: _fivetran_start
           - name: _fivetran_end
             description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
+            config:
+              meta:
+                source_column_name: _fivetran_end
           - name: _fivetran_synced
             description: The time at which fivetran last synced this record.
+            config:
+              meta:
+                source_column_name: _fivetran_synced
           - name: account_number
             description: Account number assigned to this account (not the unique, system-generated ID assigned during creation).
             config:
@@ -320,12 +344,24 @@ sources:
                 source_column_name: Id
           - name: _fivetran_active 
             description: true if it is the currently active record. false if it is a historical version of the record. Only one version of the record can be true.
+            config:
+              meta:
+                source_column_name: _fivetran_active
           - name: _fivetran_start
             description: The time when the record was first created or modified in the source, based on a timestamp value in the source table that monotonically increases over time with data change or update.
+            config:
+              meta:
+                source_column_name: _fivetran_start
           - name: _fivetran_end
             description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
+            config:
+              meta:
+                source_column_name: _fivetran_end
           - name: _fivetran_synced
             description: The time at which fivetran last synced this record.
+            config:
+              meta:
+                source_column_name: _fivetran_synced
           - name: account_id
             description: ID of the account that’s the parent of this contact.
             config:
@@ -494,12 +530,24 @@ sources:
                 source_column_name: Id
           - name: _fivetran_active 
             description: true if it is the currently active record. false if it is a historical version of the record. Only one version of the record can be true.
+            config:
+              meta:
+                source_column_name: _fivetran_active
           - name: _fivetran_start
             description: The time when the record was first created or modified in the source, based on a timestamp value in the source table that monotonically increases over time with data change or update.
+            config:
+              meta:
+                source_column_name: _fivetran_start
           - name: _fivetran_end
             description: The time until which the record was active minus epsilon, where epsilon is the smallest time difference that can be stored in the timestamp type value.
+            config:
+              meta:
+                source_column_name: _fivetran_end
           - name: _fivetran_synced
             description: The time at which fivetran last synced this record.
+            config:
+              meta:
+                source_column_name: _fivetran_synced
           - name: account_id
             description: ID of the account associated with this opportunity.
             config:
