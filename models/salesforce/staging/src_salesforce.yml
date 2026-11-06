@@ -995,8 +995,6 @@ sources:
           config:
             meta:
               source_name: GroupEventType
-        - name: id
-          description: Activity ID
         - name: is_archived
           description: Indicates whether the event has been archived.
           config:
