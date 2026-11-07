@@ -142,3 +142,12 @@ supported_vars:
     description: "Additional `USER` columns to include in `salesforce__opportunity_enhanced` and `salesforce__contact_enhanced`"
     display_name: "Additional User Columns"
 
+  salesforce_formula_materialization:
+    type: string
+    value: "view"
+    allowed_values:
+      - "view"
+      - "table"
+    description: "Materialization of the Salesforce formula field models. Changing this triggers a full refresh on the next run: the previously materialized models are dropped and recreated, which may break downstream models or queries referencing them. Unlike views, tables are only updated after each transformation run."
+    display_name: "Formula Field Model Materialization"
+
