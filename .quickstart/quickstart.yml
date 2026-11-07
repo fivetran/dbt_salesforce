@@ -142,8 +142,6 @@ supported_vars:
     description: "Additional `USER` columns to include in `salesforce__opportunity_enhanced` and `salesforce__contact_enhanced`"
     display_name: "Additional User Columns"
 
-  # Formula field model materialization -- gated behind the QuickstartSalesforceFormulaMaterialization
-  # feature flag on the Fivetran side; hidden from customers until the flag is enabled for their group.
   salesforce_formula_materialization:
     type: string
     value: "view"
