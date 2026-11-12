@@ -1,0 +1,80 @@
+title: Salesforce Pipeline
+text: |
+  Current open opportunities by stage, expected close month, and owner.
+  Amount totals assume a shared reporting currency; no conversion is applied.
+  This is a current snapshot, not a historical pipeline reconstruction.
+variables:
+  close_period:
+    input: daterange
+    label: Expected close dates
+queries:
+  summary:
+    dialect: duckdb
+    sql: |
+      select count(*) as open_opportunities, sum(amount) as pipeline_amount,
+        sum(case when close_date < current_date then 1 else 0 end) as overdue_opportunities
+      from {{ ref('salesforce__opportunity_enhanced') }}
+      where not is_closed
+        and {{ filter_date_range('close_date', close_period) }}
+  stages:
+    dialect: duckdb
+    sql: |
+      select stage_name as stage, sum(amount) as pipeline_amount
+      from {{ ref('salesforce__opportunity_enhanced') }}
+      where not is_closed
+        and {{ filter_date_range('close_date', close_period) }}
+      group by 1
+      order by 2 desc
+  closing:
+    dialect: duckdb
+    sql: |
+      select date_trunc('month', close_date) as close_month, sum(amount) as pipeline_amount
+      from {{ ref('salesforce__opportunity_enhanced') }}
+      where not is_closed
+        and {{ filter_date_range('close_date', close_period) }}
+      group by 1
+      order by 1
+  owners:
+    dialect: duckdb
+    sql: |
+      select opportunity_owner_id as owner_id, opportunity_owner_name as owner,
+        count(*) as opportunities, sum(amount) as pipeline_amount,
+        sum(case when close_date < current_date then 1 else 0 end) as overdue_opportunities
+      from {{ ref('salesforce__opportunity_enhanced') }}
+      where not is_closed
+        and {{ filter_date_range('close_date', close_period) }}
+      group by 1, 2
+      order by 4 desc
+      limit 20
+charts:
+  open:
+    type: kpi
+    label: Open opportunities
+    query: summary
+    value: open_opportunities
+  pipeline:
+    type: kpi
+    label: Pipeline amount
+    query: summary
+    value: pipeline_amount
+  overdue:
+    type: kpi
+    label: Past expected close date
+    query: summary
+    value: overdue_opportunities
+  stages:
+    type: bar
+    title: Open Pipeline by Stage
+    query: stages
+  closing:
+    type: line
+    title: Pipeline by Expected Close Month
+    query: closing
+  owners:
+    type: table
+    title: Top 20 Owners by Pipeline Amount
+    query: owners
+rows:
+  - cols: [open, pipeline, overdue]
+  - cols: [stages, closing]
+  - owners

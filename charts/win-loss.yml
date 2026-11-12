@@ -1,0 +1,81 @@
+title: Salesforce Win and Loss Review
+text: |
+  Closed opportunities grouped by close date. Win rate counts opportunities,
+  rather than weighting by amount. Amount totals assume a shared reporting
+  currency; no conversion is applied.
+variables:
+  close_period:
+    input: daterange
+    label: Closed between
+queries:
+  summary:
+    dialect: duckdb
+    formats:
+      win_rate: percent
+    sql: |
+      select count(*) as closed_opportunities,
+        sum(case when is_won then 1 else 0 end) as won_opportunities,
+        sum(case when is_won then amount else 0 end) as won_amount,
+        sum(case when is_won then 1.0 else 0.0 end) / nullif(count(*), 0) as win_rate
+      from {{ ref('salesforce__opportunity_enhanced') }}
+      where is_closed
+        and {{ filter_date_range('close_date', close_period) }}
+  monthly:
+    dialect: duckdb
+    sql: |
+      select date_trunc('month', close_date) as month,
+        case when is_won then 'Won' else 'Lost' end as outcome,
+        count(*) as opportunities
+      from {{ ref('salesforce__opportunity_enhanced') }}
+      where is_closed
+        and {{ filter_date_range('close_date', close_period) }}
+      group by 1, 2
+      order by 1, 2
+  sources:
+    dialect: duckdb
+    formats:
+      win_rate: percent
+    sql: |
+      select coalesce(lead_source, 'Unspecified') as lead_source,
+        count(*) as closed_opportunities,
+        sum(case when is_won then 1 else 0 end) as won_opportunities,
+        sum(case when is_won then 1.0 else 0.0 end) / nullif(count(*), 0) as win_rate,
+        sum(case when is_won then amount else 0 end) as won_amount
+      from {{ ref('salesforce__opportunity_enhanced') }}
+      where is_closed
+        and {{ filter_date_range('close_date', close_period) }}
+      group by 1
+      order by 2 desc
+charts:
+  closed:
+    type: kpi
+    label: Closed opportunities
+    query: summary
+    value: closed_opportunities
+  won:
+    type: kpi
+    label: Won opportunities
+    query: summary
+    value: won_opportunities
+  rate:
+    type: kpi
+    label: Win rate
+    query: summary
+    value: win_rate
+  amount:
+    type: kpi
+    label: Won amount
+    query: summary
+    value: won_amount
+  monthly:
+    type: line
+    title: Wins and Losses by Close Month
+    query: monthly
+  sources:
+    type: table
+    title: Win Rate by Lead Source
+    query: sources
+rows:
+  - cols: [closed, won, rate, amount]
+  - monthly
+  - sources
