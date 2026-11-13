@@ -1,4 +1,5 @@
 version: 2.4.2
+pr_number: 102
 under_the_hood:
   - description: Aligns the column documentation across the staging, end, and history models with the columns the models actually output, so the dbt docs site and Quickstart no longer list fields that are not returned.
     details:
