@@ -1,3 +1,14 @@
+# dbt_salesforce v2.4.2
+
+[PR #102](https://github.com/fivetran/dbt_salesforce/pull/102) includes the following updates:
+
+## Under the Hood
+- Aligns the column documentation across the staging, end, and history models with the columns the models actually output, so the dbt docs site and Quickstart no longer list fields that are not returned.
+  - Removes 88 documented columns that the models no longer output, such as the `_fivetran_active` field used only as a filter in the staging models, and the columns dropped from the `get_account_columns`, `get_user_columns`, and `get_user_role_columns` macros.
+  - Corrects the documented column names for [salesforce__campaign_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__campaign_daily_history) to match the model output: `campaign_name`, `campaign_description`, `campaign_status`, `campaign_type`, `parent_campaign_id`, and `total_pipeline_amount` are documented as `name`, `description`, `status`, `type`, `parent_id`, and `amount_all_opportunities`.
+  - Documents the `mailing_country_code` field on [salesforce__contact_daily_history](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__contact_daily_history).
+  - Removes the stale `opportunity_account_id` field from [salesforce__opportunity_enhanced](https://fivetran.github.io/dbt_salesforce/#!/model/model.salesforce.salesforce__opportunity_enhanced), which the model returns as `account_id`.
+
 # dbt_salesforce v2.4.1
 
 [PR #88](https://github.com/fivetran/dbt_salesforce/pull/88) includes the following updates:
