@@ -2,3 +2,4 @@ version: 2.5.0
 pr_number: 101
 new_features:
 - description: Raises the minimum dbt version to 1.10.0.
+date: '2026-11-18'

@@ -1,3 +1,10 @@
+# dbt_salesforce v2.5.0
+
+[PR #101](https://github.com/fivetran/dbt_salesforce/pull/101) includes the following updates:
+
+## Feature Update
+- Raises the minimum dbt version to 1.10.0.
+
 # dbt_salesforce v2.4.1
 
 [PR #88](https://github.com/fivetran/dbt_salesforce/pull/88) includes the following updates:
