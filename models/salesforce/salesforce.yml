@@ -276,8 +276,6 @@ models:
         description: Boolean field, indicating whether the created date is greater than or equal to the first day of this quarter.
       - name: number_of_employees
         description: Number of employees working at the company represented by this account.
-      - name: opportunity_account_id
-        description: The id of the account associated with this opportunity.
       - name: opportunity_manager_city
         description: The city associated with the owner's manager.
       - name: opportunity_manager_id
