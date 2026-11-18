@@ -1,0 +1,4 @@
+version: 2.5.0
+pr_number: 101
+new_features:
+- description: Raises the minimum supported dbt version from v1.3.0 to v1.10.0.
