@@ -48,3 +48,4 @@ under_the_hood:
     `salesforce__campaign_daily_history` model of the `salesforce_history.yml` file.
 - description: Adds `mailing_country_code` to the `salesforce__contact_daily_history`
     model of the `salesforce_history.yml` file.
+date: '2026-11-19'
