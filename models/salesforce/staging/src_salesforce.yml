@@ -26,19 +26,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: account_number
           description: Account number assigned to this account (not the unique, system-generated ID assigned during creation).
           config:
@@ -289,19 +280,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: account_id
           description: ID of the account associated with this opportunity.
           config:
@@ -483,19 +465,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: _fivetran_deleted
           description: True, if this field has been deleted
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: about_me
           description: Information about the user, such as areas of interest or skills.
           config:
@@ -822,19 +795,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True, if this field has been deleted
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: case_access_for_account_owner
           description: The case access level for the account owner.
           config:
@@ -902,19 +866,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: account_id
           description: ID of the account that’s the parent of this contact.
           config:
@@ -1234,19 +1189,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: account_id
           description: >
             Represents the ID of the related account. The AccountId is determined as follows.
@@ -1544,19 +1490,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: annual_revenue
           description: Annual revenue for the lead’s company.
           config:
@@ -1825,19 +1762,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: created_by_id
           description: Created By ID
           config:
@@ -1996,19 +1924,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: account_id
           description: Required. ID of the Account associated with this order. Can only be updated when the order’s StatusCode value is Draft. This is a relationship field.
           config:
@@ -2260,19 +2179,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: created_by_id
           description: Created By ID
           config:
@@ -2419,19 +2329,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: account_id
           description: Represents the ID of the related Account. The AccountId is determined as follows. If the value of WhatId is any of the following objects, then Salesforce uses that object’s AccountId. Account Opportunity Contract Custom object that is a child of Account If the value of the WhatIdfield is any other object, and the value of the WhoId field is a Contact object, then Salesforce uses that contact’s AccountId. (If your organization uses Shared Activities, then Salesforce uses the AccountId of the primary contact.) Otherwise, Salesforce sets the value of the AccountId field to null. This is a relationship field.
           config:
@@ -2657,19 +2558,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record.
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled.
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: actual_cost
           description: Amount of money spent to run the campaign.
           config:
@@ -2780,19 +2672,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record.
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_deleted
           description: True if Fivetran marked the record as deleted. Soft delete mode only.
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled.
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: account_id
           description: ID of the account associated with the contact or lead.
           config:
@@ -2879,19 +2762,10 @@ sources:
               source_column_name: Id
         - name: _fivetran_synced
           description: The time at which fivetran last synced this record.
-          config:
-            meta:
-              source_column_name: _fivetran_synced
         - name: _fivetran_active
           description: True if record is active, used to filter out only active records if History Mode is enabled
-          config:
-            meta:
-              source_column_name: _fivetran_active
         - name: _fivetran_deleted
           description: True if the record has been deleted in Salesforce.
-          config:
-            meta:
-              source_column_name: _fivetran_deleted
         - name: description
           description: Description of the record type.
           config:
