@@ -55,13 +55,13 @@ vars:
           columns:
             Description: Description__c
       salesforce_history:
-        AccountHistory:
+        Account:
           name: sf_account_history_data
           columns:
             BillingStateCode: "<fivetran_not_synced>"
             ShippingCountryCode: "<fivetran_not_synced>"
             ShippingStateCode: "<fivetran_not_synced>"
-        ContactHistory:
+        Contact:
           name: sf_contact_history_data
           columns:
             Department: "<fivetran_not_synced>"

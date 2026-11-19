@@ -1,7 +1,7 @@
 --To disable this model, set the salesforce__user_role_enabled within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__user_role_enabled', True)) }}
 
-{%- set source_table = {'source_name': 'salesforce', 'table_name': 'user_role', 'payload_key': 'UserRole'} -%}
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'user_role'} -%}
 
 with fields as (
 

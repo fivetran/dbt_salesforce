@@ -1,7 +1,7 @@
 --To disable this model, set the salesforce__task_enabled variable within your dbt_project.yml file to False.
 {{ config(enabled=var('salesforce__task_enabled', True)) }}
 
-{%- set source_table = {'source_name': 'salesforce', 'table_name': 'task', 'payload_key': 'Task'} -%}
+{%- set source_table = {'source_name': 'salesforce', 'table_name': 'task'} -%}
 
 with fields as (
 

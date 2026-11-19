@@ -36,7 +36,6 @@ fields as (
             base_columns=salesforce.get_account_columns(),
             id_alias='account_id'
         ),
-        payload_key='AccountHistory',
         default_sync_mode='History'
     ) }}
 

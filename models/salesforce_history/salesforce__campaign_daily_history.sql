@@ -36,7 +36,6 @@ fields as (
             base_columns=salesforce.get_campaign_columns(),
             id_alias='campaign_id'
         ),
-        payload_key='CampaignHistory',
         default_sync_mode='History'
     ) }}
 
