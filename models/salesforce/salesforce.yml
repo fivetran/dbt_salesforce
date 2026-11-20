@@ -7,7 +7,7 @@ models:
     columns:
       - name: manager_id
         description: The user id of the manager.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: bookings_amount_closed_this_month
@@ -79,7 +79,7 @@ models:
     columns:
       - name: owner_id
         description: '{{ doc("owner_id") }}'
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: avg_bookings_amount
@@ -171,7 +171,7 @@ models:
     columns:
       - name: opportunity_id
         description: The unique, system-generated ID assigned during creation.
-        tests: 
+        data_tests: 
           - not_null
           - unique
       - name: _fivetran_synced 
@@ -276,8 +276,6 @@ models:
         description: Boolean field, indicating whether the created date is greater than or equal to the first day of this quarter.
       - name: number_of_employees
         description: Number of employees working at the company represented by this account.
-      - name: opportunity_account_id
-        description: The id of the account associated with this opportunity.
       - name: opportunity_manager_city
         description: The city associated with the owner's manager.
       - name: opportunity_manager_id
@@ -380,7 +378,7 @@ models:
     columns:
       - name: contact_id
         description: '{{ doc("contact_id") }}'
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: contact_name
@@ -457,7 +455,7 @@ models:
     columns:
       - name: date_day
         description: '{{ doc("date_day") }}'
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: leads_created
@@ -488,7 +486,7 @@ models:
     columns:
       - name: opportunity_line_item_id
         description: Unique id for each record.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: opportunity_line_item_name
@@ -559,7 +557,7 @@ models:
     columns:
       - name: campaign_id
         description: The unique, system-generated ID assigned during creation.
-        tests:
+        data_tests:
           - not_null
           - unique
       - name: campaign_name
