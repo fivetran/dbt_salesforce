@@ -3,7 +3,7 @@
 [PR #101](https://github.com/fivetran/dbt_salesforce/pull/101) includes the following updates:
 
 ## Feature Update
-- Raises the minimum dbt version to 1.10.0.
+- **Breaking change**: Raises the minimum dbt version to 1.10.0.
 
 ## Under the Hood
 - Updates yml column documentation to match model output.
