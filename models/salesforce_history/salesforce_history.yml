@@ -6,7 +6,7 @@ models:
     columns:
       - name: campaign_day_id
         description: Surrogate key hashed on `date_day` and `campaign_id`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: date_day
@@ -69,7 +69,7 @@ models:
     columns:
       - name: account_day_id
         description: Surrogate key hashed on `date_day` and `account_id`
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: date_day
@@ -152,7 +152,7 @@ models:
     columns:
       - name: contact_day_id
         description: Surrogate key hashed on `date_day` and `contact_id`
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: date_day
@@ -240,7 +240,7 @@ models:
     columns:
       - name: opportunity_day_id
         description: Surrogate key hashed on `date_day` and `opportunity_id`
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: date_day

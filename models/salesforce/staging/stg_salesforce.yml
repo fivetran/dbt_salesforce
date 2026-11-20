@@ -7,7 +7,7 @@ models:
     columns:
       - name: account_id
         description: The unique, system-generated ID assigned during creation
-        tests: 
+        data_tests: 
           - not_null
           - unique
       - name: _fivetran_synced 
@@ -82,7 +82,7 @@ models:
     columns:
       - name: opportunity_id
         description: The unique, system-generated ID assigned during creation.
-        tests: 
+        data_tests: 
           - not_null
           - unique
       - name: _fivetran_synced 
@@ -165,7 +165,7 @@ models:
     columns:
       - name: user_id
         description: The unique, system-generated ID assigned during creation.
-        tests: 
+        data_tests: 
           - not_null
           - unique
       - name: _fivetran_synced 
@@ -232,7 +232,7 @@ models:
     columns:
       - name: user_role_id
         description: The unique, system-generated ID assigned during creation
-        tests: 
+        data_tests: 
           - not_null
           - unique
       - name: _fivetran_synced 
@@ -255,7 +255,7 @@ models:
     columns:
       - name: contact_id
         description: The unique, system-generated ID assigned during creation.
-        tests: 
+        data_tests: 
           - not_null
           - unique
       - name: _fivetran_synced
@@ -333,7 +333,7 @@ models:
     columns:
       - name: event_id
         description: The unique, system-generated ID assigned during creation.
-        tests: 
+        data_tests: 
           - not_null
           - unique
       - name: _fivetran_synced
@@ -422,7 +422,7 @@ models:
     columns:
       - name: lead_id
         description: The unique, system-generated ID assigned during creation.
-        tests: 
+        data_tests: 
           - not_null
           - unique
       - name: _fivetran_synced
@@ -519,7 +519,7 @@ models:
     columns:
       - name: opportunity_line_item_id
         description: The unique, system-generated ID assigned during creation.
-        tests: 
+        data_tests: 
           - not_null
           - unique
       - name: _fivetran_synced
@@ -598,7 +598,7 @@ models:
     columns:
       - name: order_id
         description: The unique, system-generated ID assigned during creation.
-        tests: 
+        data_tests: 
           - not_null
           - unique
       - name: _fivetran_synced
@@ -681,7 +681,7 @@ models:
     columns:
       - name: product_2_id
         description: The unique, system-generated ID assigned during creation.
-        tests: 
+        data_tests: 
           - not_null
           - unique
       - name: _fivetran_synced
@@ -738,7 +738,7 @@ models:
     columns:
       - name: task_id
         description: The unique, system-generated ID assigned during creation.
-        tests: 
+        data_tests: 
           - not_null
           - unique
       - name: _fivetran_synced
@@ -803,7 +803,7 @@ models:
     columns:
       - name: campaign_id
         description: The unique, system-generated ID assigned during creation.
-        tests:
+        data_tests:
           - not_null
           - unique
       - name: _fivetran_synced
@@ -852,7 +852,7 @@ models:
     columns:
       - name: campaign_member_id
         description: The unique, system-generated ID assigned during creation.
-        tests:
+        data_tests:
           - not_null
           - unique
       - name: _fivetran_synced
@@ -891,7 +891,7 @@ models:
     columns:
       - name: record_type_id
         description: The unique, system-generated ID assigned during creation.
-        tests:
+        data_tests:
           - not_null
           - unique
       - name: _fivetran_synced
